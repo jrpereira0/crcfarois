@@ -766,8 +766,7 @@ export default function EditarProdutoPage() {
       {/* Toast */}
       {toast && (
         <Toast
-          type={toast.type}
-          message={toast.text}
+          message={toast}
           onClose={() => setToast(null)}
         />
       )}
