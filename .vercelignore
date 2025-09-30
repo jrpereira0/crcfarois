@@ -1,0 +1,12 @@
+﻿# Ignorar durante build na Vercel
+.env
+.env.local
+.env*.local
+node_modules
+.next
+prisma/migrations
+*.log
+.DS_Store
+README.md
+test-*.md
+scripts/test-*.js
