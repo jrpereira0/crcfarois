@@ -174,7 +174,7 @@ export function ImageUpload({
     }
 
     // Adicionar imagens ao estado (com status uploading)
-    const updatedImages = [...images, ...newImages];
+    let updatedImages = [...images, ...newImages];
     onImagesChange(updatedImages);
 
     // Fazer upload de cada imagem para Cloudinary
@@ -183,29 +183,27 @@ export function ImageUpload({
         const { url, publicId } = await uploadToCloudinary(image.file);
 
         // Atualizar imagem com dados do Cloudinary
-        onImagesChange((prevImages) =>
-          prevImages.map((img) =>
-            img.id === image.id
-              ? { ...img, url, publicId, uploaded: true, uploading: false }
-              : img
-          )
+        updatedImages = updatedImages.map((img) =>
+          img.id === image.id
+            ? { ...img, url, publicId, uploaded: true, uploading: false }
+            : img
         );
+        onImagesChange(updatedImages);
       } catch (error) {
         console.error("Erro no upload para Cloudinary:", error);
 
         // Marcar imagem com erro
-        onImagesChange((prevImages) =>
-          prevImages.map((img) =>
-            img.id === image.id
-              ? {
-                  ...img,
-                  uploading: false,
-                  error:
-                    error instanceof Error ? error.message : "Erro no upload",
-                }
-              : img
-          )
+        updatedImages = updatedImages.map((img) =>
+          img.id === image.id
+            ? {
+                ...img,
+                uploading: false,
+                error:
+                  error instanceof Error ? error.message : "Erro no upload",
+              }
+            : img
         );
+        onImagesChange(updatedImages);
       }
     }
   };
