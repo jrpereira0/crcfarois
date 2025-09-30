@@ -11,6 +11,7 @@ interface Categoria {
   nome: string;
   slug: string;
   parentId?: string;
+  children?: Categoria[];
 }
 
 interface ImageFile {
