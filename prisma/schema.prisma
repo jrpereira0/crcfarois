@@ -1,0 +1,389 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  ADMIN
+  CLIENTE
+  REPRESENTANTE
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String
+  role          Role      @default(CLIENTE)
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  cliente       Cliente?
+  representante Representante?
+  carrinho      Carrinho?
+  pedidos       Pedido[]
+  faturamentos  Faturamento[] @relation("FaturamentoCliente")
+  solicitacoesAprovadas SolicitacaoCadastro[] @relation("SolicitacaoAprovador")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Cliente {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  razaoSocial          String
+  responsavel          String
+  cnpjCpf              String   @unique
+  inscricaoEstadual    String?
+  inscricaoMunicipal   String?
+  tipoEmpresa          String?
+  condicoesPagamento   String[] @default([])
+  cep                  String
+  endereco             String
+  numero               String
+  complemento          String?
+  bairro               String?
+  cidade               String?
+  estado               String?
+  email                String   @unique
+  telefone             String?
+  whatsapp             String
+  ativo                Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  representantes       RepresentanteCliente[]
+
+  @@map("clientes")
+}
+
+model Representante {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  cpf                  String   @unique
+  endereco             String
+  numero               String
+  complemento          String?
+  bairro               String
+  cidade               String
+  estado               String
+  cep                  String
+  whatsapp             String?
+  // Dados bancários
+  banco                String?
+  agencia              String?
+  conta                String?
+  tipoConta            String?
+  chavePix             String?
+  // Comissão
+  comissaoPercentual   Decimal  @db.Decimal(5, 2) // Ex: 5.50%
+  ativo                Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientes             RepresentanteCliente[]
+  solicitacoes         SolicitacaoCadastro[]
+
+  @@map("representantes")
+}
+
+// Tabela de relacionamento muitos-para-muitos entre Representantes e Clientes
+model RepresentanteCliente {
+  id              String    @id @default(cuid())
+  representanteId String
+  clienteId       String
+  createdAt       DateTime  @default(now())
+  
+  representante   Representante @relation(fields: [representanteId], references: [id], onDelete: Cascade)
+  cliente         Cliente       @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+
+  @@unique([representanteId, clienteId])
+  @@map("representante_clientes")
+}
+
+model Categoria {
+  id          String      @id @default(cuid())
+  nome        String
+  slug        String      @unique
+  descricao   String?
+  parentId    String?
+  ordem       Int         @default(1)
+  ativo       Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relacionamento hierárquico
+  parent      Categoria?  @relation("CategoriaHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children    Categoria[] @relation("CategoriaHierarchy")
+  
+  // Relação com produtos
+  produtos    Produto[]
+  
+  @@index([parentId])
+  @@index([slug])
+  @@index([ordem])
+}
+
+model Produto {
+  id                String    @id @default(cuid())
+  titulo            String
+  sku               String    @unique
+  categoriaId       String
+  origem            String?
+  aplicacao         String?
+  preco             Decimal   @db.Decimal(10, 2)
+  descricao         String?
+  quantidadeEstoque Int       @default(0)
+  compraMinima      Int       @default(1)
+  compraMaxima      Int?
+  // Imagens via Cloudinary
+  imagemPrincipal   String?   // URL da imagem principal
+  imagensUrls       String[]  @default([]) // Array de URLs das imagens
+  cloudinaryIds     String[]  @default([]) // Array de Public IDs do Cloudinary
+  ativo             Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  // Relacionamentos
+  categoria         Categoria @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
+  carrinhoItens     CarrinhoItem[]
+  pedidoItens       PedidoItem[]
+  
+  @@index([categoriaId])
+  @@index([sku])
+  @@index([ativo])
+}
+
+model Carrinho {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itens CarrinhoItem[]
+
+  @@map("carrinhos")
+}
+
+model CarrinhoItem {
+  id            String  @id @default(cuid())
+  carrinhoId    String
+  produtoId     String
+  quantidade    Int
+  precoUnitario Decimal @db.Decimal(10, 2)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  carrinho Carrinho @relation(fields: [carrinhoId], references: [id], onDelete: Cascade)
+  produto  Produto  @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+
+  @@unique([carrinhoId, produtoId])
+  @@map("carrinho_itens")
+}
+
+enum StatusPedido {
+  PENDENTE
+  CONFIRMADO
+  PREPARANDO
+  PRONTO
+  ENVIADO
+  ENTREGUE
+  CANCELADO
+}
+
+enum TipoEntrega {
+  RETIRADA
+  ENTREGA
+}
+
+enum FormaPagamento {
+  DINHEIRO
+  PIX
+  CARTAO_CREDITO
+  CARTAO_DEBITO
+  BOLETO
+  TRANSFERENCIA
+}
+
+enum StatusFaturamento {
+  PENDENTE
+  PAGO
+  VENCIDO
+  CANCELADO
+}
+
+model Pedido {
+  id              String        @id @default(cuid())
+  numero          String        @unique
+  userId          String
+  status          StatusPedido  @default(PENDENTE)
+  tipoEntrega     TipoEntrega
+  formaPagamento  FormaPagamento
+  condicaoPagamento String?     // Condição específica escolhida pelo cliente
+  
+  // Valores
+  subtotal        Decimal       @db.Decimal(10, 2)
+  frete           Decimal       @db.Decimal(10, 2) @default(0)
+  total           Decimal       @db.Decimal(10, 2)
+  
+  // Endereço de entrega (opcional - apenas se tipoEntrega = ENTREGA)
+  enderecoEntrega String?
+  numeroEntrega   String?
+  complementoEntrega String?
+  bairroEntrega   String?
+  cidadeEntrega   String?
+  estadoEntrega   String?
+  cepEntrega      String?
+  
+  // Observações
+  observacoes     String?
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  // Relacionamentos
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itens           PedidoItem[]
+  
+  @@map("pedidos")
+}
+
+model PedidoItem {
+  id            String  @id @default(cuid())
+  pedidoId      String
+  produtoId     String
+  quantidade    Int
+  precoUnitario Decimal @db.Decimal(10, 2)
+  subtotal      Decimal @db.Decimal(10, 2)
+  
+  // Dados do produto no momento do pedido (para histórico)
+  produtoTitulo String
+  produtoSku    String
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relacionamentos
+  pedido        Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  produto       Produto  @relation(fields: [produtoId], references: [id], onDelete: Restrict)
+  
+  @@map("pedido_itens")
+}
+
+model Faturamento {
+  id              String           @id @default(cuid())
+  numero          String           @unique
+  clienteId       String
+  valor           Decimal          @db.Decimal(10, 2)
+  dataVencimento  DateTime
+  status          StatusFaturamento @default(PENDENTE)
+  observacoes     String?
+  anexoUrl        String?          // URL do comprovante
+  anexoNome       String?          // Nome original do arquivo
+  dataPagamento   DateTime?        // Data do pagamento (quando status = PAGO)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  // Relacionamento com cliente via User
+  cliente         User             @relation("FaturamentoCliente", fields: [clienteId], references: [id], onDelete: Cascade)
+  
+  @@map("faturamentos")
+}
+
+enum StatusSolicitacao {
+  PENDENTE
+  APROVADA
+  NEGADA
+}
+
+model SolicitacaoCadastro {
+  id                    String            @id @default(cuid())
+  
+  // Dados da empresa
+  razaoSocial           String
+  cnpj                  String
+  inscricaoEstadual     String?
+  inscricaoMunicipal    String?
+  tipoEmpresa           String?
+  
+  // Dados do responsável
+  nomeResponsavel       String
+  emailResponsavel      String
+  telefoneResponsavel   String?
+  whatsappResponsavel   String
+  
+  // Endereço
+  cep                   String
+  endereco              String
+  numero                String
+  complemento           String?
+  bairro                String
+  cidade                String
+  estado                String
+  
+  // Senha para acesso
+  senha                 String
+  
+  // Status da solicitação
+  status                StatusSolicitacao @default(PENDENTE)
+  
+  // Aprovação
+  aprovadoPorId         String?
+  aprovadoPor           User?             @relation("SolicitacaoAprovador", fields: [aprovadoPorId], references: [id])
+  representanteId       String?
+  representante         Representante?    @relation(fields: [representanteId], references: [id])
+  motivoRejeicao        String?
+  
+  // Timestamps
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  aprovadaEm            DateTime?
+  
+  @@map("solicitacoes_cadastro")
+}

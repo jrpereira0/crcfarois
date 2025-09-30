@@ -1,0 +1,515 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Cores personalizadas CRC Faróis */
+:root {
+  --crc-blue: #2b308c;
+  --crc-blue-hover: #1e40af;
+  --crc-blue-light: #dbeafe;
+}
+
+/* Classes utilitárias personalizadas */
+.bg-crc-blue {
+  background-color: var(--crc-blue) !important;
+}
+
+.bg-crc-blue:hover {
+  background-color: var(--crc-blue-hover) !important;
+}
+
+.text-crc-blue {
+  color: var(--crc-blue) !important;
+}
+
+.text-crc-blue:hover {
+  color: var(--crc-blue-hover) !important;
+}
+
+.border-crc-blue {
+  border-color: var(--crc-blue) !important;
+}
+
+.bg-crc-blue-light {
+  background-color: var(--crc-blue-light) !important;
+}
+
+.group-hover\:bg-crc-blue:hover {
+  background-color: var(--crc-blue) !important;
+}
+
+.group-hover\:text-white:hover {
+  color: white !important;
+}
+
+/* Animações B2B */
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-scale-x {
+  animation: scaleX 0.8s ease-out forwards;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+  opacity: 0;
+}
+
+.animation-delay-600 {
+  animation-delay: 0.6s;
+  opacity: 0;
+}
+
+.animation-delay-700 {
+  animation-delay: 0.7s;
+  opacity: 0;
+}
+
+.animation-delay-800 {
+  animation-delay: 0.8s;
+  opacity: 0;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1s;
+  opacity: 0;
+}
+
+.animation-delay-1200 {
+  animation-delay: 1.2s;
+  opacity: 0;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: var(--font-sora), "Sora", sans-serif;
+}
+
+body {
+  background-color: #ffffff;
+  color: #374151;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Corrigir problema de hidratação */
+html {
+  font-family: var(--font-sora), "Sora", sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Utility classes para line clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Corrigir problema de duplo scroll no layout B2B */
+.b2b-layout {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.b2b-main {
+  height: calc(100vh - 4rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Evitar layout shift nas condições de pagamento */
+.condicoes-pagamento-container {
+  min-height: 120px; /* Altura mínima para evitar layout shift */
+  transition: all 0.3s ease;
+}
+
+.condicoes-loading {
+  min-height: 120px;
+}
+
+/* Cards uniformes para produtos */
+.produto-card {
+  height: 520px;
+  display: flex;
+  flex-direction: column;
+}
+
+.produto-card-image {
+  height: 192px; /* h-48 = 12rem = 192px */
+  flex-shrink: 0;
+}
+
+.produto-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.produto-card-header {
+  height: 24px; /* h-6 */
+  margin-bottom: 0.75rem;
+}
+
+.produto-card-title-section {
+  height: 80px; /* h-20 */
+  margin-bottom: 1rem;
+}
+
+.produto-card-title {
+  height: 56px; /* h-14 */
+  margin-bottom: 0.5rem;
+}
+
+.produto-card-category {
+  height: 20px; /* h-5 */
+}
+
+.produto-card-price {
+  height: 32px; /* h-8 */
+  margin-bottom: 1rem;
+}
+
+.produto-card-actions {
+  height: 96px; /* h-24 */
+  margin-top: auto;
+}
+
+/* Animações para carrinho */
+@keyframes flyToCart {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-40px) translateX(20px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.cart-fly-animation {
+  animation: flyToCart 0.6s ease-out forwards;
+}
+
+/* Animação de pulsação para o badge do carrinho */
+@keyframes cartPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.cart-pulse {
+  animation: cartPulse 0.6s ease-in-out;
+}
+
+/* Toast de carrinho com animação especial */
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromTop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Animação específica para dropdown de status */
+@keyframes dropdownSlideIn {
+  0% {
+    transform: translateY(-8px) scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.dropdown-enter {
+  animation: dropdownSlideIn 0.15s ease-out;
+}
+
+/* Animações para calendário */
+@keyframes modalFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes calendarSlideIn {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.calendar-modal-enter {
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.calendar-content-enter {
+  animation: calendarSlideIn 0.3s ease-out;
+}
+
+.toast-enter-desktop {
+  animation: slideInFromRight 0.3s ease-out;
+}
+
+.toast-enter-mobile {
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+/* Destaque visual para produto recém-adicionado */
+@keyframes productGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+.product-added-glow {
+  animation: productGlow 1s ease-out;
+}
+
+/* Responsividade para toasts */
+@media (max-width: 768px) {
+  .toast-container-mobile {
+    top: 5rem !important;
+    left: 1rem !important;
+    right: 1rem !important;
+  }
+}
+
+/* Animações personalizadas para a página inicial moderna */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.2),
+      0 0 60px rgba(59, 130, 246, 0.1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Classes utilitárias para animações */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 4s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.8s ease-out;
+}
+
+/* Efeito glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gradientes personalizados */
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-border {
+  background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleX {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Efeito hover 3D */
+.hover-3d {
+  transition: transform 0.3s ease;
+}
+
+.hover-3d:hover {
+  transform: perspective(1000px) rotateX(10deg) rotateY(10deg) scale(1.05);
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: light;
+  }
+}
