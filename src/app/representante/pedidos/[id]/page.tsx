@@ -331,18 +331,21 @@ ${itensTexto}
             <div className="flex items-center gap-2">
               {/* WhatsApp */}
               {pedido.user.cliente?.whatsapp && (
-                <a
-                  href={formatWhatsAppUrl(
-                    pedido.user.cliente.whatsapp,
-                    generateWhatsAppMessage()
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => {
+                    const mensagem = generateWhatsAppMessage();
+                    const numeroCompleto = formatWhatsAppUrl(
+                      pedido.user.cliente?.whatsapp || ""
+                    );
+                    window.open(
+                      `https://wa.me/${numeroCompleto}?text=${mensagem}`
+                    );
+                  }}
                   className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                 >
                   <Phone className="h-4 w-4" />
                   WhatsApp
-                </a>
+                </button>
               )}
 
               {/* Editar */}

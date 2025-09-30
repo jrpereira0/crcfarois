@@ -47,6 +47,19 @@ interface FormData {
   compraMaxima: string;
 }
 
+interface FormErrors {
+  titulo?: string;
+  sku?: string;
+  categoriaId?: string;
+  origem?: string;
+  aplicacao?: string;
+  preco?: string;
+  descricao?: string;
+  quantidadeEstoque?: string;
+  compraMinima?: string;
+  compraMaxima?: string;
+}
+
 export default function NovoProdutoPage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -71,7 +84,7 @@ export default function NovoProdutoPage() {
     compraMaxima: "",
   });
 
-  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   // Buscar categorias para o select
   const fetchCategorias = async () => {
@@ -178,7 +191,7 @@ export default function NovoProdutoPage() {
   };
 
   const validateForm = () => {
-    const newErrors: Partial<FormData> = {};
+    const newErrors: FormErrors = {};
 
     if (!formData.titulo.trim()) {
       newErrors.titulo = "Título é obrigatório";
