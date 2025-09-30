@@ -27,6 +27,11 @@ interface ImageFile {
   file: File;
   preview: string;
   isPrincipal: boolean;
+  url?: string;
+  publicId?: string;
+  uploaded?: boolean;
+  uploading?: boolean;
+  error?: string;
 }
 
 interface FormData {
