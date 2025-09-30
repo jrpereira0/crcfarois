@@ -23,6 +23,7 @@ interface Produto {
 interface Cliente {
   id: string;
   razaoSocial: string;
+  cnpjCpf: string;
   user: {
     name: string;
     email: string;
