@@ -219,7 +219,7 @@ export const listImagesByCategory = async (
   try {
     const result = await cloudinary.search
       .expression(`tags:${category} AND tags:crc-farois`)
-      .sort_by([["created_at", "desc"]])
+      .sort_by("created_at", "desc")
       .max_results(limit)
       .execute();
 
