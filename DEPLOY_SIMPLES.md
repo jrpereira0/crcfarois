@@ -21,6 +21,7 @@ Antes de clicar em "Deploy", adicione estas variáveis em **"Environment Variabl
 ```
 DATABASE_URL
 ```
+
 ```
 postgresql://neondb_owner:npg_RGd9oaZuMH0K@ep-long-block-actmeqx6-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
 ```
@@ -28,6 +29,7 @@ postgresql://neondb_owner:npg_RGd9oaZuMH0K@ep-long-block-actmeqx6-pooler.sa-east
 ```
 NEXTAUTH_SECRET
 ```
+
 ```
 bK3QUV7Qr+wQCfGbOWVMziPWQA3N+vLSsuQf/BZ7fAg=
 ```
@@ -35,14 +37,17 @@ bK3QUV7Qr+wQCfGbOWVMziPWQA3N+vLSsuQf/BZ7fAg=
 ```
 NEXTAUTH_URL
 ```
+
 ```
 https://crcfarois.vercel.app
 ```
+
 **⚠️ IMPORTANTE**: Esta URL vai mudar. Após o deploy, você vai atualizar ela.
 
 ```
 CLOUDINARY_CLOUD_NAME
 ```
+
 ```
 dn7nvyvss
 ```
@@ -50,6 +55,7 @@ dn7nvyvss
 ```
 CLOUDINARY_API_KEY
 ```
+
 ```
 754777921963855
 ```
@@ -57,6 +63,7 @@ CLOUDINARY_API_KEY
 ```
 CLOUDINARY_API_SECRET
 ```
+
 ```
 vcABbSimmHeFwVMmrQYo5NYf_UE
 ```
@@ -64,6 +71,7 @@ vcABbSimmHeFwVMmrQYo5NYf_UE
 ```
 BREVO_API_KEY
 ```
+
 ```
 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
 ```
@@ -71,6 +79,7 @@ xkeysib-9a82cc5b8ad6a1607f93658d48855561bfeaa1574982d2ba36eecf8ba18f94b7-7rFUbY4
 ```
 BREVO_SENDER_EMAIL
 ```
+
 ```
 nao-responda@crcfarois.ind.br
 ```
@@ -78,14 +87,17 @@ nao-responda@crcfarois.ind.br
 ```
 NEXT_PUBLIC_APP_URL
 ```
+
 ```
 https://crcfarois.vercel.app
 ```
+
 **⚠️ IMPORTANTE**: Esta URL também vai mudar após o deploy.
 
 ```
 NODE_ENV
 ```
+
 ```
 production
 ```
@@ -119,10 +131,12 @@ Agora que você tem a URL real:
 ### ✅ Passo 5: Testar
 
 Acesse seu site:
+
 - **Site**: `https://sua-url.vercel.app`
 - **Login**: `https://sua-url.vercel.app/login`
 
 **Credenciais padrão:**
+
 - Admin: `admin@crcfarois.ind.br` / `admin123`
 - Cliente: `cliente@exemplo.com` / `cliente123`
 - Representante: `rep@exemplo.com` / `rep123`
@@ -132,6 +146,7 @@ Acesse seu site:
 ## ⚠️ O banco de dados JÁ está configurado?
 
 Você já rodou isso localmente?
+
 ```bash
 npx prisma db push
 npx prisma db seed
@@ -147,6 +162,7 @@ Se **NÃO** → Rode esses comandos agora antes do deploy
 Seu site já estará no ar em poucos minutos!
 
 Se der algum erro:
+
 1. Vá em **Deployments** na Vercel
 2. Clique no último deployment
 3. Vá em **Functions** para ver os logs

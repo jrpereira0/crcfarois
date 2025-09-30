@@ -82,31 +82,37 @@ Antes de fazer o deploy, clique em **"Environment Variables"** e adicione:
 ```env
 DATABASE_URL
 ```
+
 Cole a Connection String do seu banco PostgreSQL (Neon/Supabase/Railway)
 
 ```env
 NEXTAUTH_SECRET
 ```
+
 Cole o secret gerado com openssl (Passo 2)
 
 ```env
 NEXTAUTH_URL
 ```
+
 Deixe em branco por enquanto (vamos preencher depois do primeiro deploy)
 
 ```env
 CLOUDINARY_CLOUD_NAME
 ```
+
 Cole o Cloud Name do Cloudinary
 
 ```env
 CLOUDINARY_API_KEY
 ```
+
 Cole a API Key do Cloudinary
 
 ```env
 CLOUDINARY_API_SECRET
 ```
+
 Cole o API Secret do Cloudinary
 
 #### Variáveis Opcionais:
@@ -114,16 +120,19 @@ Cole o API Secret do Cloudinary
 ```env
 BREVO_API_KEY
 ```
+
 Cole a API Key do Brevo (se configurou o email)
 
 ```env
 ADMIN_EMAIL
 ```
+
 Email do administrador (ex: admin@crcfarois.ind.br)
 
 ```env
 NODE_ENV
 ```
+
 Valor: `production`
 
 ### 5.3 Fazer Deploy
@@ -177,12 +186,14 @@ Para verificar se funcionou:
 
 1. Acesse a URL do projeto na Vercel
 2. Teste as páginas principais:
+
    - Página inicial
    - Quem somos
    - Produtos
    - Contato
 
 3. Teste o login:
+
    - Acesse `/login`
    - Use as credenciais padrão:
      - **Admin**: `admin@crcfarois.ind.br` / `admin123`
@@ -222,7 +233,8 @@ git push
 
 ### Erro: "NextAuth configuration error"
 
-**Solução**: 
+**Solução**:
+
 1. Verifique se `NEXTAUTH_URL` está configurado com a URL completa
 2. Verifique se `NEXTAUTH_SECRET` tem pelo menos 32 caracteres
 
@@ -233,6 +245,7 @@ git push
 ### Páginas em branco ou erro 500
 
 **Solução**:
+
 1. Vá em **Deployments** → Clique no último deployment
 2. Vá em **Functions** → Veja os logs de erro
 3. Corrija o problema e faça redeploy

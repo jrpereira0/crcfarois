@@ -31,6 +31,14 @@ interface FormData {
   ordem: number;
 }
 
+interface FormErrors {
+  nome?: string;
+  slug?: string;
+  descricao?: string;
+  parentId?: string;
+  ordem?: string;
+}
+
 export default function NovaCategoriaPage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -50,7 +58,7 @@ export default function NovaCategoriaPage() {
     ordem: 1,
   });
 
-  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const fetchCategorias = async () => {
     try {
@@ -121,7 +129,7 @@ export default function NovaCategoriaPage() {
   };
 
   const validateForm = () => {
-    const newErrors: Partial<FormData> = {};
+    const newErrors: FormErrors = {};
 
     if (!formData.nome.trim()) {
       newErrors.nome = "Nome é obrigatório";
