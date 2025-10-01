@@ -22,7 +22,10 @@ export async function POST(request: NextRequest) {
     // Notificar se o email não existe
     if (!user) {
       return NextResponse.json(
-        { error: "Email não encontrado. Verifique o email digitado ou solicite um cadastro." },
+        {
+          error:
+            "Email não encontrado. Verifique o email digitado ou solicite um cadastro.",
+        },
         { status: 404 }
       );
     }

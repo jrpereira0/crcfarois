@@ -173,18 +173,8 @@ function RedefinirSenhaContent() {
 
       <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
         <div className="w-full max-w-md">
-        {/* Logo */}
+        {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-block bg-white/90 backdrop-blur-sm p-4 rounded-2xl shadow-xl mb-4">
-            <Image
-              src="/logobranca.svg"
-              alt="CRC Faróis"
-              width={140}
-              height={51}
-              className="h-10 w-auto"
-              priority
-            />
-          </div>
           <h1 className="text-3xl font-bold text-white mb-2">
             Redefinir Senha
           </h1>
@@ -193,159 +183,157 @@ function RedefinirSenhaContent() {
           </p>
         </div>
 
-        {/* Card */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Código de Verificação */}
-            <div>
-              <label
-                htmlFor="code"
-                className="block text-sm font-semibold text-gray-700 mb-2"
-              >
-                Código de Verificação
-              </label>
-              <input
-                id="code"
-                name="code"
-                type="text"
-                required
-                maxLength={6}
-                value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-center text-2xl font-mono tracking-widest text-gray-900"
-                placeholder="000000"
-                disabled={loading}
-              />
-              <p className="mt-2 text-xs text-gray-500">
-                Digite o código de 6 dígitos enviado para seu email
-              </p>
-            </div>
-
-            {/* Nova Senha */}
-            <div>
-              <label
-                htmlFor="newPassword"
-                className="block text-sm font-semibold text-gray-700 mb-2"
-              >
-                Nova Senha
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
+          {/* Card */}
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Código de Verificação */}
+              <div>
+                <label
+                  htmlFor="code"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
+                  Código de Verificação
+                </label>
                 <input
-                  id="newPassword"
-                  name="newPassword"
-                  type={showPassword ? "text" : "password"}
+                  id="code"
+                  name="code"
+                  type="text"
                   required
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="block w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-gray-900 placeholder-gray-400"
-                  placeholder="Mínimo 6 caracteres"
+                  maxLength={6}
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                  className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-center text-2xl font-mono tracking-widest text-gray-900"
+                  placeholder="000000"
                   disabled={loading}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
-                  )}
-                </button>
+                <p className="mt-2 text-xs text-gray-500">
+                  Digite o código de 6 dígitos enviado para seu email
+                </p>
               </div>
-            </div>
 
-            {/* Confirmar Senha */}
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-semibold text-gray-700 mb-2"
-              >
-                Confirmar Nova Senha
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="block w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-gray-900 placeholder-gray-400"
-                  placeholder="Digite a senha novamente"
-                  disabled={loading}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center"
+              {/* Nova Senha */}
+              <div>
+                <label
+                  htmlFor="newPassword"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
                 >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Error Message */}
-            {error && (
-              <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 animate-fade-in-up">
-                <div className="flex items-center gap-3">
-                  <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
-                  <p className="text-sm text-red-700 font-medium">
-                    {error}
-                  </p>
+                  Nova Senha
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    id="newPassword"
+                    name="newPassword"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="block w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-gray-900 placeholder-gray-400"
+                    placeholder="Mínimo 6 caracteres"
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5 text-gray-400" />
+                    ) : (
+                      <Eye className="h-5 w-5 text-gray-400" />
+                    )}
+                  </button>
                 </div>
               </div>
-            )}
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98]"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  Redefinindo senha...
-                </>
-              ) : (
-                <>
-                  Redefinir senha
-                  <Lock className="h-5 w-5" />
-                </>
+              {/* Confirmar Senha */}
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
+                  Confirmar Nova Senha
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="block w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-gray-900 placeholder-gray-400"
+                    placeholder="Digite a senha novamente"
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5 text-gray-400" />
+                    ) : (
+                      <Eye className="h-5 w-5 text-gray-400" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 animate-fade-in-up">
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+                    <p className="text-sm text-red-700 font-medium">{error}</p>
+                  </div>
+                </div>
               )}
-            </button>
-          </form>
 
-          {/* Info de Segurança */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-              <Shield className="h-4 w-4 text-green-500" />
-              Código válido por 15 minutos
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Redefinindo senha...
+                  </>
+                ) : (
+                  <>
+                    Redefinir senha
+                    <Lock className="h-5 w-5" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* Info de Segurança */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                <Shield className="h-4 w-4 text-green-500" />
+                Código válido por 15 minutos
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Solicitar novo código */}
-        <div className="text-center mt-6">
-          <Link
-            href="/esqueci-senha"
-            className="inline-flex items-center gap-2 text-white hover:text-yellow-300 transition-colors font-medium"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            Solicitar novo código
-          </Link>
-        </div>
+          {/* Solicitar novo código */}
+          <div className="text-center mt-6">
+            <Link
+              href="/esqueci-senha"
+              className="inline-flex items-center gap-2 text-white hover:text-yellow-300 transition-colors font-medium"
+            >
+              <ArrowLeft className="h-5 w-5" />
+              Solicitar novo código
+            </Link>
+          </div>
         </div>
       </div>
     </div>
