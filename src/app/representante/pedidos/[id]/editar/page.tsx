@@ -561,7 +561,11 @@ export default function EditarPedidoRepresentantePage() {
                         {item.produto?.imagemPrincipal ? (
                           <Image
                             src={item.produto.imagemPrincipal}
-                            alt={item.produtoTitulo || item.produto?.titulo || "Produto"}
+                            alt={
+                              item.produtoTitulo ||
+                              item.produto?.titulo ||
+                              "Produto"
+                            }
                             fill
                             className="object-contain p-1 sm:p-2"
                             sizes="96px"
@@ -569,7 +573,11 @@ export default function EditarPedidoRepresentantePage() {
                         ) : item.produto?.imagensUrls?.length > 0 ? (
                           <Image
                             src={item.produto.imagensUrls[0]}
-                            alt={item.produtoTitulo || item.produto?.titulo || "Produto"}
+                            alt={
+                              item.produtoTitulo ||
+                              item.produto?.titulo ||
+                              "Produto"
+                            }
                             fill
                             className="object-contain p-1 sm:p-2"
                             sizes="96px"
@@ -586,7 +594,9 @@ export default function EditarPedidoRepresentantePage() {
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex-1 min-w-0 mr-2">
                             <h3 className="text-sm sm:text-lg font-semibold text-gray-900 mb-1 line-clamp-2">
-                              {item.produtoTitulo || item.produto?.titulo || "Produto"}
+                              {item.produtoTitulo ||
+                                item.produto?.titulo ||
+                                "Produto"}
                             </h3>
                             <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500">
                               <span className="bg-gray-100 px-2 py-0.5 sm:py-1 rounded-full font-medium">
@@ -594,7 +604,9 @@ export default function EditarPedidoRepresentantePage() {
                               </span>
                               <span className="flex items-center gap-1">
                                 <Tag className="h-3 w-3" />
-                                <span className="hidden sm:inline">{item.produto?.categoria?.nome || "Categoria"}</span>
+                                <span className="hidden sm:inline">
+                                  {item.produto?.categoria?.nome || "Categoria"}
+                                </span>
                               </span>
                             </div>
                           </div>
@@ -650,7 +662,9 @@ export default function EditarPedidoRepresentantePage() {
                           {/* Preços */}
                           <div className="text-right">
                             <div className="text-xs sm:text-sm text-gray-500">
-                              {formatPrice(item.precoUnitario || item.produto?.preco || 0)}{" "}
+                              {formatPrice(
+                                item.precoUnitario || item.produto?.preco || 0
+                              )}{" "}
                               x {item.quantidade}
                             </div>
                             <div className="text-lg sm:text-xl font-bold text-primary">
@@ -661,7 +675,9 @@ export default function EditarPedidoRepresentantePage() {
 
                         {/* Informações adicionais */}
                         <div className="mt-2 sm:mt-3 flex items-center gap-2 sm:gap-4 text-xs text-gray-500">
-                          <span>Estoque: {item.produto?.quantidadeEstoque || 0}</span>
+                          <span>
+                            Estoque: {item.produto?.quantidadeEstoque || 0}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -683,7 +699,119 @@ export default function EditarPedidoRepresentantePage() {
             </div>
           </div>
 
-          {/* Informações de entrega */}
+          {/* Forma de pagamento */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
+                Forma de Pagamento
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+              {[
+                { value: "PIX", label: "PIX", icon: "💳" },
+                { value: "DINHEIRO", label: "Dinheiro", icon: "💵" },
+                {
+                  value: "CARTAO_CREDITO",
+                  label: "Cartão de Crédito",
+                  icon: "💳",
+                },
+                {
+                  value: "CARTAO_DEBITO",
+                  label: "Cartão de Débito",
+                  icon: "💳",
+                },
+                { value: "BOLETO", label: "Boleto", icon: "📋" },
+                { value: "TRANSFERENCIA", label: "Transferência", icon: "🏦" },
+              ].map((opcao) => (
+                <label
+                  key={opcao.value}
+                  className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                    form.formaPagamento === opcao.value
+                      ? "border-primary bg-primary/5"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="formaPagamento"
+                    value={opcao.value}
+                    checked={form.formaPagamento === opcao.value}
+                    onChange={(e) =>
+                      setForm((prev) =>
+                        prev
+                          ? { ...prev, formaPagamento: e.target.value }
+                          : null
+                      )
+                    }
+                    className="sr-only"
+                  />
+                  <span className="text-xl sm:text-2xl flex-shrink-0">
+                    {opcao.icon}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-gray-900 text-xs sm:text-base truncate">
+                      {opcao.label}
+                    </div>
+                  </div>
+                  {form.formaPagamento === opcao.value && (
+                    <CheckCircle className="h-3 w-3 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+                  )}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Condições de Pagamento */}
+          {condicoesDisponiveis.length > 0 && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
+                  Condições de Pagamento
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
+                {condicoesDisponiveis.map((condicao) => (
+                  <label
+                    key={condicao}
+                    className={`flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                      form?.condicaoPagamento === condicao
+                        ? "border-primary bg-primary/5"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="condicaoPagamento"
+                      value={condicao}
+                      checked={form?.condicaoPagamento === condicao}
+                      onChange={(e) =>
+                        setForm((prev) =>
+                          prev
+                            ? { ...prev, condicaoPagamento: e.target.value }
+                            : null
+                        )
+                      }
+                      className="sr-only"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-gray-900 text-sm sm:text-base">
+                        {condicao}
+                      </div>
+                    </div>
+                    {form?.condicaoPagamento === condicao && (
+                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+                    )}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Entrega */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
             <div className="flex items-center gap-3 mb-4">
               <Truck className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
@@ -916,116 +1044,6 @@ export default function EditarPedidoRepresentantePage() {
             )}
           </div>
 
-          {/* Forma de pagamento */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
-                Forma de Pagamento
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
-              {[
-                { value: "PIX", label: "PIX", icon: "💳" },
-                { value: "DINHEIRO", label: "Dinheiro", icon: "💵" },
-                {
-                  value: "CARTAO_CREDITO",
-                  label: "Cartão de Crédito",
-                  icon: "💳",
-                },
-                {
-                  value: "CARTAO_DEBITO",
-                  label: "Cartão de Débito",
-                  icon: "💳",
-                },
-                { value: "BOLETO", label: "Boleto", icon: "📋" },
-                { value: "TRANSFERENCIA", label: "Transferência", icon: "🏦" },
-              ].map((opcao) => (
-                <label
-                  key={opcao.value}
-                  className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                    form.formaPagamento === opcao.value
-                      ? "border-primary bg-primary/5"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="formaPagamento"
-                    value={opcao.value}
-                    checked={form.formaPagamento === opcao.value}
-                    onChange={(e) =>
-                      setForm((prev) =>
-                        prev
-                          ? { ...prev, formaPagamento: e.target.value }
-                          : null
-                      )
-                    }
-                    className="sr-only"
-                  />
-                  <span className="text-xl sm:text-2xl flex-shrink-0">{opcao.icon}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium text-gray-900 text-xs sm:text-base truncate">
-                      {opcao.label}
-                    </div>
-                  </div>
-                  {form.formaPagamento === opcao.value && (
-                    <CheckCircle className="h-3 w-3 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
-                  )}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Condições de Pagamento */}
-          {condicoesDisponiveis.length > 0 && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
-                  Condições de Pagamento
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
-                {condicoesDisponiveis.map((condicao) => (
-                  <label
-                    key={condicao}
-                    className={`flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                      form?.condicaoPagamento === condicao
-                        ? "border-primary bg-primary/5"
-                        : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="condicaoPagamento"
-                      value={condicao}
-                      checked={form?.condicaoPagamento === condicao}
-                      onChange={(e) =>
-                        setForm((prev) =>
-                          prev
-                            ? { ...prev, condicaoPagamento: e.target.value }
-                            : null
-                        )
-                      }
-                      className="sr-only"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-gray-900 text-sm sm:text-base">
-                        {condicao}
-                      </div>
-                    </div>
-                    {form?.condicaoPagamento === condicao && (
-                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
-                    )}
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Observações */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
             <div className="flex items-center gap-3 mb-4">
@@ -1232,4 +1250,3 @@ export default function EditarPedidoRepresentantePage() {
     </div>
   );
 }
-
