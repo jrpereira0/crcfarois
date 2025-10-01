@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState, memo, useCallback } from "react";
 import Link from "next/link";
@@ -116,8 +116,8 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
     }
   }, [session, status, router]);
 
-  const handleLogout = () => {
-    router.push("/api/auth/signout");
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: "/login" });
   };
 
   if (!mounted || status === "loading") {
