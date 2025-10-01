@@ -316,15 +316,15 @@ export default function PedidosPage() {
                       </div>
                       <div className="text-left sm:text-right">
                         <div className="text-2xl font-bold text-primary">
-                        {formatPrice(pedido.total)}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {pedido.itens.length}{" "}
-                        {pedido.itens.length === 1 ? "item" : "itens"}
+                          {formatPrice(pedido.total)}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {pedido.itens.length}{" "}
+                          {pedido.itens.length === 1 ? "item" : "itens"}
+                        </div>
                       </div>
                     </div>
-                    </div>
-                    
+
                     <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-gray-500">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />

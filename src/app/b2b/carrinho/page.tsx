@@ -314,7 +314,9 @@ export default function CarrinhoPage() {
                             </span>
                             <span className="flex items-center gap-1">
                               <Tag className="h-3 w-3" />
-                              <span className="hidden sm:inline">{item.categoria.nome}</span>
+                              <span className="hidden sm:inline">
+                                {item.categoria.nome}
+                              </span>
                             </span>
                           </div>
                         </div>

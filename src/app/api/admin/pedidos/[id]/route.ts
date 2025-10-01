@@ -205,7 +205,7 @@ export async function PATCH(
 
       enviarEmailStatusPedidoAlterado({
         nomeCliente:
-          pedidoCompleto.user.cliente?.nomeResponsavel ||
+          pedidoCompleto.user.cliente?.responsavel ||
           pedidoCompleto.user.name ||
           "Cliente",
         emailCliente: pedidoCompleto.user.email || "",
