@@ -157,6 +157,13 @@ export default function PerfilAdminPage() {
       return;
     }
 
+    // Validar formato do email no frontend
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(novoEmail)) {
+      setError("Por favor, digite um email válido");
+      return;
+    }
+
     setSaving(true);
 
     try {
@@ -178,10 +185,12 @@ export default function PerfilAdminPage() {
           window.location.href = "/login";
         }, 3000);
       } else {
+        // Mostrar erro específico retornado pela API
         setError(data.error || "Erro ao alterar email");
       }
     } catch (error) {
-      setError("Erro ao alterar email");
+      console.error("Erro ao alterar email:", error);
+      setError("Erro de conexão. Tente novamente.");
     } finally {
       setSaving(false);
     }
@@ -521,6 +530,16 @@ export default function PerfilAdminPage() {
                   </button>
                 </div>
               </div>
+
+              {/* Mensagem de Erro no Modal */}
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
+                    <p className="text-xs text-red-800">{error}</p>
+                  </div>
+                </div>
+              )}
 
               {/* Aviso de Segurança */}
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">

@@ -24,7 +24,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (!novoEmail || !senhaAtual) {
-      console.log("❌ Campos obrigatórios faltando:", { novoEmail: !!novoEmail, senhaAtual: !!senhaAtual });
+      console.log("❌ Campos obrigatórios faltando:", {
+        novoEmail: !!novoEmail,
+        senhaAtual: !!senhaAtual,
+      });
       return NextResponse.json(
         { error: "Email e senha são obrigatórios" },
         { status: 400 }
@@ -35,10 +38,7 @@ export async function POST(request: NextRequest) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(novoEmail)) {
       console.log("❌ Email inválido:", novoEmail);
-      return NextResponse.json(
-        { error: "Email inválido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email inválido" }, { status: 400 });
     }
 
     // Buscar usuário
@@ -59,10 +59,7 @@ export async function POST(request: NextRequest) {
 
     if (!senhaValida) {
       console.log("❌ Senha incorreta");
-      return NextResponse.json(
-        { error: "Senha incorreta" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Senha incorreta" }, { status: 400 });
     }
 
     // Verificar se o novo email já está em uso
@@ -86,11 +83,15 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    console.log("✅ Email alterado com sucesso:", { de: user.email, para: novoEmail });
+    console.log("✅ Email alterado com sucesso:", {
+      de: user.email,
+      para: novoEmail,
+    });
 
     return NextResponse.json({
       success: true,
-      message: "Email alterado com sucesso. Faça login novamente com o novo email.",
+      message:
+        "Email alterado com sucesso. Faça login novamente com o novo email.",
     });
   } catch (error) {
     console.error("❌ Erro ao alterar email:", error);
@@ -100,4 +101,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
