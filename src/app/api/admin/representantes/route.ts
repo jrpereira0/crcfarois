@@ -8,11 +8,15 @@ import { enviarEmailRepresentanteCriadoAdmin } from "@/lib/email";
 // GET - Listar todos os representantes (admin)
 export async function GET(request: NextRequest) {
   try {
+    console.log("📋 Buscando representantes...");
     const session = await getServerSession(authOptions);
 
     if (!session || session.user.role !== "ADMIN") {
+      console.log("❌ Acesso negado - não é admin");
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
+
+    console.log("✅ Sessão válida, buscando no banco...");
 
     const representantes = await prisma.representante.findMany({
       include: {
@@ -48,11 +52,15 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: "desc" },
     });
 
+    console.log(`✅ Encontrados ${representantes.length} representantes`);
+
     return NextResponse.json({ representantes });
-  } catch (error) {
-    console.error("Erro ao buscar representantes:", error);
+  } catch (error: any) {
+    console.error("❌ Erro ao buscar representantes:", error);
+    console.error("❌ Stack trace:", error.stack);
+    console.error("❌ Mensagem:", error.message);
     return NextResponse.json(
-      { error: "Erro interno do servidor" },
+      { error: "Erro interno do servidor", details: error.message },
       { status: 500 }
     );
   }
