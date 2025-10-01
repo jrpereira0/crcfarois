@@ -280,8 +280,18 @@ export async function PUT(
 
     // Se há itens para atualizar
     if (itens && itens.length > 0) {
-      // Validar produtos
-      const produtoIds = itens.map((item: any) => item.produtoId);
+      // Validar produtos - filtrar apenas IDs válidos
+      const produtoIds = itens
+        .map((item: any) => item.produtoId)
+        .filter((id: any) => id !== undefined && id !== null);
+
+      if (produtoIds.length === 0) {
+        return NextResponse.json(
+          { error: "Nenhum produto válido foi fornecido" },
+          { status: 400 }
+        );
+      }
+
       const produtos = await prisma.produto.findMany({
         where: {
           id: {
