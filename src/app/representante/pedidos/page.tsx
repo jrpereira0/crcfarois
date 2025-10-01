@@ -1081,7 +1081,9 @@ export default function PedidosRepresentantePage() {
                     <div className="flex flex-col gap-2 text-xs sm:text-sm text-gray-500 sm:hidden">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                        <span className="truncate">{formatDate(pedido.createdAt)}</span>
+                        <span className="truncate">
+                          {formatDate(pedido.createdAt)}
+                        </span>
                       </span>
                       <div className="flex items-center gap-3">
                         <span className="flex items-center gap-1">
