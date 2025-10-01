@@ -99,14 +99,16 @@ export function Sidebar() {
       >
         <div className="flex items-center justify-between h-16 px-4 bg-primary">
           <div className="flex-1 flex justify-center">
-            <Image
-              src="/logobranca.svg"
-              alt="CRC Faróis"
-              width={120}
-              height={44}
-              className="h-8 w-auto"
-              priority
-            />
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
+              <Image
+                src="/logobranca.svg"
+                alt="CRC Faróis"
+                width={120}
+                height={44}
+                className="h-7 w-auto"
+                priority
+              />
+            </div>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -166,14 +168,16 @@ export function Sidebar() {
         <div className="flex flex-col flex-grow bg-white border-r border-gray-200 shadow-sm">
           {/* Logo */}
           <div className="flex items-center justify-center h-16 px-4 bg-primary">
-            <Image
-              src="/logobranca.svg"
-              alt="CRC Faróis"
-              width={140}
-              height={51}
-              className="h-9 w-auto"
-              priority
-            />
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
+              <Image
+                src="/logobranca.svg"
+                alt="CRC Faróis"
+                width={140}
+                height={51}
+                className="h-8 w-auto"
+                priority
+              />
+            </div>
           </div>
 
           {/* Navigation */}

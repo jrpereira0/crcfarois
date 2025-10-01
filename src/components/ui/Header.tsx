@@ -134,14 +134,16 @@ export default function Header() {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Image
-              src="/logobranca.svg"
-              alt="CRC Faróis"
-              width={200}
-              height={73}
-              className="h-10 md:h-14 w-auto"
-              priority
-            />
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 md:p-4 border border-white/20 hover:bg-white/20 transition-all duration-300">
+              <Image
+                src="/logobranca.svg"
+                alt="CRC Faróis"
+                width={200}
+                height={73}
+                className="h-8 md:h-10 w-auto"
+                priority
+              />
+            </div>
           </Link>
 
           {/* Menu Desktop - Elegante */}
@@ -237,13 +239,15 @@ export default function Header() {
         <div className="flex flex-col h-full">
           {/* Header da Sidebar */}
           <div className="bg-primary p-6 flex items-center justify-between">
-            <Image
-              src="/logobranca.svg"
-              alt="CRC Faróis"
-              width={140}
-              height={51}
-              className="h-10 w-auto"
-            />
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
+              <Image
+                src="/logobranca.svg"
+                alt="CRC Faróis"
+                width={140}
+                height={51}
+                className="h-8 w-auto"
+              />
+            </div>
             <button
               onClick={toggleSidebar}
               className="text-white hover:text-yellow-300 transition-colors"

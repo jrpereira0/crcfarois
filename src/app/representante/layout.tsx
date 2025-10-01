@@ -147,14 +147,16 @@ function RepresentanteLayoutContent({ children }: RepresentanteLayoutProps) {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-center h-16 px-4 bg-primary relative">
-            <Image
-              src="/logobranca.svg"
-              alt="CRC Faróis"
-              width={140}
-              height={51}
-              className="h-9 w-auto"
-              priority
-            />
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
+              <Image
+                src="/logobranca.svg"
+                alt="CRC Faróis"
+                width={140}
+                height={51}
+                className="h-8 w-auto"
+                priority
+              />
+            </div>
             <button
               onClick={() => setSidebarOpen(false)}
               className="lg:hidden absolute right-4 text-white hover:text-gray-200"
