@@ -252,7 +252,7 @@ export function emailStatusPedidoAlterado(
             Dúvidas? Entre em contato com nosso suporte
           </p>
           <p style="color: #1e40af; font-size: 14px; font-weight: 600; margin: 0;">
-            CRC Faróis - Iluminando o seu caminho
+            CRC Faróis - Ilumine o seu caminho
           </p>
         </div>
       </div>

@@ -16,7 +16,6 @@ import {
   FileText,
   Phone,
   Mail,
-  Edit,
   Loader2,
   Building,
   Clock,
@@ -347,15 +346,6 @@ ${itensTexto}
                   WhatsApp
                 </button>
               )}
-
-              {/* Editar */}
-              <Link
-                href={`/representante/pedidos/${pedido.id}/editar`}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                <Edit className="h-4 w-4" />
-                Editar Pedido
-              </Link>
             </div>
           </div>
         </div>

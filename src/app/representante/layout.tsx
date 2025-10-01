@@ -230,19 +230,6 @@ function RepresentanteLayoutContent({ children }: RepresentanteLayoutProps) {
             </Link>
 
             <CartLink pathname={pathname} setSidebarOpen={setSidebarOpen} />
-
-            <Link
-              href="/representante/novo-pedido"
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                pathname.startsWith("/representante/novo-pedido")
-                  ? "bg-primary text-white shadow-sm"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-              onClick={() => setSidebarOpen(false)}
-            >
-              <Plus className="h-5 w-5" />
-              <span className="font-medium">Novo Pedido</span>
-            </Link>
           </nav>
 
           {/* User info and logout */}
