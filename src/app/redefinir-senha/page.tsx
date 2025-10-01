@@ -172,7 +172,7 @@ function RedefinirSenhaContent() {
       </div>
 
       <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-      <div className="w-full max-w-md">
+        <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-block bg-white/90 backdrop-blur-sm p-4 rounded-2xl shadow-xl mb-4">
@@ -345,6 +345,7 @@ function RedefinirSenhaContent() {
             <ArrowLeft className="h-5 w-5" />
             Solicitar novo código
           </Link>
+        </div>
         </div>
       </div>
     </div>
