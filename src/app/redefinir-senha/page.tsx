@@ -171,20 +171,30 @@ function RedefinirSenhaContent() {
         </div>
       </div>
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-6">
         <div className="w-full max-w-md">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
+          {/* Logo e Header */}
+          <div className="text-center mb-6 sm:mb-8 animate-fade-in-up">
+            <div className="inline-block bg-white/10 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-white/20 mb-4">
+              <Image
+                src="/logobranca.svg"
+                alt="CRC Faróis"
+                width={200}
+                height={73}
+                className="h-10 sm:h-12 w-auto"
+                priority
+              />
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
               Redefinir Senha
             </h1>
-            <p className="text-white/90">
+            <p className="text-sm sm:text-base text-white/90">
               Digite o código enviado para <strong>{email}</strong>
             </p>
           </div>
 
           {/* Card */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">
+          <div className="bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-2xl p-6 sm:p-8 border border-white/20 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Código de Verificação */}
               <div>
@@ -202,11 +212,11 @@ function RedefinirSenhaContent() {
                   maxLength={6}
                   value={code}
                   onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                  className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-center text-2xl font-mono tracking-widest text-gray-900"
+                  className="block w-full px-4 py-3 sm:py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-center text-xl sm:text-2xl font-mono tracking-widest text-gray-900"
                   placeholder="000000"
                   disabled={loading}
                 />
-                <p className="mt-2 text-xs text-gray-500">
+                <p className="mt-2 text-xs sm:text-sm text-gray-500">
                   Digite o código de 6 dígitos enviado para seu email
                 </p>
               </div>
@@ -299,17 +309,18 @@ function RedefinirSenhaContent() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-500 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98] text-sm sm:text-base"
               >
                 {loading ? (
                   <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    Redefinindo senha...
+                    <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                    <span className="hidden sm:inline">Redefinindo senha...</span>
+                    <span className="sm:hidden">Redefinindo...</span>
                   </>
                 ) : (
                   <>
                     Redefinir senha
-                    <Lock className="h-5 w-5" />
+                    <Lock className="h-4 w-4 sm:h-5 sm:w-5" />
                   </>
                 )}
               </button>

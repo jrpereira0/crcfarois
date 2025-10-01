@@ -256,12 +256,16 @@ export default function EsqueciSenhaPage() {
                   {loading ? (
                     <>
                       <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
-                      <span className="hidden sm:inline">Enviando código...</span>
+                      <span className="hidden sm:inline">
+                        Enviando código...
+                      </span>
                       <span className="sm:hidden">Enviando...</span>
                     </>
                   ) : (
                     <>
-                      <span className="hidden sm:inline">Enviar código de verificação</span>
+                      <span className="hidden sm:inline">
+                        Enviar código de verificação
+                      </span>
                       <span className="sm:hidden">Enviar código</span>
                       <Mail className="h-4 w-4 sm:h-5 sm:w-5" />
                     </>
