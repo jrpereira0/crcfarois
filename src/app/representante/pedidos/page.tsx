@@ -644,50 +644,49 @@ export default function PedidosRepresentantePage() {
               Gerencie todos os pedidos dos clientes
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-gray-500">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="text-xs sm:text-sm text-gray-500">
               {pedidosFiltrados.length}{" "}
-              {pedidosFiltrados.length === 1 ? "pedido" : "pedidos"} encontrado
-              {pedidosFiltrados.length !== 1 ? "s" : ""}
+              {pedidosFiltrados.length === 1 ? "pedido" : "pedidos"}
             </div>
-            <button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2 font-medium">
-              <Download className="h-4 w-4" />
-              Exportar
+            <button className="bg-primary text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2 font-medium text-sm">
+              <Download className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Exportar</span>
             </button>
           </div>
         </div>
 
         {/* Filtros */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {/* Busca */}
             <div className="lg:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                 Buscar Pedidos
               </label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Número, cliente ou produto..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
             </div>
 
             {/* Status */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                 Status
               </label>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               >
-                <option value="">Todos os status</option>
+                <option value="">Todos</option>
                 <option value="PENDENTE">Pendente</option>
                 <option value="CONFIRMADO">Confirmado</option>
                 <option value="PREPARANDO">Preparando</option>
@@ -700,15 +699,15 @@ export default function PedidosRepresentantePage() {
 
             {/* Tipo de Entrega */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                 Entrega
               </label>
               <select
                 value={tipoEntregaFilter}
                 onChange={(e) => setTipoEntregaFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               >
-                <option value="">Todos os tipos</option>
+                <option value="">Todos</option>
                 <option value="RETIRADA">Retirada</option>
                 <option value="ENTREGA">Entrega</option>
               </select>
@@ -716,40 +715,42 @@ export default function PedidosRepresentantePage() {
           </div>
 
           {/* Botões de ação */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-4 pt-4 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 sm:gap-4 mt-4 pt-4 border-t border-gray-200">
             <button
               onClick={() => setShowDateFilter(!showDateFilter)}
-              className={`flex items-center gap-2 px-6 py-2 rounded-lg transition-colors ${
+              className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2 rounded-lg transition-colors text-sm ${
                 dateFilterType
                   ? "bg-green-100 text-green-700 border border-green-300"
                   : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
               }`}
             >
-              <Calendar className="h-4 w-4" />
-              {dateFilterType
-                ? dateFilterType === "customizado" &&
-                  customStartDate &&
-                  customEndDate
-                  ? `${formatDateShort(customStartDate)} - ${formatDateShort(
-                      customEndDate
-                    )}`
-                  : dateFilterType === "hoje"
-                  ? "Hoje"
-                  : dateFilterType === "esta-semana"
-                  ? "Esta semana"
-                  : dateFilterType === "semana-passada"
-                  ? "Semana passada"
-                  : dateFilterType === "este-mes"
-                  ? "Este mês"
-                  : dateFilterType === "mes-passado"
-                  ? "Mês passado"
-                  : "Período"
-                : "Filtrar por data"}
+              <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="truncate">
+                {dateFilterType
+                  ? dateFilterType === "customizado" &&
+                    customStartDate &&
+                    customEndDate
+                    ? `${formatDateShort(customStartDate)} - ${formatDateShort(
+                        customEndDate
+                      )}`
+                    : dateFilterType === "hoje"
+                    ? "Hoje"
+                    : dateFilterType === "esta-semana"
+                    ? "Esta semana"
+                    : dateFilterType === "semana-passada"
+                    ? "Semana passada"
+                    : dateFilterType === "este-mes"
+                    ? "Este mês"
+                    : dateFilterType === "mes-passado"
+                    ? "Mês passado"
+                    : "Período"
+                  : "Filtrar por data"}
+              </span>
             </button>
 
             <button
               onClick={clearFilters}
-              className="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-200 transition-colors"
+              className="bg-gray-100 text-gray-700 px-4 sm:px-6 py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm"
             >
               Limpar Filtros
             </button>
@@ -1027,89 +1028,135 @@ export default function PedidosRepresentantePage() {
                 className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow relative"
                 style={{ overflow: "visible" }}
               >
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   {/* Header do pedido */}
-                  <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-6">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Pedido {pedido.numero}
-                        </h3>
-                        <StatusDropdown pedido={pedido} />
-                      </div>
+                  <div className="flex flex-col gap-4 mb-4 sm:mb-6">
+                    {/* Linha 1: Número do pedido e Status */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+                        Pedido {pedido.numero}
+                      </h3>
+                      <StatusDropdown pedido={pedido} />
+                    </div>
 
-                      {/* Informações do cliente */}
-                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
-                        <span className="flex items-center gap-1">
-                          <User className="h-4 w-4" />
+                    {/* Linha 2: Informações do cliente - Mobile */}
+                    <div className="flex flex-col gap-2 sm:hidden">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <User className="h-4 w-4 flex-shrink-0" />
+                        <span className="truncate">
                           {pedido.user.cliente?.razaoSocial || pedido.user.name}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Mail className="h-4 w-4" />
-                          {pedido.user.email}
-                        </span>
-                        {pedido.user.cliente?.whatsapp && (
-                          <span className="flex items-center gap-1">
-                            <Phone className="h-4 w-4" />
-                            {pedido.user.cliente.whatsapp}
-                          </span>
-                        )}
                       </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Mail className="h-4 w-4 flex-shrink-0" />
+                        <span className="truncate">{pedido.user.email}</span>
+                      </div>
+                      {pedido.user.cliente?.whatsapp && (
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <Phone className="h-4 w-4 flex-shrink-0" />
+                          <span>{pedido.user.cliente.whatsapp}</span>
+                        </div>
+                      )}
+                    </div>
 
-                      {/* Informações do pedido */}
-                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                    {/* Linha 2: Informações do cliente - Desktop */}
+                    <div className="hidden sm:flex items-center gap-4 text-sm text-gray-600 flex-wrap">
+                      <span className="flex items-center gap-1">
+                        <User className="h-4 w-4" />
+                        {pedido.user.cliente?.razaoSocial || pedido.user.name}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Mail className="h-4 w-4" />
+                        {pedido.user.email}
+                      </span>
+                      {pedido.user.cliente?.whatsapp && (
                         <span className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          {formatDate(pedido.createdAt)}
+                          <Phone className="h-4 w-4" />
+                          {pedido.user.cliente.whatsapp}
                         </span>
+                      )}
+                    </div>
+
+                    {/* Linha 3: Informações do pedido - Mobile */}
+                    <div className="flex flex-col gap-2 text-xs sm:text-sm text-gray-500 sm:hidden">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                        <span className="truncate">{formatDate(pedido.createdAt)}</span>
+                      </span>
+                      <div className="flex items-center gap-3">
                         <span className="flex items-center gap-1">
                           {pedido.tipoEntrega === "ENTREGA" ? (
-                            <Truck className="h-4 w-4" />
+                            <Truck className="h-3 w-3 sm:h-4 sm:w-4" />
                           ) : (
-                            <MapPin className="h-4 w-4" />
+                            <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
                           )}
                           {pedido.tipoEntrega === "ENTREGA"
                             ? "Entrega"
                             : "Retirada"}
                         </span>
                         <span className="flex items-center gap-1">
-                          <CreditCard className="h-4 w-4" />
-                          {pedido.formaPagamento.replace("_", " ")}
-                          {pedido.condicaoPagamento && (
-                            <span className="text-gray-400">
-                              • {pedido.condicaoPagamento}
-                            </span>
-                          )}
+                          <CreditCard className="h-3 w-3 sm:h-4 sm:w-4" />
+                          <span className="truncate">
+                            {pedido.formaPagamento.replace("_", " ")}
+                          </span>
                         </span>
                       </div>
                     </div>
 
-                    {/* Valor e ações */}
-                    <div className="flex flex-col lg:items-end gap-2">
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-primary">
-                          {formatPrice(pedido.total)}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {pedido.itens.length}{" "}
-                          {pedido.itens.length === 1 ? "item" : "itens"}
-                        </div>
-                      </div>
+                    {/* Linha 3: Informações do pedido - Desktop */}
+                    <div className="hidden sm:flex items-center gap-4 text-sm text-gray-500 flex-wrap">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        {formatDate(pedido.createdAt)}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        {pedido.tipoEntrega === "ENTREGA" ? (
+                          <Truck className="h-4 w-4" />
+                        ) : (
+                          <MapPin className="h-4 w-4" />
+                        )}
+                        {pedido.tipoEntrega === "ENTREGA"
+                          ? "Entrega"
+                          : "Retirada"}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <CreditCard className="h-4 w-4" />
+                        {pedido.formaPagamento.replace("_", " ")}
+                        {pedido.condicaoPagamento && (
+                          <span className="text-gray-400">
+                            • {pedido.condicaoPagamento}
+                          </span>
+                        )}
+                      </span>
+                    </div>
 
-                      <div className="flex items-center gap-2">
-                        <Link
-                          href={`/representante/pedidos/${pedido.id}`}
-                          className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors font-medium"
-                        >
-                          <Eye className="h-4 w-4" />
-                          Ver Detalhes
-                        </Link>
+                    {/* Linha 4: Valor total */}
+                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                      <div className="text-xs sm:text-sm text-gray-500">
+                        {pedido.itens.length}{" "}
+                        {pedido.itens.length === 1 ? "item" : "itens"}
+                      </div>
+                      <div className="text-xl sm:text-2xl font-bold text-primary">
+                        {formatPrice(pedido.total)}
+                      </div>
+                    </div>
+
+                    {/* Linha 5: Ações - Mobile */}
+                    <div className="flex flex-col gap-2 sm:hidden">
+                      <Link
+                        href={`/representante/pedidos/${pedido.id}`}
+                        className="flex items-center justify-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg hover:bg-primary/90 transition-colors font-medium text-sm"
+                      >
+                        <Eye className="h-4 w-4" />
+                        Ver Detalhes
+                      </Link>
+                      <div className="grid grid-cols-2 gap-2">
                         <Link
                           href={`/representante/pedidos/${pedido.id}/editar`}
-                          className="flex items-center gap-2 bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors font-medium"
+                          className="flex items-center justify-center gap-2 bg-amber-600 text-white px-3 py-2.5 rounded-lg hover:bg-amber-700 transition-colors font-medium text-sm"
                         >
                           <Edit className="h-4 w-4" />
-                          Editar
+                          <span className="hidden sm:inline">Editar</span>
                         </Link>
 
                         {(pedido.user.cliente?.whatsapp ||
@@ -1126,14 +1173,54 @@ export default function PedidosRepresentantePage() {
                                 `https://wa.me/${numeroCompleto}?text=${mensagem}`
                               );
                             }}
-                            className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium"
+                            className="flex items-center justify-center gap-2 bg-green-600 text-white px-3 py-2.5 rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
                             title="Enviar detalhes do pedido por WhatsApp"
                           >
                             <Phone className="h-4 w-4" />
-                            WhatsApp
+                            <span className="hidden sm:inline">WhatsApp</span>
                           </button>
                         )}
                       </div>
+                    </div>
+
+                    {/* Linha 5: Ações - Desktop */}
+                    <div className="hidden sm:flex items-center gap-2">
+                      <Link
+                        href={`/representante/pedidos/${pedido.id}`}
+                        className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors font-medium"
+                      >
+                        <Eye className="h-4 w-4" />
+                        Ver Detalhes
+                      </Link>
+                      <Link
+                        href={`/representante/pedidos/${pedido.id}/editar`}
+                        className="flex items-center gap-2 bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors font-medium"
+                      >
+                        <Edit className="h-4 w-4" />
+                        Editar
+                      </Link>
+
+                      {(pedido.user.cliente?.whatsapp ||
+                        pedido.user.cliente?.telefone) && (
+                        <button
+                          onClick={() => {
+                            const mensagem = generateWhatsAppMessage(pedido);
+                            const numeroCompleto = formatWhatsAppUrl(
+                              pedido.user.cliente?.whatsapp ||
+                                pedido.user.cliente?.telefone ||
+                                ""
+                            );
+                            window.open(
+                              `https://wa.me/${numeroCompleto}?text=${mensagem}`
+                            );
+                          }}
+                          className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium"
+                          title="Enviar detalhes do pedido por WhatsApp"
+                        >
+                          <Phone className="h-4 w-4" />
+                          WhatsApp
+                        </button>
+                      )}
                     </div>
                   </div>
 
