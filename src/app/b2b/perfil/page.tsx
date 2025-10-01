@@ -49,18 +49,21 @@ export default function PerfilClientePage() {
   const [saving, setSaving] = useState(false);
   const [perfil, setPerfil] = useState<PerfilData | null>(null);
   const [showSenhaModal, setShowSenhaModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [novoEmail, setNovoEmail] = useState("");
+  const [senhaParaEmail, setSenhaParaEmail] = useState("");
   const [showSenhaAtual, setShowSenhaAtual] = useState(false);
   const [showNovaSenha, setShowNovaSenha] = useState(false);
   const [showConfirmarSenha, setShowConfirmarSenha] = useState(false);
+  const [showSenhaEmail, setShowSenhaEmail] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   // Dados editáveis
   const [razaoSocial, setRazaoSocial] = useState("");
-  const [nomeFantasia, setNomeFantasia] = useState("");
   const [inscricaoEstadual, setInscricaoEstadual] = useState("");
   const [responsavel, setResponsavel] = useState("");
   const [telefone, setTelefone] = useState("");
@@ -89,7 +92,6 @@ export default function PerfilClientePage() {
       if (response.ok) {
         setPerfil(data);
         setRazaoSocial(data.cliente?.razaoSocial || "");
-        setNomeFantasia(data.cliente?.nomeFantasia || "");
         setInscricaoEstadual(data.cliente?.inscricaoEstadual || "");
         setResponsavel(data.cliente?.responsavel || "");
         setTelefone(data.cliente?.telefone || "");
@@ -121,7 +123,6 @@ export default function PerfilClientePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           razaoSocial,
-          nomeFantasia,
           inscricaoEstadual,
           responsavel,
           telefone,
@@ -194,6 +195,50 @@ export default function PerfilClientePage() {
     }
   };
 
+  const handleAlterarEmail = async () => {
+    setError("");
+    setSuccess("");
+
+    if (!novoEmail) {
+      setError("Digite o novo email");
+      return;
+    }
+
+    if (!senhaParaEmail) {
+      setError("Digite sua senha para confirmar");
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      const response = await fetch("/api/perfil/alterar-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ novoEmail, senhaAtual: senhaParaEmail }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess(data.message);
+        setShowEmailModal(false);
+        setNovoEmail("");
+        setSenhaParaEmail("");
+        // Fazer logout após 3 segundos
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 3000);
+      } else {
+        setError(data.error || "Erro ao alterar email");
+      }
+    } catch (error) {
+      setError("Erro ao alterar email");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading || status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -258,13 +303,22 @@ export default function PerfilClientePage() {
               </div>
             </div>
 
-            <button
-              onClick={() => setShowSenhaModal(true)}
-              className="w-full mt-6 flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-lg transition-colors font-medium"
-            >
-              <Lock className="h-4 w-4" />
-              Alterar Senha
-            </button>
+            <div className="space-y-3 mt-6">
+              <button
+                onClick={() => setShowEmailModal(true)}
+                className="w-full flex items-center justify-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 py-3 px-4 rounded-lg transition-colors font-medium"
+              >
+                <Mail className="h-4 w-4" />
+                Alterar Email
+              </button>
+              <button
+                onClick={() => setShowSenhaModal(true)}
+                className="w-full flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-lg transition-colors font-medium"
+              >
+                <Lock className="h-4 w-4" />
+                Alterar Senha
+              </button>
+            </div>
           </div>
         </div>
 
@@ -277,31 +331,17 @@ export default function PerfilClientePage() {
             </h2>
 
             <div className="space-y-6">
-              {/* Razão Social e Nome Fantasia */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Razão Social
-                  </label>
-                  <input
-                    type="text"
-                    value={razaoSocial}
-                    onChange={(e) => setRazaoSocial(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nome Fantasia
-                  </label>
-                  <input
-                    type="text"
-                    value={nomeFantasia}
-                    onChange={(e) => setNomeFantasia(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Nome comercial"
-                  />
-                </div>
+              {/* Razão Social */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Razão Social
+                </label>
+                <input
+                  type="text"
+                  value={razaoSocial}
+                  onChange={(e) => setRazaoSocial(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                />
               </div>
 
               {/* CNPJ e Inscrição Estadual */}
@@ -356,19 +396,27 @@ export default function PerfilClientePage() {
                 />
               </div>
 
-              {/* Email (somente leitura) */}
+              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
+                  Email de Acesso
                 </label>
-                <input
-                  type="email"
-                  value={perfil?.email || ""}
-                  disabled
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
-                />
+                <div className="flex gap-3">
+                  <input
+                    type="email"
+                    value={perfil?.email || ""}
+                    disabled
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
+                  />
+                  <button
+                    onClick={() => setShowEmailModal(true)}
+                    className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium whitespace-nowrap"
+                  >
+                    Alterar Email
+                  </button>
+                </div>
                 <p className="mt-1 text-xs text-gray-500">
-                  O email não pode ser alterado
+                  Email usado para login no sistema
                 </p>
               </div>
 
@@ -646,6 +694,113 @@ export default function PerfilClientePage() {
                   </>
                 ) : (
                   "Alterar Senha"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Alterar Email */}
+      {showEmailModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              Alterar Email
+            </h3>
+            <p className="text-sm text-gray-600 mb-6">
+              Você precisará fazer login novamente após alterar o email
+            </p>
+
+            <div className="space-y-4">
+              {/* Email Atual */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Atual
+                </label>
+                <input
+                  type="email"
+                  value={perfil?.email || ""}
+                  disabled
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
+                />
+              </div>
+
+              {/* Novo Email */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Novo Email
+                </label>
+                <input
+                  type="email"
+                  value={novoEmail}
+                  onChange={(e) => setNovoEmail(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="seu@novoemail.com"
+                />
+              </div>
+
+              {/* Senha para Confirmar */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Senha Atual (para confirmar)
+                </label>
+                <div className="relative">
+                  <input
+                    type={showSenhaEmail ? "text" : "password"}
+                    value={senhaParaEmail}
+                    onChange={(e) => setSenhaParaEmail(e.target.value)}
+                    className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Digite sua senha"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowSenhaEmail(!showSenhaEmail)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showSenhaEmail ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Aviso de Segurança */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                <p className="text-xs text-yellow-800">
+                  <strong>⚠️ Atenção:</strong> Ao alterar o email, você será
+                  desconectado e precisará fazer login novamente com o novo
+                  email.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowEmailModal(false);
+                  setError("");
+                  setNovoEmail("");
+                  setSenhaParaEmail("");
+                }}
+                className="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleAlterarEmail}
+                disabled={saving}
+                className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Alterando...
+                  </>
+                ) : (
+                  "Alterar Email"
                 )}
               </button>
             </div>
