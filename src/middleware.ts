@@ -17,7 +17,7 @@ export default withAuth(
 
     // Redirecionar usuários autenticados da página de login baseado no role
     if (token && pathname === "/login") {
-      if (token.role === "ADMIN") {
+      if (token.role === "ADMIN" || token.role === "FUNCIONARIO") {
         return NextResponse.redirect(new URL("/dashboard", req.url));
       } else if (token.role === "CLIENTE") {
         return NextResponse.redirect(new URL("/b2b", req.url));
@@ -26,21 +26,26 @@ export default withAuth(
       }
     }
 
-    // Verificar acesso ao dashboard - apenas admins
+    // Verificar acesso ao dashboard - admins e funcionários
     if (token && pathname.startsWith("/dashboard")) {
-      if (token.role !== "ADMIN") {
+      if (token.role !== "ADMIN" && token.role !== "FUNCIONARIO") {
         if (token.role === "CLIENTE") {
           return NextResponse.redirect(new URL("/b2b", req.url));
         } else if (token.role === "REPRESENTANTE") {
           return NextResponse.redirect(new URL("/representante", req.url));
         }
       }
+      
+      // Bloquear acesso de FUNCIONARIO à página de usuários
+      if (token.role === "FUNCIONARIO" && pathname.startsWith("/dashboard/usuarios")) {
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+      }
     }
 
     // Verificar acesso à área B2B - apenas clientes
     if (token && pathname.startsWith("/b2b")) {
       if (token.role !== "CLIENTE") {
-        if (token.role === "ADMIN") {
+        if (token.role === "ADMIN" || token.role === "FUNCIONARIO") {
           return NextResponse.redirect(new URL("/dashboard", req.url));
         } else if (token.role === "REPRESENTANTE") {
           return NextResponse.redirect(new URL("/representante", req.url));
@@ -51,7 +56,7 @@ export default withAuth(
     // Verificar acesso à área de representante - apenas representantes
     if (token && pathname.startsWith("/representante")) {
       if (token.role !== "REPRESENTANTE") {
-        if (token.role === "ADMIN") {
+        if (token.role === "ADMIN" || token.role === "FUNCIONARIO") {
           return NextResponse.redirect(new URL("/dashboard", req.url));
         } else if (token.role === "CLIENTE") {
           return NextResponse.redirect(new URL("/b2b", req.url));

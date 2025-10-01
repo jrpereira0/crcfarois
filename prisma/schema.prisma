@@ -39,6 +39,7 @@ model Session {
 
 enum Role {
   ADMIN
+  FUNCIONARIO
   CLIENTE
   REPRESENTANTE
 }

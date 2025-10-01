@@ -18,6 +18,7 @@ import {
   DollarSign,
   UserCheck,
   FileText,
+  UserCog,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -27,46 +28,61 @@ const navigation = [
     name: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
+    roles: ["ADMIN", "FUNCIONARIO"],
   },
   {
     name: "Clientes",
     href: "/dashboard/clientes",
     icon: Users,
+    roles: ["ADMIN", "FUNCIONARIO"],
   },
   {
     name: "Representantes",
     href: "/dashboard/representantes",
     icon: UserCheck,
+    roles: ["ADMIN", "FUNCIONARIO"],
   },
   {
     name: "Solicitações",
     href: "/dashboard/solicitacoes",
     icon: FileText,
+    roles: ["ADMIN", "FUNCIONARIO"],
   },
   {
     name: "Produtos",
     href: "/dashboard/produtos",
     icon: Package,
+    roles: ["ADMIN", "FUNCIONARIO"],
   },
   {
     name: "Categorias",
     href: "/dashboard/categorias",
     icon: FolderTree,
+    roles: ["ADMIN", "FUNCIONARIO"],
   },
   {
     name: "Pedidos",
     href: "/dashboard/pedidos",
     icon: ShoppingBag,
+    roles: ["ADMIN", "FUNCIONARIO"],
   },
   {
     name: "Faturamento",
     href: "/dashboard/faturamento",
     icon: DollarSign,
+    roles: ["ADMIN", "FUNCIONARIO"],
+  },
+  {
+    name: "Usuários",
+    href: "/dashboard/usuarios",
+    icon: UserCog,
+    roles: ["ADMIN"], // Apenas ADMIN pode gerenciar usuários
   },
   {
     name: "Meu Perfil",
     href: "/dashboard/perfil",
     icon: User,
+    roles: ["ADMIN", "FUNCIONARIO"],
   },
 ];
 
@@ -119,36 +135,40 @@ export function Sidebar() {
         </div>
 
         <nav className="mt-8 px-4">
-          {navigation.map((item) => {
-            const isActive =
-              pathname === item.href ||
-              (item.href === "/dashboard/clientes" &&
-                pathname.startsWith("/dashboard/clientes")) ||
-              (item.href === "/dashboard/representantes" &&
-                pathname.startsWith("/dashboard/representantes")) ||
-              (item.href === "/dashboard/produtos" &&
-                pathname.startsWith("/dashboard/produtos")) ||
-              (item.href === "/dashboard/categorias" &&
-                pathname.startsWith("/dashboard/categorias")) ||
-              (item.href === "/dashboard/faturamento" &&
-                pathname.startsWith("/dashboard/faturamento"));
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "group flex items-center px-3 py-2 text-sm font-medium rounded-md mb-2 transition-colors",
-                  isActive
-                    ? "bg-primary text-white"
-                    : "text-gray-700 hover:bg-gray-100"
-                )}
-                onClick={() => setSidebarOpen(false)}
-              >
-                <item.icon className="mr-3 h-5 w-5" />
-                {item.name}
-              </Link>
-            );
-          })}
+          {navigation
+            .filter((item) => item.roles.includes(session?.user?.role as any))
+            .map((item) => {
+              const isActive =
+                pathname === item.href ||
+                (item.href === "/dashboard/clientes" &&
+                  pathname.startsWith("/dashboard/clientes")) ||
+                (item.href === "/dashboard/representantes" &&
+                  pathname.startsWith("/dashboard/representantes")) ||
+                (item.href === "/dashboard/produtos" &&
+                  pathname.startsWith("/dashboard/produtos")) ||
+                (item.href === "/dashboard/categorias" &&
+                  pathname.startsWith("/dashboard/categorias")) ||
+                (item.href === "/dashboard/faturamento" &&
+                  pathname.startsWith("/dashboard/faturamento")) ||
+                (item.href === "/dashboard/usuarios" &&
+                  pathname.startsWith("/dashboard/usuarios"));
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "group flex items-center px-3 py-2 text-sm font-medium rounded-md mb-2 transition-colors",
+                    isActive
+                      ? "bg-primary text-white"
+                      : "text-gray-700 hover:bg-gray-100"
+                  )}
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  <item.icon className="mr-3 h-5 w-5" />
+                  {item.name}
+                </Link>
+              );
+            })}
         </nav>
 
         {/* Mobile user menu */}
@@ -182,37 +202,41 @@ export function Sidebar() {
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-8 space-y-2">
-            {navigation.map((item) => {
-              const isActive =
-                pathname === item.href ||
-                (item.href === "/dashboard/clientes" &&
-                  pathname.startsWith("/dashboard/clientes")) ||
-                (item.href === "/dashboard/representantes" &&
-                  pathname.startsWith("/dashboard/representantes")) ||
-                (item.href === "/dashboard/produtos" &&
-                  pathname.startsWith("/dashboard/produtos")) ||
-                (item.href === "/dashboard/categorias" &&
-                  pathname.startsWith("/dashboard/categorias")) ||
-                (item.href === "/dashboard/pedidos" &&
-                  pathname.startsWith("/dashboard/pedidos")) ||
-                (item.href === "/dashboard/faturamento" &&
-                  pathname.startsWith("/dashboard/faturamento"));
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    "group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
-                    isActive
-                      ? "bg-primary text-white"
-                      : "text-gray-700 hover:bg-gray-100"
-                  )}
-                >
-                  <item.icon className="mr-3 h-5 w-5" />
-                  {item.name}
-                </Link>
-              );
-            })}
+            {navigation
+              .filter((item) => item.roles.includes(session?.user?.role as any))
+              .map((item) => {
+                const isActive =
+                  pathname === item.href ||
+                  (item.href === "/dashboard/clientes" &&
+                    pathname.startsWith("/dashboard/clientes")) ||
+                  (item.href === "/dashboard/representantes" &&
+                    pathname.startsWith("/dashboard/representantes")) ||
+                  (item.href === "/dashboard/produtos" &&
+                    pathname.startsWith("/dashboard/produtos")) ||
+                  (item.href === "/dashboard/categorias" &&
+                    pathname.startsWith("/dashboard/categorias")) ||
+                  (item.href === "/dashboard/pedidos" &&
+                    pathname.startsWith("/dashboard/pedidos")) ||
+                  (item.href === "/dashboard/faturamento" &&
+                    pathname.startsWith("/dashboard/faturamento")) ||
+                  (item.href === "/dashboard/usuarios" &&
+                    pathname.startsWith("/dashboard/usuarios"));
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={cn(
+                      "group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                      isActive
+                        ? "bg-primary text-white"
+                        : "text-gray-700 hover:bg-gray-100"
+                    )}
+                  >
+                    <item.icon className="mr-3 h-5 w-5" />
+                    {item.name}
+                  </Link>
+                );
+              })}
           </nav>
 
           {/* User menu */}
