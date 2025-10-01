@@ -148,7 +148,7 @@ export default function PerfilAdminPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="min-h-full">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Meu Perfil</h1>
@@ -393,4 +393,3 @@ export default function PerfilAdminPage() {
     </div>
   );
 }
-

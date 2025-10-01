@@ -56,6 +56,10 @@ export async function PUT(request: NextRequest) {
     const data = await request.json();
     const {
       name,
+      razaoSocial,
+      nomeFantasia,
+      inscricaoEstadual,
+      responsavel,
       telefone,
       whatsapp,
       endereco,
@@ -67,11 +71,13 @@ export async function PUT(request: NextRequest) {
       cep,
     } = data;
 
-    // Atualizar nome do usuário
-    await prisma.user.update({
-      where: { id: session.user.id },
-      data: { name },
-    });
+    // Atualizar nome do usuário (se fornecido)
+    if (name) {
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: { name },
+      });
+    }
 
     // Atualizar dados específicos baseado no role
     if (session.user.role === "CLIENTE") {
@@ -83,7 +89,10 @@ export async function PUT(request: NextRequest) {
         await prisma.cliente.update({
           where: { id: cliente.id },
           data: {
-            responsavel: name,
+            ...(razaoSocial && { razaoSocial }),
+            ...(nomeFantasia && { nomeFantasia }),
+            ...(inscricaoEstadual && { inscricaoEstadual }),
+            ...(responsavel && { responsavel }),
             telefone,
             whatsapp,
             endereco,

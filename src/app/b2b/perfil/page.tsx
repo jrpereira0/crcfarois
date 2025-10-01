@@ -26,7 +26,10 @@ interface PerfilData {
   role: string;
   cliente?: {
     razaoSocial: string;
+    nomeFantasia: string | null;
     cnpjCpf: string;
+    inscricaoEstadual: string | null;
+    responsavel: string;
     telefone: string | null;
     whatsapp: string;
     cep: string;
@@ -56,7 +59,10 @@ export default function PerfilClientePage() {
   const [success, setSuccess] = useState("");
 
   // Dados editáveis
-  const [nome, setNome] = useState("");
+  const [razaoSocial, setRazaoSocial] = useState("");
+  const [nomeFantasia, setNomeFantasia] = useState("");
+  const [inscricaoEstadual, setInscricaoEstadual] = useState("");
+  const [responsavel, setResponsavel] = useState("");
   const [telefone, setTelefone] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [endereco, setEndereco] = useState("");
@@ -82,7 +88,10 @@ export default function PerfilClientePage() {
 
       if (response.ok) {
         setPerfil(data);
-        setNome(data.name || "");
+        setRazaoSocial(data.cliente?.razaoSocial || "");
+        setNomeFantasia(data.cliente?.nomeFantasia || "");
+        setInscricaoEstadual(data.cliente?.inscricaoEstadual || "");
+        setResponsavel(data.cliente?.responsavel || "");
         setTelefone(data.cliente?.telefone || "");
         setWhatsapp(data.cliente?.whatsapp || "");
         setEndereco(data.cliente?.endereco || "");
@@ -111,7 +120,10 @@ export default function PerfilClientePage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: nome,
+          razaoSocial,
+          nomeFantasia,
+          inscricaoEstadual,
+          responsavel,
           telefone,
           whatsapp,
           endereco,
@@ -191,12 +203,12 @@ export default function PerfilClientePage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="min-h-full">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Meu Perfil</h1>
         <p className="text-gray-600">
-          Gerencie suas informações pessoais e de segurança
+          Gerencie todas as informações de cadastro da sua empresa
         </p>
       </div>
 
@@ -215,10 +227,10 @@ export default function PerfilClientePage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Card de Informações da Empresa */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-6">
             <div className="text-center mb-6">
               <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                 <Building2 className="h-10 w-10 text-white" />
@@ -257,11 +269,77 @@ export default function PerfilClientePage() {
         </div>
 
         {/* Formulário de Dados */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="lg:col-span-3">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-primary" />
+              Informações da Empresa
+            </h2>
+
+            <div className="space-y-6">
+              {/* Razão Social e Nome Fantasia */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Razão Social
+                  </label>
+                  <input
+                    type="text"
+                    value={razaoSocial}
+                    onChange={(e) => setRazaoSocial(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nome Fantasia
+                  </label>
+                  <input
+                    type="text"
+                    value={nomeFantasia}
+                    onChange={(e) => setNomeFantasia(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Nome comercial"
+                  />
+                </div>
+              </div>
+
+              {/* CNPJ e Inscrição Estadual */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    CNPJ/CPF
+                  </label>
+                  <input
+                    type="text"
+                    value={perfil?.cliente?.cnpjCpf || ""}
+                    disabled
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    O CNPJ/CPF não pode ser alterado
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Inscrição Estadual
+                  </label>
+                  <input
+                    type="text"
+                    value={inscricaoEstadual}
+                    onChange={(e) => setInscricaoEstadual(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="IE ou ISENTO"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
               <User className="h-5 w-5 text-primary" />
-              Informações Pessoais
+              Responsável e Contato
             </h2>
 
             <div className="space-y-6">
@@ -272,10 +350,26 @@ export default function PerfilClientePage() {
                 </label>
                 <input
                   type="text"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
+                  value={responsavel}
+                  onChange={(e) => setResponsavel(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
+              </div>
+
+              {/* Email (somente leitura) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={perfil?.email || ""}
+                  disabled
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  O email não pode ser alterado
+                </p>
               </div>
 
               {/* Telefone e WhatsApp */}
@@ -305,26 +399,30 @@ export default function PerfilClientePage() {
                   />
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div className="border-t border-gray-200 my-6"></div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+              <MapPin className="h-5 w-5 text-primary" />
+              Endereço
+            </h2>
 
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-primary" />
-                Endereço
-              </h3>
-
+            <div className="space-y-6">
               {/* CEP */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  CEP
-                </label>
-                <input
-                  type="text"
-                  value={cep}
-                  onChange={(e) => setCep(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="12345-678"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    CEP
+                  </label>
+                  <input
+                    type="text"
+                    value={cep}
+                    onChange={(e) => setCep(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="12345-678"
+                  />
+                </div>
               </div>
 
               {/* Endereço e Número */}
@@ -338,6 +436,7 @@ export default function PerfilClientePage() {
                     value={endereco}
                     onChange={(e) => setEndereco(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Rua, Avenida, etc"
                   />
                 </div>
                 <div>
@@ -364,7 +463,7 @@ export default function PerfilClientePage() {
                     value={complemento}
                     onChange={(e) => setComplemento(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Apto, Sala, etc"
+                    placeholder="Apto, Sala, Bloco, etc"
                   />
                 </div>
                 <div>
@@ -407,28 +506,28 @@ export default function PerfilClientePage() {
                   />
                 </div>
               </div>
-
-              {/* Botão Salvar */}
-              <div className="pt-6">
-                <button
-                  onClick={handleSalvarPerfil}
-                  disabled={saving}
-                  className="w-full bg-primary text-white py-4 px-6 rounded-lg hover:bg-primary/90 transition-all font-semibold shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {saving ? (
-                    <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      Salvando...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="h-5 w-5" />
-                      Salvar Alterações
-                    </>
-                  )}
-                </button>
-              </div>
             </div>
+          </div>
+
+          {/* Botão Salvar */}
+          <div className="mt-6">
+            <button
+              onClick={handleSalvarPerfil}
+              disabled={saving}
+              className="w-full bg-primary text-white py-4 px-6 rounded-lg hover:bg-primary/90 transition-all font-semibold shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  Salvando...
+                </>
+              ) : (
+                <>
+                  <Save className="h-5 w-5" />
+                  Salvar Todas as Alterações
+                </>
+              )}
+            </button>
           </div>
         </div>
       </div>
