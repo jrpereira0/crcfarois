@@ -114,8 +114,7 @@ export async function PUT(request: NextRequest) {
         await prisma.representante.update({
           where: { id: representante.id },
           data: {
-            telefone,
-            whatsapp,
+            ...(whatsapp && { whatsapp }),
           },
         });
       }
