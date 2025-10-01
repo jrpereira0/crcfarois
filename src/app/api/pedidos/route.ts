@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import {
+  enviarEmailNovoPedidoCliente,
+  enviarEmailNovoPedidoRepresentante,
+  enviarEmailNovoPedidoAdmin,
+} from "@/lib/email";
 
 // GET - Listar pedidos do usuário
 export async function GET(request: NextRequest) {
@@ -286,6 +291,132 @@ export async function POST(request: NextRequest) {
         },
       });
     }
+
+    // Buscar informações do cliente para o email
+    const cliente = await prisma.cliente.findUnique({
+      where: { userId: session.user.id },
+      include: {
+        user: true,
+        representantes: {
+          include: {
+            representante: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // Formatar data
+    const dataFormatada = new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(pedido.createdAt);
+
+    // Formatar itens para email
+    const itensEmail = pedido.itens.map((item) => ({
+      titulo: item.produtoTitulo,
+      quantidade: item.quantidade,
+      precoUnitario: parseFloat(item.precoUnitario.toString()).toFixed(2),
+      subtotal: parseFloat(item.subtotal.toString()).toFixed(2),
+    }));
+
+    // Enviar email para o cliente
+    const emailClientePromise = enviarEmailNovoPedidoCliente({
+      nomeCliente: cliente?.nomeResponsavel || session.user.name || "Cliente",
+      emailCliente: session.user.email || "",
+      numeroPedido: pedido.numero,
+      dataPedido: dataFormatada,
+      tipoEntrega: pedido.tipoEntrega,
+      formaPagamento: pedido.formaPagamento,
+      condicaoPagamento: pedido.condicaoPagamento || undefined,
+      subtotal: parseFloat(pedido.subtotal.toString()).toFixed(2),
+      frete: parseFloat(pedido.frete.toString()).toFixed(2),
+      total: parseFloat(pedido.total.toString()).toFixed(2),
+      itens: itensEmail,
+      enderecoEntrega: pedido.enderecoEntrega
+        ? {
+            endereco: pedido.enderecoEntrega,
+            numero: pedido.numeroEntrega || "",
+            complemento: pedido.complementoEntrega || undefined,
+            bairro: pedido.bairroEntrega || "",
+            cidade: pedido.cidadeEntrega || "",
+            estado: pedido.estadoEntrega || "",
+            cep: pedido.cepEntrega || "",
+          }
+        : undefined,
+    });
+
+    // Enviar email para o representante (se houver)
+    const representante = cliente?.representantes?.[0]?.representante;
+    const emailRepresentantePromise = representante
+      ? enviarEmailNovoPedidoRepresentante({
+          nomeRepresentante: representante.user.name || "Representante",
+          emailRepresentante: representante.user.email || "",
+          numeroPedido: pedido.numero,
+          dataPedido: dataFormatada,
+          clienteNome: cliente?.razaoSocial || "Cliente",
+          clienteEmail: session.user.email || "",
+          clienteTelefone: cliente?.telefone || undefined,
+          tipoEntrega: pedido.tipoEntrega,
+          formaPagamento: pedido.formaPagamento,
+          condicaoPagamento: pedido.condicaoPagamento || undefined,
+          subtotal: parseFloat(pedido.subtotal.toString()).toFixed(2),
+          frete: parseFloat(pedido.frete.toString()).toFixed(2),
+          total: parseFloat(pedido.total.toString()).toFixed(2),
+          itens: itensEmail,
+        })
+      : Promise.resolve({ success: true });
+
+    // Buscar todos os admins para enviar email
+    const admins = await prisma.user.findMany({
+      where: { role: "ADMIN" },
+      select: { email: true, name: true },
+    });
+
+    // Criar promises de email para cada admin
+    const emailAdminPromises = admins.map((admin) =>
+      enviarEmailNovoPedidoAdmin({
+        emailAdmin: admin.email || "",
+        numeroPedido: pedido.numero,
+        dataPedido: dataFormatada,
+        clienteNome: cliente?.razaoSocial || session.user.name || "Cliente",
+        clienteEmail: session.user.email || "",
+        representanteNome: representante?.user.name || undefined,
+        tipoEntrega: pedido.tipoEntrega,
+        formaPagamento: pedido.formaPagamento,
+        condicaoPagamento: pedido.condicaoPagamento || undefined,
+        subtotal: parseFloat(pedido.subtotal.toString()).toFixed(2),
+        frete: parseFloat(pedido.frete.toString()).toFixed(2),
+        total: parseFloat(pedido.total.toString()).toFixed(2),
+        quantidadeItens: pedido.itens.length,
+      })
+    );
+
+    // Enviar todos os emails em paralelo (não bloquear a resposta)
+    Promise.all([
+      emailClientePromise,
+      emailRepresentantePromise,
+      ...emailAdminPromises,
+    ])
+      .then((results) => {
+        console.log("Emails enviados:", {
+          cliente: results[0].success,
+          representante: results[1].success,
+          admins: `${results.slice(2).filter((r) => r.success).length}/${
+            admins.length
+          }`,
+        });
+      })
+      .catch((error) => {
+        console.error("Erro ao enviar emails:", error);
+        // Não falhar a criação do pedido se o email falhar
+      });
 
     return NextResponse.json({
       success: true,

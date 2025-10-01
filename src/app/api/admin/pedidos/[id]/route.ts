@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { enviarEmailStatusPedidoAlterado } from "@/lib/email";
 
 // GET - Buscar pedido específico (admin)
 export async function GET(
@@ -150,6 +151,33 @@ export async function PATCH(
       );
     }
 
+    // Buscar pedido com informações do cliente antes de atualizar
+    const pedidoCompleto = await prisma.pedido.findUnique({
+      where: { id },
+      include: {
+        user: {
+          include: {
+            cliente: true,
+          },
+        },
+        itens: {
+          include: {
+            produto: true,
+          },
+        },
+      },
+    });
+
+    if (!pedidoCompleto) {
+      return NextResponse.json(
+        { error: "Pedido não encontrado" },
+        { status: 404 }
+      );
+    }
+
+    // Guardar status anterior
+    const statusAnterior = pedidoCompleto.status;
+
     // Atualizar status
     const pedidoAtualizado = await prisma.pedido.update({
       where: { id },
@@ -158,6 +186,42 @@ export async function PATCH(
         updatedAt: new Date(),
       },
     });
+
+    // Se o status mudou, enviar email para o cliente
+    if (statusAnterior !== status) {
+      const dataFormatada = new Intl.DateTimeFormat("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(pedidoCompleto.createdAt);
+
+      // Formatar itens para email
+      const itensEmail = pedidoCompleto.itens.map((item) => ({
+        titulo: item.produtoTitulo,
+        quantidade: item.quantidade,
+        precoUnitario: parseFloat(item.precoUnitario.toString()).toFixed(2),
+        subtotal: parseFloat(item.subtotal.toString()).toFixed(2),
+      }));
+
+      enviarEmailStatusPedidoAlterado({
+        nomeCliente:
+          pedidoCompleto.user.cliente?.nomeResponsavel ||
+          pedidoCompleto.user.name ||
+          "Cliente",
+        emailCliente: pedidoCompleto.user.email || "",
+        numeroPedido: pedidoCompleto.numero,
+        statusAnterior: statusAnterior,
+        statusNovo: status,
+        dataPedido: dataFormatada,
+        subtotal: parseFloat(pedidoCompleto.subtotal.toString()).toFixed(2),
+        frete: parseFloat(pedidoCompleto.frete.toString()).toFixed(2),
+        total: parseFloat(pedidoCompleto.total.toString()).toFixed(2),
+        itens: itensEmail,
+      }).catch((error) => {
+        console.error("Erro ao enviar email de alteração de status:", error);
+        // Não falhar a atualização do pedido se o email falhar
+      });
+    }
 
     return NextResponse.json({
       success: true,

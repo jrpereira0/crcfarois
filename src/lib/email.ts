@@ -6,6 +6,10 @@ import { emailRejeicaoCadastro } from "./email-templates/rejeicao-cadastro";
 import { emailNovoClienteRepresentante } from "./email-templates/novo-cliente-representante";
 import { emailClienteCriadoAdmin } from "./email-templates/cliente-criado-admin";
 import { emailRepresentanteCriadoAdmin } from "./email-templates/representante-criado-admin";
+import { emailNovoPedidoCliente } from "./email-templates/novo-pedido-cliente";
+import { emailNovoPedidoRepresentante } from "./email-templates/novo-pedido-representante";
+import { emailNovoPedidoAdmin } from "./email-templates/novo-pedido-admin";
+import { emailStatusPedidoAlterado } from "./email-templates/status-pedido-alterado";
 
 interface EnviarEmailSolicitacaoParams {
   nomeResponsavel: string;
@@ -254,6 +258,229 @@ export async function enviarEmailRepresentanteCriadoAdmin(params: {
       "Erro ao enviar email para representante criado pelo admin:",
       error
     );
+    return {
+      success: false,
+      error: error.message || "Erro desconhecido ao enviar email",
+    };
+  }
+}
+
+/**
+ * Envia email de novo pedido para o cliente
+ */
+export async function enviarEmailNovoPedidoCliente(params: {
+  nomeCliente: string;
+  emailCliente: string;
+  numeroPedido: string;
+  dataPedido: string;
+  tipoEntrega: string;
+  formaPagamento: string;
+  condicaoPagamento?: string;
+  subtotal: string;
+  frete: string;
+  total: string;
+  itens: Array<{
+    titulo: string;
+    quantidade: number;
+    precoUnitario: string;
+    subtotal: string;
+  }>;
+  enderecoEntrega?: {
+    endereco: string;
+    numero: string;
+    complemento?: string;
+    bairro: string;
+    cidade: string;
+    estado: string;
+    cep: string;
+  };
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.subject = `✅ Pedido #${params.numeroPedido} Confirmado - CRC Faróis`;
+    sendSmtpEmail.sender = {
+      name: "CRC Faróis",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+    };
+    sendSmtpEmail.to = [
+      {
+        email: params.emailCliente,
+        name: params.nomeCliente,
+      },
+    ];
+    sendSmtpEmail.htmlContent = emailNovoPedidoCliente(params);
+
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+    console.log("Email de novo pedido enviado para cliente:", response);
+    return { success: true };
+  } catch (error: any) {
+    console.error("Erro ao enviar email de novo pedido para cliente:", error);
+    return {
+      success: false,
+      error: error.message || "Erro desconhecido ao enviar email",
+    };
+  }
+}
+
+/**
+ * Envia email de novo pedido para o representante
+ */
+export async function enviarEmailNovoPedidoRepresentante(params: {
+  nomeRepresentante: string;
+  emailRepresentante: string;
+  numeroPedido: string;
+  dataPedido: string;
+  clienteNome: string;
+  clienteEmail: string;
+  clienteTelefone?: string;
+  tipoEntrega: string;
+  formaPagamento: string;
+  condicaoPagamento?: string;
+  subtotal: string;
+  frete: string;
+  total: string;
+  itens: Array<{
+    titulo: string;
+    quantidade: number;
+    precoUnitario: string;
+    subtotal: string;
+  }>;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.subject = `🎯 Novo Pedido #${params.numeroPedido} - ${params.clienteNome}`;
+    sendSmtpEmail.sender = {
+      name: "CRC Faróis",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+    };
+    sendSmtpEmail.to = [
+      {
+        email: params.emailRepresentante,
+        name: params.nomeRepresentante,
+      },
+    ];
+    sendSmtpEmail.htmlContent = emailNovoPedidoRepresentante(params);
+
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+    console.log("Email de novo pedido enviado para representante:", response);
+    return { success: true };
+  } catch (error: any) {
+    console.error(
+      "Erro ao enviar email de novo pedido para representante:",
+      error
+    );
+    return {
+      success: false,
+      error: error.message || "Erro desconhecido ao enviar email",
+    };
+  }
+}
+
+/**
+ * Envia email de novo pedido para o admin
+ */
+export async function enviarEmailNovoPedidoAdmin(params: {
+  emailAdmin: string;
+  numeroPedido: string;
+  dataPedido: string;
+  clienteNome: string;
+  clienteEmail: string;
+  representanteNome?: string;
+  tipoEntrega: string;
+  formaPagamento: string;
+  condicaoPagamento?: string;
+  subtotal: string;
+  frete: string;
+  total: string;
+  quantidadeItens: number;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.subject = `🔔 Novo Pedido #${params.numeroPedido} - CRC Faróis`;
+    sendSmtpEmail.sender = {
+      name: "CRC Faróis",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+    };
+    sendSmtpEmail.to = [
+      {
+        email: params.emailAdmin,
+        name: "Administração",
+      },
+    ];
+    sendSmtpEmail.htmlContent = emailNovoPedidoAdmin(params);
+
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+    console.log("Email de novo pedido enviado para admin:", response);
+    return { success: true };
+  } catch (error: any) {
+    console.error("Erro ao enviar email de novo pedido para admin:", error);
+    return {
+      success: false,
+      error: error.message || "Erro desconhecido ao enviar email",
+    };
+  }
+}
+
+/**
+ * Envia email de alteração de status do pedido para o cliente
+ */
+export async function enviarEmailStatusPedidoAlterado(params: {
+  nomeCliente: string;
+  emailCliente: string;
+  numeroPedido: string;
+  statusAnterior: string;
+  statusNovo: string;
+  dataPedido: string;
+  subtotal: string;
+  frete: string;
+  total: string;
+  itens: Array<{
+    titulo: string;
+    quantidade: number;
+    precoUnitario: string;
+    subtotal: string;
+  }>;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    const statusLabels: Record<string, string> = {
+      PENDENTE: "Pendente",
+      CONFIRMADO: "Confirmado",
+      EM_SEPARACAO: "Em Separação",
+      ENVIADO: "Enviado",
+      PRONTO_RETIRADA: "Pronto para Retirada",
+      ENTREGUE: "Entregue",
+      CANCELADO: "Cancelado",
+    };
+
+    sendSmtpEmail.subject = `📦 Pedido #${params.numeroPedido} - ${
+      statusLabels[params.statusNovo] || params.statusNovo
+    }`;
+    sendSmtpEmail.sender = {
+      name: "CRC Faróis",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+    };
+    sendSmtpEmail.to = [
+      {
+        email: params.emailCliente,
+        name: params.nomeCliente,
+      },
+    ];
+    sendSmtpEmail.htmlContent = emailStatusPedidoAlterado(params);
+
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+    console.log("Email de alteração de status enviado:", response);
+    return { success: true };
+  } catch (error: any) {
+    console.error("Erro ao enviar email de alteração de status:", error);
     return {
       success: false,
       error: error.message || "Erro desconhecido ao enviar email",
