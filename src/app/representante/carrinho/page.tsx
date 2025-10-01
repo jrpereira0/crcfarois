@@ -326,42 +326,42 @@ export default function RepresentanteCarrinhoPage() {
                   isRemoving ? "opacity-50 scale-95" : "opacity-100 scale-100"
                 }`}
               >
-                <div className="p-6">
-                  <div className="flex gap-4">
+                <div className="p-4 sm:p-6">
+                  <div className="flex gap-3 sm:gap-4">
                     {/* Imagem do produto */}
-                    <div className="relative w-20 h-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
+                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
                       {item.produto.imagemPrincipal ? (
                         <Image
                           src={item.produto.imagemPrincipal}
                           alt={item.produto.titulo}
                           fill
-                          className="object-contain p-2"
-                          sizes="80px"
+                          className="object-contain p-1.5 sm:p-2"
+                          sizes="(max-width: 640px) 64px, 80px"
                         />
                       ) : item.produto.imagensUrls.length > 0 ? (
                         <Image
                           src={item.produto.imagensUrls[0]}
                           alt={item.produto.titulo}
                           fill
-                          className="object-contain p-2"
-                          sizes="80px"
+                          className="object-contain p-1.5 sm:p-2"
+                          sizes="(max-width: 640px) 64px, 80px"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <Package className="h-6 w-6 text-gray-300" />
+                          <Package className="h-5 w-5 sm:h-6 sm:w-6 text-gray-300" />
                         </div>
                       )}
                     </div>
 
                     {/* Informações do produto */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-1 truncate">
+                      <div className="flex items-start justify-between mb-2 sm:mb-3">
+                        <div className="flex-1 min-w-0 mr-2">
+                          <h3 className="text-sm sm:text-lg font-semibold text-gray-900 mb-1 line-clamp-2">
                             {item.produto.titulo}
                           </h3>
-                          <div className="flex items-center gap-3 text-sm text-gray-500">
-                            <span className="bg-gray-100 px-2 py-1 rounded-full font-medium">
+                          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500">
+                            <span className="bg-gray-100 px-2 py-0.5 sm:py-1 rounded-full font-medium">
                               {item.produto.sku}
                             </span>
                           </div>
@@ -375,23 +375,23 @@ export default function RepresentanteCarrinhoPage() {
                             )
                           }
                           disabled={isRemoving}
-                          className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors disabled:opacity-50"
+                          className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 sm:p-2 rounded-lg transition-colors disabled:opacity-50 flex-shrink-0"
                           title="Remover item"
                         >
                           {isRemoving ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
                           ) : (
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           )}
                         </button>
                       </div>
 
                       {/* Controles e preços */}
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                      <div className="flex flex-col gap-3 sm:gap-4">
                         {/* Controles de quantidade */}
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm text-gray-600 font-medium">
-                            Quantidade:
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <span className="text-xs sm:text-sm text-gray-600 font-medium">
+                            Qtd:
                           </span>
                           <div className="flex items-center border border-gray-300 rounded-lg bg-white">
                             <button
@@ -406,13 +406,13 @@ export default function RepresentanteCarrinhoPage() {
                                 item.quantidade <= item.produto.compraMinima ||
                                 isUpdating
                               }
-                              className="p-2 hover:bg-gray-100 transition-colors rounded-l-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="p-1.5 sm:p-2 hover:bg-gray-100 transition-colors rounded-l-lg disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                              <Minus className="h-4 w-4" />
+                              <Minus className="h-3 w-3 sm:h-4 sm:w-4" />
                             </button>
-                            <div className="px-4 py-2 min-w-[3rem] text-center font-medium border-l border-r border-gray-300 flex items-center justify-center">
+                            <div className="px-3 sm:px-4 py-1.5 sm:py-2 min-w-[2.5rem] sm:min-w-[3rem] text-center font-medium border-l border-r border-gray-300 flex items-center justify-center text-sm">
                               {isUpdating ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
+                                <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                               ) : (
                                 item.quantidade
                               )}
@@ -431,37 +431,34 @@ export default function RepresentanteCarrinhoPage() {
                                     item.produto.quantidadeEstoque) ||
                                 isUpdating
                               }
-                              className="p-2 hover:bg-gray-100 transition-colors rounded-r-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="p-1.5 sm:p-2 hover:bg-gray-100 transition-colors rounded-r-lg disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                              <Plus className="h-4 w-4" />
+                              <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
                             </button>
                           </div>
                         </div>
 
                         {/* Preços */}
-                        <div className="text-right">
-                          <div className="text-sm text-gray-500">
-                            {formatPrice(item.produto.preco)} ×{" "}
-                            {item.quantidade}
+                        <div className="flex items-center justify-between sm:block sm:text-right">
+                          <div className="text-xs sm:text-sm text-gray-500">
+                            {formatPrice(item.produto.preco)} × {item.quantidade}
                           </div>
-                          <div className="text-xl font-bold text-primary">
+                          <div className="text-base sm:text-xl font-bold text-primary">
                             {formatPrice(item.produto.preco * item.quantidade)}
                           </div>
                         </div>
-                      </div>
 
-                      {/* Informações adicionais */}
-                      <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
-                        <span>Min: {item.produto.compraMinima}</span>
-                        <span>
-                          Max:{" "}
-                          {item.produto.compraMaxima ||
-                            item.produto.quantidadeEstoque}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <CheckCircle className="h-3 w-3 text-green-500" />
-                          {item.produto.quantidadeEstoque} em estoque
-                        </span>
+                        {/* Informações adicionais */}
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-gray-500">
+                          <span>Min: {item.produto.compraMinima}</span>
+                          <span>
+                            Max: {item.produto.compraMaxima || item.produto.quantidadeEstoque}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <CheckCircle className="h-3 w-3 text-green-500" />
+                            {item.produto.quantidadeEstoque} em estoque
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>

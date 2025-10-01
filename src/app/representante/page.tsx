@@ -220,34 +220,35 @@ export default function RepresentanteDashboard() {
 
       {/* Pedidos recentes */}
       {stats?.pedidosRecentes && stats.pedidosRecentes.length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
               Pedidos Recentes
             </h2>
             <Link
               href="/representante/pedidos"
-              className="text-primary hover:text-primary/80 transition-colors font-medium"
+              className="text-primary hover:text-primary/80 transition-colors font-medium text-sm sm:text-base"
             >
               Ver todos
             </Link>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {stats.pedidosRecentes.slice(0, 5).map((pedido) => (
               <div
                 key={pedido.id}
-                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-gray-50 rounded-lg gap-3"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                {/* Desktop/Tablet Layout */}
+                <div className="hidden sm:flex items-center gap-4 flex-1">
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
                     <ShoppingBag className="h-5 w-5 text-white" />
                   </div>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium text-gray-900">
                       {pedido.numero}
                     </h4>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 truncate">
                       {pedido.cliente.razaoSocial || pedido.cliente.user.name}
                     </p>
                     <p className="text-xs text-gray-500">
@@ -255,7 +256,50 @@ export default function RepresentanteDashboard() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+
+                {/* Mobile Layout */}
+                <div className="flex sm:hidden items-start gap-3">
+                  <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                    <ShoppingBag className="h-4 w-4 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-gray-900 text-sm">
+                      {pedido.numero}
+                    </h4>
+                    <p className="text-xs text-gray-600 truncate">
+                      {pedido.cliente.razaoSocial || pedido.cliente.user.name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {formatDate(pedido.createdAt)}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Desktop Actions */}
+                <div className="hidden sm:flex items-center gap-3">
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusColor(
+                      pedido.status
+                    )}`}
+                  >
+                    {pedido.status}
+                  </span>
+                  <div className="text-right min-w-[80px]">
+                    <p className="font-semibold text-gray-900">
+                      {formatPrice(pedido.total)}
+                    </p>
+                  </div>
+                  <Link
+                    href={`/representante/pedidos/${pedido.id}`}
+                    className="flex items-center gap-1 bg-gray-600 text-white px-3 py-1 rounded-lg hover:bg-gray-700 transition-colors text-sm whitespace-nowrap"
+                  >
+                    <Eye className="h-3 w-3" />
+                    Ver
+                  </Link>
+                </div>
+
+                {/* Mobile Actions */}
+                <div className="flex sm:hidden items-center justify-between gap-2">
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
                       pedido.status
@@ -263,14 +307,12 @@ export default function RepresentanteDashboard() {
                   >
                     {pedido.status}
                   </span>
-                  <div className="text-right">
-                    <p className="font-semibold text-gray-900">
-                      {formatPrice(pedido.total)}
-                    </p>
-                  </div>
+                  <p className="font-semibold text-gray-900 text-sm">
+                    {formatPrice(pedido.total)}
+                  </p>
                   <Link
                     href={`/representante/pedidos/${pedido.id}`}
-                    className="flex items-center gap-1 bg-gray-600 text-white px-3 py-1 rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                    className="flex items-center gap-1 bg-gray-600 text-white px-3 py-1.5 rounded-lg hover:bg-gray-700 transition-colors text-xs"
                   >
                     <Eye className="h-3 w-3" />
                     Ver
