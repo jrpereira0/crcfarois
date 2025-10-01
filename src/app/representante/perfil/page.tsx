@@ -320,7 +320,7 @@ export default function PerfilRepresentantePage() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email de Acesso
                 </label>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <input
                     type="email"
                     value={perfil?.email || ""}
@@ -329,7 +329,7 @@ export default function PerfilRepresentantePage() {
                   />
                   <button
                     onClick={() => setShowEmailModal(true)}
-                    className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium whitespace-nowrap"
+                    className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium whitespace-nowrap sm:w-auto"
                   >
                     Alterar Email
                   </button>
