@@ -11,6 +11,8 @@ import {
   Eye,
   EyeOff,
   CheckCircle,
+  Shield,
+  AlertCircle,
 } from "lucide-react";
 
 function RedefinirSenhaContent() {
@@ -96,9 +98,34 @@ function RedefinirSenhaContent() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 text-center">
+      <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-4">
+        {/* Background animado */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-blue-600 to-blue-800">
+          <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-float"></div>
+          <div
+            className="absolute top-32 right-20 w-32 h-32 bg-yellow-300/20 rounded-full blur-2xl animate-float"
+            style={{ animationDelay: "1s" }}
+          ></div>
+          <div
+            className="absolute bottom-20 left-20 w-24 h-24 bg-white/10 rounded-full blur-xl animate-float"
+            style={{ animationDelay: "2s" }}
+          ></div>
+          <div
+            className="absolute bottom-32 right-10 w-16 h-16 bg-yellow-300/30 rounded-full blur-xl animate-float"
+            style={{ animationDelay: "3s" }}
+          ></div>
+          <div className="absolute inset-0 opacity-5">
+            <div
+              className="h-full w-full"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='none' fill-rule='evenodd'%3e%3cg fill='%23ffffff' fill-opacity='0.3'%3e%3ccircle cx='30' cy='30' r='1.5'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e")`,
+              }}
+            ></div>
+          </div>
+        </div>
+
+        <div className="relative z-10 w-full max-w-md">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20 text-center">
             <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
@@ -118,36 +145,62 @@ function RedefinirSenhaContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background animado */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary via-blue-600 to-blue-800">
+        <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-float"></div>
+        <div
+          className="absolute top-32 right-20 w-32 h-32 bg-yellow-300/20 rounded-full blur-2xl animate-float"
+          style={{ animationDelay: "1s" }}
+        ></div>
+        <div
+          className="absolute bottom-20 left-20 w-24 h-24 bg-white/10 rounded-full blur-xl animate-float"
+          style={{ animationDelay: "2s" }}
+        ></div>
+        <div
+          className="absolute bottom-32 right-10 w-16 h-16 bg-yellow-300/30 rounded-full blur-xl animate-float"
+          style={{ animationDelay: "3s" }}
+        ></div>
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='none' fill-rule='evenodd'%3e%3cg fill='%23ffffff' fill-opacity='0.3'%3e%3ccircle cx='30' cy='30' r='1.5'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e")`,
+            }}
+          ></div>
+        </div>
+      </div>
+
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-block bg-primary p-4 rounded-2xl shadow-lg mb-4">
+          <div className="inline-block bg-white/90 backdrop-blur-sm p-4 rounded-2xl shadow-xl mb-4">
             <Image
               src="/logobranca.svg"
               alt="CRC Faróis"
               width={140}
               height={51}
-              className="h-12 w-auto"
+              className="h-10 w-auto"
               priority
             />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-white mb-2">
             Redefinir Senha
           </h1>
-          <p className="text-gray-600">
+          <p className="text-white/90">
             Digite o código enviado para <strong>{email}</strong>
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Código de Verificação */}
             <div>
               <label
                 htmlFor="code"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-semibold text-gray-700 mb-2"
               >
                 Código de Verificação
               </label>
@@ -159,7 +212,7 @@ function RedefinirSenhaContent() {
                 maxLength={6}
                 value={code}
                 onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                className="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-center text-2xl font-mono tracking-widest"
+                className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-center text-2xl font-mono tracking-widest text-gray-900"
                 placeholder="000000"
                 disabled={loading}
               />
@@ -172,12 +225,12 @@ function RedefinirSenhaContent() {
             <div>
               <label
                 htmlFor="newPassword"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-semibold text-gray-700 mb-2"
               >
                 Nova Senha
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Lock className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
@@ -187,14 +240,14 @@ function RedefinirSenhaContent() {
                   required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                  className="block w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-gray-900 placeholder-gray-400"
                   placeholder="Mínimo 6 caracteres"
                   disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center"
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5 text-gray-400" />
@@ -209,12 +262,12 @@ function RedefinirSenhaContent() {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-semibold text-gray-700 mb-2"
               >
                 Confirmar Nova Senha
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Lock className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
@@ -224,14 +277,14 @@ function RedefinirSenhaContent() {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                  className="block w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all text-gray-900 placeholder-gray-400"
                   placeholder="Digite a senha novamente"
                   disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center"
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="h-5 w-5 text-gray-400" />
@@ -244,8 +297,13 @@ function RedefinirSenhaContent() {
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                {error}
+              <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 animate-fade-in-up">
+                <div className="flex items-center gap-3">
+                  <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+                  <p className="text-sm text-red-700 font-medium">
+                    {error}
+                  </p>
+                </div>
               </div>
             )}
 
@@ -253,7 +311,7 @@ function RedefinirSenhaContent() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary text-white py-3 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98]"
             >
               {loading ? (
                 <>
@@ -262,38 +320,31 @@ function RedefinirSenhaContent() {
                 </>
               ) : (
                 <>
-                  <Lock className="h-5 w-5" />
                   Redefinir senha
+                  <Lock className="h-5 w-5" />
                 </>
               )}
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">ou</span>
+          {/* Info de Segurança */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+              <Shield className="h-4 w-4 text-green-500" />
+              Código válido por 15 minutos
             </div>
           </div>
+        </div>
 
-          {/* Back Button */}
+        {/* Solicitar novo código */}
+        <div className="text-center mt-6">
           <Link
             href="/esqueci-senha"
-            className="w-full flex items-center justify-center gap-2 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 transition-all font-medium border border-gray-300"
+            className="inline-flex items-center gap-2 text-white hover:text-yellow-300 transition-colors font-medium"
           >
             <ArrowLeft className="h-5 w-5" />
             Solicitar novo código
           </Link>
-        </div>
-
-        {/* Info */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
-            O código é válido por 15 minutos
-          </p>
         </div>
       </div>
     </div>

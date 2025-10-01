@@ -19,14 +19,12 @@ export async function POST(request: NextRequest) {
       where: { email: email.toLowerCase() },
     });
 
-    // Por segurança, sempre retornar sucesso mesmo se o email não existir
-    // Isso evita que atacantes descubram quais emails estão cadastrados
+    // Notificar se o email não existe
     if (!user) {
-      return NextResponse.json({
-        success: true,
-        message:
-          "Se o email estiver cadastrado, você receberá um código de verificação",
-      });
+      return NextResponse.json(
+        { error: "Email não encontrado. Verifique o email digitado ou solicite um cadastro." },
+        { status: 404 }
+      );
     }
 
     // Gerar código de 6 dígitos
