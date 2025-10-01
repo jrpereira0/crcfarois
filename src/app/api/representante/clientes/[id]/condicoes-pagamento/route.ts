@@ -14,7 +14,7 @@ export async function GET(
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = params; // Pode ser userId ou clienteId
 
     // Buscar o representante logado
     const representante = await prisma.representante.findUnique({
@@ -28,7 +28,32 @@ export async function GET(
       );
     }
 
-    // Verificar se o cliente está atribuído ao representante
+    // Primeiro, tentar buscar o cliente pelo userId (quando vem do pedido)
+    const clientePorUserId = await prisma.cliente.findUnique({
+      where: { userId: id },
+      select: {
+        id: true,
+        condicoesPagamento: true,
+      },
+    });
+
+    // Se encontrou pelo userId, verificar se o representante tem acesso
+    if (clientePorUserId) {
+      const relacionamento = await prisma.representanteCliente.findFirst({
+        where: {
+          representanteId: representante.id,
+          clienteId: clientePorUserId.id,
+        },
+      });
+
+      if (relacionamento) {
+        return NextResponse.json({
+          condicoes: clientePorUserId.condicoesPagamento || [],
+        });
+      }
+    }
+
+    // Se não encontrou pelo userId, tentar pelo clienteId direto
     const relacionamento = await prisma.representanteCliente.findFirst({
       where: {
         representanteId: representante.id,

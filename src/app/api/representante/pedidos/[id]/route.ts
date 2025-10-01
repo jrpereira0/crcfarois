@@ -140,6 +140,7 @@ export async function GET(
         email: pedido.user.email,
         cliente: pedido.user.cliente,
       },
+      userId: pedido.userId,
       // Itens
       itens: pedido.itens.map((item) => ({
         id: item.id,
