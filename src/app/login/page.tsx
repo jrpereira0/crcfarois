@@ -229,7 +229,7 @@ export default function LoginPage() {
                       type="email"
                       autoComplete="email"
                       required
-                      className="block w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-primary transition-all duration-300 bg-white/80 backdrop-blur-sm hover:bg-white focus:bg-white hover:border-primary/50"
+                      className="block w-full pl-4 pr-4 py-4 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-primary transition-all duration-300 bg-white/80 backdrop-blur-sm hover:bg-white focus:bg-white hover:border-primary/50"
                       placeholder="seu@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -255,7 +255,7 @@ export default function LoginPage() {
                       type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
                       required
-                      className="block w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-primary transition-all duration-300 bg-white/80 backdrop-blur-sm hover:bg-white focus:bg-white hover:border-primary/50"
+                      className="block w-full pl-4 pr-12 py-4 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-primary transition-all duration-300 bg-white/80 backdrop-blur-sm hover:bg-white focus:bg-white hover:border-primary/50"
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
