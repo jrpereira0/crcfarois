@@ -197,31 +197,151 @@ export default function CadastroClientePage() {
   };
 
   // Funções para navegar entre as etapas
+  // Função para validar CNPJ
+  const validarCNPJ = (cnpj: string): boolean => {
+    // Remove caracteres não numéricos
+    cnpj = cnpj.replace(/\D/g, "");
+
+    // Verifica se tem 14 dígitos
+    if (cnpj.length !== 14) return false;
+
+    // Verifica se todos os dígitos são iguais
+    if (/^(\d)\1+$/.test(cnpj)) return false;
+
+    // Validação do primeiro dígito verificador
+    let tamanho = cnpj.length - 2;
+    let numeros = cnpj.substring(0, tamanho);
+    let digitos = cnpj.substring(tamanho);
+    let soma = 0;
+    let pos = tamanho - 7;
+
+    for (let i = tamanho; i >= 1; i--) {
+      soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
+      if (pos < 2) pos = 9;
+    }
+
+    let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado !== parseInt(digitos.charAt(0))) return false;
+
+    // Validação do segundo dígito verificador
+    tamanho = tamanho + 1;
+    numeros = cnpj.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+
+    for (let i = tamanho; i >= 1; i--) {
+      soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
+      if (pos < 2) pos = 9;
+    }
+
+    resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado !== parseInt(digitos.charAt(1))) return false;
+
+    return true;
+  };
+
+  // Função para validar email
+  const validarEmail = (email: string): boolean => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  // Função para validar WhatsApp (11 dígitos)
+  const validarWhatsApp = (whatsapp: string): boolean => {
+    const numero = whatsapp.replace(/\D/g, "");
+    return numero.length === 11;
+  };
+
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1: // Dados da Empresa
-        return !!(form.razaoSocial.trim() && form.cnpj.trim());
+        if (!form.razaoSocial.trim()) {
+          setMessage({ type: "error", text: "Razão Social é obrigatória" });
+          return false;
+        }
+        if (!form.cnpj.trim()) {
+          setMessage({ type: "error", text: "CNPJ é obrigatório" });
+          return false;
+        }
+        if (!validarCNPJ(form.cnpj)) {
+          setMessage({ type: "error", text: "CNPJ inválido" });
+          return false;
+        }
+        setMessage(null);
+        return true;
+
       case 2: // Endereço da Empresa
-        return !!(
-          form.cep.trim() &&
-          form.endereco.trim() &&
-          form.numero.trim() &&
-          form.bairro.trim() &&
-          form.cidade.trim() &&
-          form.estado.trim()
-        );
+        const camposEndereco = [
+          { nome: "CEP", valor: form.cep },
+          { nome: "Endereço", valor: form.endereco },
+          { nome: "Número", valor: form.numero },
+          { nome: "Bairro", valor: form.bairro },
+          { nome: "Cidade", valor: form.cidade },
+          { nome: "Estado", valor: form.estado },
+        ];
+
+        for (const campo of camposEndereco) {
+          if (!campo.valor.trim()) {
+            setMessage({ type: "error", text: `${campo.nome} é obrigatório` });
+            return false;
+          }
+        }
+
+        if (form.cep.replace(/\D/g, "").length !== 8) {
+          setMessage({ type: "error", text: "CEP deve ter 8 dígitos" });
+          return false;
+        }
+
+        setMessage(null);
+        return true;
+
       case 3: // Dados do Responsável
-        return !!(
-          form.nomeResponsavel.trim() && form.whatsappResponsavel.trim()
-        );
+        if (!form.nomeResponsavel.trim()) {
+          setMessage({ type: "error", text: "Nome do responsável é obrigatório" });
+          return false;
+        }
+        if (!form.whatsappResponsavel.trim()) {
+          setMessage({ type: "error", text: "WhatsApp é obrigatório" });
+          return false;
+        }
+        if (!validarWhatsApp(form.whatsappResponsavel)) {
+          setMessage({
+            type: "error",
+            text: "WhatsApp inválido. Use o formato (11) 99999-9999",
+          });
+          return false;
+        }
+        setMessage(null);
+        return true;
+
       case 4: // Dados de Acesso
-        return !!(
-          form.emailResponsavel.trim() &&
-          form.senha.trim() &&
-          form.confirmarSenha.trim() &&
-          form.senha === form.confirmarSenha &&
-          form.senha.length >= 6
-        );
+        if (!form.emailResponsavel.trim()) {
+          setMessage({ type: "error", text: "Email é obrigatório" });
+          return false;
+        }
+        if (!validarEmail(form.emailResponsavel)) {
+          setMessage({ type: "error", text: "Email inválido" });
+          return false;
+        }
+        if (!form.senha.trim()) {
+          setMessage({ type: "error", text: "Senha é obrigatória" });
+          return false;
+        }
+        if (form.senha.length < 6) {
+          setMessage({ type: "error", text: "Senha deve ter pelo menos 6 caracteres" });
+          return false;
+        }
+        if (!form.confirmarSenha.trim()) {
+          setMessage({ type: "error", text: "Confirmação de senha é obrigatória" });
+          return false;
+        }
+        if (form.senha !== form.confirmarSenha) {
+          setMessage({ type: "error", text: "As senhas não coincidem" });
+          return false;
+        }
+        setMessage(null);
+        return true;
+
       default:
         return false;
     }
