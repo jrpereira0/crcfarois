@@ -428,7 +428,7 @@ export default function EditarPedidoRepresentantePage() {
               : null,
           itens: form.itens.map((item) => ({
             id: item.id.startsWith("new-") ? undefined : item.id,
-            produtoId: item.produtoId,
+            produtoId: item.produtoId || item.produto?.id, // Pegar de produtoId ou produto.id
             quantidade: item.quantidade,
             precoUnitario: item.precoUnitario,
           })),
