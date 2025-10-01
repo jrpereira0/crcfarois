@@ -218,6 +218,19 @@ function RepresentanteLayoutContent({ children }: RepresentanteLayoutProps) {
             </Link>
 
             <CartLink pathname={pathname} setSidebarOpen={setSidebarOpen} />
+
+            <Link
+              href="/representante/perfil"
+              className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                pathname === "/representante/perfil"
+                  ? "bg-primary text-white"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+              onClick={() => setSidebarOpen(false)}
+            >
+              <User className="mr-3 h-5 w-5" />
+              Meu Perfil
+            </Link>
           </nav>
 
           {/* User menu */}

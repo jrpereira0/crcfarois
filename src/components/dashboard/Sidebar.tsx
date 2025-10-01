@@ -63,6 +63,11 @@ const navigation = [
     href: "/dashboard/faturamento",
     icon: DollarSign,
   },
+  {
+    name: "Meu Perfil",
+    href: "/dashboard/perfil",
+    icon: User,
+  },
 ];
 
 export function Sidebar() {

@@ -54,7 +54,18 @@ export async function PUT(request: NextRequest) {
     }
 
     const data = await request.json();
-    const { name, telefone, whatsapp, endereco, numero, complemento, bairro, cidade, estado, cep } = data;
+    const {
+      name,
+      telefone,
+      whatsapp,
+      endereco,
+      numero,
+      complemento,
+      bairro,
+      cidade,
+      estado,
+      cep,
+    } = data;
 
     // Atualizar nome do usuário
     await prisma.user.update({
@@ -113,4 +124,3 @@ export async function PUT(request: NextRequest) {
     );
   }
 }
-

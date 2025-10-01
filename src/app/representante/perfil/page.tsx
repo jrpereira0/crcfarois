@@ -7,8 +7,6 @@ import {
   User,
   Mail,
   Phone,
-  MapPin,
-  Building2,
   Lock,
   Save,
   Eye,
@@ -16,7 +14,7 @@ import {
   Loader2,
   CheckCircle,
   AlertCircle,
-  FileText,
+  Briefcase,
 } from "lucide-react";
 
 interface PerfilData {
@@ -24,22 +22,14 @@ interface PerfilData {
   name: string;
   email: string;
   role: string;
-  cliente?: {
-    razaoSocial: string;
-    cnpjCpf: string;
+  representante?: {
     telefone: string | null;
     whatsapp: string;
-    cep: string;
-    endereco: string;
-    numero: string;
-    complemento: string | null;
-    bairro: string | null;
-    cidade: string | null;
-    estado: string | null;
+    regiao: string | null;
   };
 }
 
-export default function PerfilClientePage() {
+export default function PerfilRepresentantePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -59,13 +49,6 @@ export default function PerfilClientePage() {
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
-  const [endereco, setEndereco] = useState("");
-  const [numero, setNumero] = useState("");
-  const [complemento, setComplemento] = useState("");
-  const [bairro, setBairro] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [estado, setEstado] = useState("");
-  const [cep, setCep] = useState("");
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -83,15 +66,8 @@ export default function PerfilClientePage() {
       if (response.ok) {
         setPerfil(data);
         setNome(data.name || "");
-        setTelefone(data.cliente?.telefone || "");
-        setWhatsapp(data.cliente?.whatsapp || "");
-        setEndereco(data.cliente?.endereco || "");
-        setNumero(data.cliente?.numero || "");
-        setComplemento(data.cliente?.complemento || "");
-        setBairro(data.cliente?.bairro || "");
-        setCidade(data.cliente?.cidade || "");
-        setEstado(data.cliente?.estado || "");
-        setCep(data.cliente?.cep || "");
+        setTelefone(data.representante?.telefone || "");
+        setWhatsapp(data.representante?.whatsapp || "");
       }
     } catch (error) {
       console.error("Erro ao carregar perfil:", error);
@@ -114,13 +90,6 @@ export default function PerfilClientePage() {
           name: nome,
           telefone,
           whatsapp,
-          endereco,
-          numero,
-          complemento,
-          bairro,
-          cidade,
-          estado,
-          cep,
         }),
       });
 
@@ -191,7 +160,7 @@ export default function PerfilClientePage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Meu Perfil</h1>
@@ -216,34 +185,36 @@ export default function PerfilClientePage() {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Card de Informações da Empresa */}
+        {/* Card de Informações */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="text-center mb-6">
               <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                <Building2 className="h-10 w-10 text-white" />
+                <Briefcase className="h-10 w-10 text-white" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                {perfil?.cliente?.razaoSocial}
+                {perfil?.name}
               </h3>
               <p className="text-sm text-gray-500">{perfil?.email}</p>
             </div>
 
             <div className="space-y-4 pt-4 border-t border-gray-200">
               <div>
-                <p className="text-xs text-gray-500 uppercase mb-1">CNPJ</p>
-                <p className="text-sm font-medium text-gray-900">
-                  {perfil?.cliente?.cnpjCpf}
-                </p>
-              </div>
-              <div>
                 <p className="text-xs text-gray-500 uppercase mb-1">
                   Tipo de Conta
                 </p>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
-                  Cliente B2B
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+                  Representante
                 </span>
               </div>
+              {perfil?.representante?.regiao && (
+                <div>
+                  <p className="text-xs text-gray-500 uppercase mb-1">Região</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    {perfil.representante.regiao}
+                  </p>
+                </div>
+              )}
             </div>
 
             <button
@@ -265,10 +236,10 @@ export default function PerfilClientePage() {
             </h2>
 
             <div className="space-y-6">
-              {/* Nome do Responsável */}
+              {/* Nome */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nome do Responsável
+                  Nome Completo
                 </label>
                 <input
                   type="text"
@@ -276,6 +247,22 @@ export default function PerfilClientePage() {
                   onChange={(e) => setNome(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
+              </div>
+
+              {/* Email (somente leitura) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={perfil?.email || ""}
+                  disabled
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  O email não pode ser alterado
+                </p>
               </div>
 
               {/* Telefone e WhatsApp */}
@@ -302,108 +289,6 @@ export default function PerfilClientePage() {
                     onChange={(e) => setWhatsapp(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     placeholder="(11) 91234-5678"
-                  />
-                </div>
-              </div>
-
-              <div className="border-t border-gray-200 my-6"></div>
-
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-primary" />
-                Endereço
-              </h3>
-
-              {/* CEP */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  CEP
-                </label>
-                <input
-                  type="text"
-                  value={cep}
-                  onChange={(e) => setCep(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="12345-678"
-                />
-              </div>
-
-              {/* Endereço e Número */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Endereço
-                  </label>
-                  <input
-                    type="text"
-                    value={endereco}
-                    onChange={(e) => setEndereco(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Número
-                  </label>
-                  <input
-                    type="text"
-                    value={numero}
-                    onChange={(e) => setNumero(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-              </div>
-
-              {/* Complemento e Bairro */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Complemento
-                  </label>
-                  <input
-                    type="text"
-                    value={complemento}
-                    onChange={(e) => setComplemento(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Apto, Sala, etc"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Bairro
-                  </label>
-                  <input
-                    type="text"
-                    value={bairro}
-                    onChange={(e) => setBairro(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-              </div>
-
-              {/* Cidade e Estado */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Cidade
-                  </label>
-                  <input
-                    type="text"
-                    value={cidade}
-                    onChange={(e) => setCidade(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Estado
-                  </label>
-                  <input
-                    type="text"
-                    value={estado}
-                    onChange={(e) => setEstado(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="SP"
-                    maxLength={2}
                   />
                 </div>
               </div>
@@ -556,3 +441,4 @@ export default function PerfilClientePage() {
     </div>
   );
 }
+
