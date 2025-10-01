@@ -173,15 +173,15 @@ function RedefinirSenhaContent() {
 
       <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
         <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Redefinir Senha
-          </h1>
-          <p className="text-white/90">
-            Digite o código enviado para <strong>{email}</strong>
-          </p>
-        </div>
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">
+              Redefinir Senha
+            </h1>
+            <p className="text-white/90">
+              Digite o código enviado para <strong>{email}</strong>
+            </p>
+          </div>
 
           {/* Card */}
           <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">
