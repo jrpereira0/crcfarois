@@ -171,32 +171,38 @@ export default function EsqueciSenhaPage() {
         </div>
 
         {/* Lado direito - Formulário */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12">
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 lg:p-12">
           <div className="w-full max-w-md">
             {/* Logo Mobile */}
-            <div className="lg:hidden text-center mb-8">
-              <div className="inline-block bg-white/90 backdrop-blur-sm p-4 rounded-2xl shadow-xl mb-4">
+            <div className="lg:hidden text-center mb-6 sm:mb-8 animate-fade-in-up">
+              <div className="inline-block bg-white/10 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-white/20 mb-4">
                 <Image
                   src="/logobranca.svg"
                   alt="CRC Faróis"
-                  width={140}
-                  height={51}
-                  className="h-10 w-auto"
+                  width={200}
+                  height={73}
+                  className="h-10 sm:h-12 w-auto"
                   priority
                 />
               </div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+                Recuperar Senha
+              </h1>
+              <p className="text-sm sm:text-base text-white/90">
+                Digite seu email para receber um código de verificação
+              </p>
             </div>
 
             {/* Card do Formulário */}
             <div
-              className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-8 animate-fade-in-up"
+              className="bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-2xl border border-white/20 p-6 sm:p-8 animate-fade-in-up"
               style={{ animationDelay: "0.1s" }}
             >
-              <div className="mb-6">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              <div className="mb-6 hidden lg:block">
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                   Recuperar Senha
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   Digite seu email para receber o código de verificação
                 </p>
               </div>
@@ -245,17 +251,19 @@ export default function EsqueciSenhaPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-500 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98] text-sm sm:text-base"
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      Enviando código...
+                      <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                      <span className="hidden sm:inline">Enviando código...</span>
+                      <span className="sm:hidden">Enviando...</span>
                     </>
                   ) : (
                     <>
-                      Enviar código de verificação
-                      <Mail className="h-5 w-5" />
+                      <span className="hidden sm:inline">Enviar código de verificação</span>
+                      <span className="sm:hidden">Enviar código</span>
+                      <Mail className="h-4 w-4 sm:h-5 sm:w-5" />
                     </>
                   )}
                 </button>
