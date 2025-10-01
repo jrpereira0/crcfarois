@@ -4,7 +4,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { Menu, X, Phone, Mail, MapPin, User, LogOut, Home, Info, MessageSquare } from "lucide-react";
+import {
+  Menu,
+  X,
+  Phone,
+  Mail,
+  MapPin,
+  User,
+  LogOut,
+  Home,
+  Info,
+  MessageSquare,
+} from "lucide-react";
 
 export default function Header() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -96,7 +107,7 @@ export default function Header() {
               Contato
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            
+
             {/* Desktop - Usuário logado ou botão de login */}
             {session ? (
               <div className="flex items-center gap-4">
@@ -106,6 +117,22 @@ export default function Header() {
                     {session.user.name || "Usuário"}
                   </span>
                 </div>
+                <Link
+                  href={
+                    session.user.role === "ADMIN"
+                      ? "/dashboard"
+                      : session.user.role === "REPRESENTANTE"
+                      ? "/representante"
+                      : "/b2b"
+                  }
+                  className="bg-yellow-300 text-primary px-6 py-3 rounded-full transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  {session.user.role === "ADMIN"
+                    ? "Dashboard"
+                    : session.user.role === "REPRESENTANTE"
+                    ? "Painel"
+                    : "Plataforma B2B"}
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="bg-red-500 text-white px-6 py-3 rounded-full transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 hover:bg-red-600"
@@ -215,18 +242,37 @@ export default function Header() {
           </nav>
 
           {/* Footer da Sidebar - Ação principal */}
-          <div className="border-t border-gray-200 p-6">
+          <div className="border-t border-gray-200 p-6 space-y-3">
             {session ? (
-              <button
-                onClick={() => {
-                  handleLogout();
-                  toggleSidebar();
-                }}
-                className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-4 px-6 rounded-xl font-semibold shadow-lg hover:bg-red-600 transition-all"
-              >
-                <LogOut className="h-5 w-5" />
-                Sair da Conta
-              </button>
+              <>
+                <Link
+                  href={
+                    session.user.role === "ADMIN"
+                      ? "/dashboard"
+                      : session.user.role === "REPRESENTANTE"
+                      ? "/representante"
+                      : "/b2b"
+                  }
+                  className="block w-full text-center bg-primary text-white py-4 px-6 rounded-xl font-semibold shadow-lg hover:bg-primary/90 transition-all"
+                  onClick={toggleSidebar}
+                >
+                  {session.user.role === "ADMIN"
+                    ? "Ir para Dashboard"
+                    : session.user.role === "REPRESENTANTE"
+                    ? "Ir para Painel"
+                    : "Ir para Plataforma B2B"}
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    toggleSidebar();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-4 px-6 rounded-xl font-semibold shadow-lg hover:bg-red-600 transition-all"
+                >
+                  <LogOut className="h-5 w-5" />
+                  Sair da Conta
+                </button>
+              </>
             ) : (
               <Link
                 href="/login"
