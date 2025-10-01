@@ -668,7 +668,7 @@ export default function CadastroClientePage() {
                         type="button"
                         onClick={nextStep}
                         disabled={!validateStep(1)}
-                        className="px-8 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-2"
+                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
                       >
                         Próximo
                         <ArrowRight className="w-4 h-4" />
@@ -820,11 +820,11 @@ export default function CadastroClientePage() {
                     </div>
 
                     {/* Botões de Navegação - Etapa 2 */}
-                    <div className="flex justify-between pt-8">
+                    <div className="flex flex-col sm:flex-row justify-between gap-3 pt-8">
                       <button
                         type="button"
                         onClick={prevStep}
-                        className="px-8 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all duration-300 flex items-center gap-2"
+                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all duration-300 flex items-center justify-center gap-2 order-2 sm:order-1"
                       >
                         <ArrowLeft className="w-4 h-4" />
                         Anterior
@@ -833,7 +833,7 @@ export default function CadastroClientePage() {
                         type="button"
                         onClick={nextStep}
                         disabled={!validateStep(2)}
-                        className="px-8 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-2"
+                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 order-1 sm:order-2"
                       >
                         Próximo
                         <ArrowRight className="w-4 h-4" />
@@ -908,11 +908,11 @@ export default function CadastroClientePage() {
                     </div>
 
                     {/* Botões de Navegação - Etapa 3 */}
-                    <div className="flex justify-between pt-8">
+                    <div className="flex flex-col sm:flex-row justify-between gap-3 pt-8">
                       <button
                         type="button"
                         onClick={prevStep}
-                        className="px-8 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all duration-300 flex items-center gap-2"
+                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all duration-300 flex items-center justify-center gap-2 order-2 sm:order-1"
                       >
                         <ArrowLeft className="w-4 h-4" />
                         Anterior
@@ -921,7 +921,7 @@ export default function CadastroClientePage() {
                         type="button"
                         onClick={nextStep}
                         disabled={!validateStep(3)}
-                        className="px-8 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-2"
+                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 order-1 sm:order-2"
                       >
                         Próximo
                         <ArrowRight className="w-4 h-4" />
@@ -1047,7 +1047,7 @@ export default function CadastroClientePage() {
                       <button
                         type="submit"
                         disabled={isLoading || isSuccess || !validateStep(4)}
-                        className={`w-full flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
+                        className={`w-full flex items-center justify-center gap-3 px-6 sm:px-8 py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 ${
                           isSuccess
                             ? "bg-green-600 text-white shadow-xl"
                             : isLoading
@@ -1060,12 +1060,14 @@ export default function CadastroClientePage() {
                         {isLoading ? (
                           <>
                             <Loader2 className="h-5 w-5 animate-spin" />
-                            Enviando Solicitação...
+                            <span className="hidden sm:inline">Enviando Solicitação...</span>
+                            <span className="sm:hidden">Enviando...</span>
                           </>
                         ) : isSuccess ? (
                           <>
                             <CheckCircle className="h-5 w-5" />
-                            Solicitação Enviada!
+                            <span className="hidden sm:inline">Solicitação Enviada!</span>
+                            <span className="sm:hidden">Enviada!</span>
                           </>
                         ) : (
                           <>
@@ -1080,17 +1082,18 @@ export default function CadastroClientePage() {
                         <button
                           type="button"
                           onClick={prevStep}
-                          className="flex-1 flex items-center justify-center gap-2 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-semibold"
+                          className="flex-1 flex items-center justify-center gap-2 px-4 sm:px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-semibold text-sm sm:text-base"
                         >
-                          <ArrowLeft className="h-5 w-5" />
+                          <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
                           Anterior
                         </button>
                         <Link
                           href="/login"
-                          className="flex-1 flex items-center justify-center gap-2 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-semibold"
+                          className="flex-1 flex items-center justify-center gap-2 px-4 sm:px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-semibold text-sm sm:text-base"
                         >
-                          <ArrowLeft className="h-5 w-5" />
-                          Voltar ao Login
+                          <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+                          <span className="hidden sm:inline">Voltar ao Login</span>
+                          <span className="sm:hidden">Login</span>
                         </Link>
                       </div>
                     </div>
