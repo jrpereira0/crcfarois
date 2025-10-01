@@ -71,6 +71,19 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  code      String   // Código de 6 dígitos
+  expires   DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([token])
+}
+
 model Cliente {
   id                   String   @id @default(cuid())
   userId               String   @unique

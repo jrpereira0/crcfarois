@@ -10,6 +10,7 @@ import { emailNovoPedidoCliente } from "./email-templates/novo-pedido-cliente";
 import { emailNovoPedidoRepresentante } from "./email-templates/novo-pedido-representante";
 import { emailNovoPedidoAdmin } from "./email-templates/novo-pedido-admin";
 import { emailStatusPedidoAlterado } from "./email-templates/status-pedido-alterado";
+import { emailRecuperacaoSenhaTemplate } from "./email-templates/recuperacao-senha";
 
 interface EnviarEmailSolicitacaoParams {
   nomeResponsavel: string;
@@ -481,6 +482,45 @@ export async function enviarEmailStatusPedidoAlterado(params: {
     return { success: true };
   } catch (error: any) {
     console.error("Erro ao enviar email de alteração de status:", error);
+    return {
+      success: false,
+      error: error.message || "Erro desconhecido ao enviar email",
+    };
+  }
+}
+
+/**
+ * Envia email com código de recuperação de senha
+ */
+export async function enviarEmailRecuperacaoSenha(params: {
+  email: string;
+  nomeUsuario: string;
+  codigo: string;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.subject = "Recuperação de Senha - CRC Faróis";
+    sendSmtpEmail.sender = {
+      name: "CRC Faróis",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+    };
+    sendSmtpEmail.to = [
+      {
+        email: params.email,
+        name: params.nomeUsuario,
+      },
+    ];
+    sendSmtpEmail.htmlContent = emailRecuperacaoSenhaTemplate({
+      nomeUsuario: params.nomeUsuario,
+      codigo: params.codigo,
+    });
+
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log("Email de recuperação de senha enviado:", response);
+    return { success: true };
+  } catch (error: any) {
+    console.error("Erro ao enviar email de recuperação de senha:", error);
     return {
       success: false,
       error: error.message || "Erro desconhecido ao enviar email",

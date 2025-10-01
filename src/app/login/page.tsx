@@ -274,6 +274,16 @@ export default function LoginPage() {
                   </div>
                 </div>
 
+                {/* Esqueceu a senha */}
+                <div className="flex justify-end">
+                  <Link
+                    href="/esqueci-senha"
+                    className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                  >
+                    Esqueceu a senha?
+                  </Link>
+                </div>
+
                 {/* Mensagem de Erro */}
                 {error && (
                   <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 animate-fade-in-up">
