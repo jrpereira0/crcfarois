@@ -178,6 +178,8 @@ export async function PUT(
 
     const pedidoId = params.id;
     const body = await request.json();
+    
+    console.log("📦 Dados recebidos para atualizar pedido:", JSON.stringify(body, null, 2));
 
     // Buscar o representante logado
     const representante = await prisma.representante.findUnique({
@@ -280,12 +282,17 @@ export async function PUT(
 
     // Se há itens para atualizar
     if (itens && itens.length > 0) {
+      console.log("📋 Itens recebidos:", JSON.stringify(itens, null, 2));
+      
       // Validar produtos - filtrar apenas IDs válidos
       const produtoIds = itens
         .map((item: any) => item.produtoId)
         .filter((id: any) => id !== undefined && id !== null);
 
+      console.log("🔍 IDs de produtos filtrados:", produtoIds);
+
       if (produtoIds.length === 0) {
+        console.error("❌ Nenhum produto válido encontrado nos itens");
         return NextResponse.json(
           { error: "Nenhum produto válido foi fornecido" },
           { status: 400 }
