@@ -61,24 +61,46 @@ export default function Header() {
         }`}
       >
         <div className="container max-w-7xl mx-auto px-4">
-          {/* Mobile - Scroll horizontal */}
-          <div className="md:hidden overflow-x-auto scrollbar-hide">
-            <div className="flex items-center space-x-6 text-xs whitespace-nowrap py-1">
-              <div className="flex items-center space-x-1 flex-shrink-0">
-                <Phone size={12} />
-                <span>(11) 99226-8645</span>
+          {/* Mobile - Animação contínua */}
+          <div className="md:hidden overflow-hidden">
+            <div className="flex items-center animate-scroll-left">
+              {/* Duplicar o conteúdo para animação infinita */}
+              <div className="flex items-center space-x-6 text-xs whitespace-nowrap py-1 pr-6">
+                <div className="flex items-center space-x-1 flex-shrink-0">
+                  <Phone size={12} />
+                  <span>(11) 99226-8645</span>
+                </div>
+                <div className="flex items-center space-x-1 flex-shrink-0">
+                  <Mail size={12} />
+                  <span>contato@crc.ind.br</span>
+                </div>
+                <div className="flex items-center space-x-1 flex-shrink-0">
+                  <MapPin size={12} />
+                  <span>Seg. - Qui. 08h-17h / Sex. 08h-16h</span>
+                </div>
+                <div className="flex items-center space-x-1 flex-shrink-0">
+                  <MapPin size={12} />
+                  <span>São Bernardo do Campo - SP</span>
+                </div>
               </div>
-              <div className="flex items-center space-x-1 flex-shrink-0">
-                <Mail size={12} />
-                <span>contato@crc.ind.br</span>
-              </div>
-              <div className="flex items-center space-x-1 flex-shrink-0">
-                <MapPin size={12} />
-                <span>Seg. - Qui. 08h-17h / Sex. 08h-16h</span>
-              </div>
-              <div className="flex items-center space-x-1 flex-shrink-0">
-                <MapPin size={12} />
-                <span>São Bernardo do Campo - SP</span>
+              {/* Duplicata para loop infinito */}
+              <div className="flex items-center space-x-6 text-xs whitespace-nowrap py-1 pr-6">
+                <div className="flex items-center space-x-1 flex-shrink-0">
+                  <Phone size={12} />
+                  <span>(11) 99226-8645</span>
+                </div>
+                <div className="flex items-center space-x-1 flex-shrink-0">
+                  <Mail size={12} />
+                  <span>contato@crc.ind.br</span>
+                </div>
+                <div className="flex items-center space-x-1 flex-shrink-0">
+                  <MapPin size={12} />
+                  <span>Seg. - Qui. 08h-17h / Sex. 08h-16h</span>
+                </div>
+                <div className="flex items-center space-x-1 flex-shrink-0">
+                  <MapPin size={12} />
+                  <span>São Bernardo do Campo - SP</span>
+                </div>
               </div>
             </div>
           </div>
