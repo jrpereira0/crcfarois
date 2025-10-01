@@ -93,6 +93,9 @@ export default function CadastroClientePage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [cepLoading, setCepLoading] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null);
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>(
+    {}
+  );
 
   useEffect(() => {
     setIsClient(true);
@@ -252,15 +255,72 @@ export default function CadastroClientePage() {
     return numero.length === 11;
   };
 
+  // Marcar campo como tocado
+  const handleBlur = (fieldName: string) => {
+    setTouchedFields((prev) => ({ ...prev, [fieldName]: true }));
+  };
+
+  // Verificar se campo tem erro
+  const getFieldError = (fieldName: string): string | null => {
+    if (!touchedFields[fieldName]) return null;
+
+    switch (fieldName) {
+      case "razaoSocial":
+        return !form.razaoSocial.trim() ? "Razão Social é obrigatória" : null;
+      case "cnpj":
+        if (!form.cnpj.trim()) return "CNPJ é obrigatório";
+        if (!validarCNPJ(form.cnpj)) return "CNPJ inválido";
+        return null;
+      case "cep":
+        if (!form.cep.trim()) return "CEP é obrigatório";
+        if (form.cep.replace(/\D/g, "").length !== 8)
+          return "CEP deve ter 8 dígitos";
+        return null;
+      case "endereco":
+        return !form.endereco.trim() ? "Endereço é obrigatório" : null;
+      case "numero":
+        return !form.numero.trim() ? "Número é obrigatório" : null;
+      case "bairro":
+        return !form.bairro.trim() ? "Bairro é obrigatório" : null;
+      case "cidade":
+        return !form.cidade.trim() ? "Cidade é obrigatória" : null;
+      case "estado":
+        return !form.estado.trim() ? "Estado é obrigatório" : null;
+      case "nomeResponsavel":
+        return !form.nomeResponsavel.trim() ? "Nome é obrigatório" : null;
+      case "whatsappResponsavel":
+        if (!form.whatsappResponsavel.trim()) return "WhatsApp é obrigatório";
+        if (!validarWhatsApp(form.whatsappResponsavel))
+          return "WhatsApp inválido (11 dígitos)";
+        return null;
+      case "emailResponsavel":
+        if (!form.emailResponsavel.trim()) return "Email é obrigatório";
+        if (!validarEmail(form.emailResponsavel)) return "Email inválido";
+        return null;
+      case "senha":
+        if (!form.senha.trim()) return "Senha é obrigatória";
+        if (form.senha.length < 6) return "Mínimo 6 caracteres";
+        return null;
+      case "confirmarSenha":
+        if (!form.confirmarSenha.trim()) return "Confirmação é obrigatória";
+        if (form.senha !== form.confirmarSenha) return "Senhas não coincidem";
+        return null;
+      default:
+        return null;
+    }
+  };
+
   const validateStep = (step: number, showErrors: boolean = false): boolean => {
     switch (step) {
       case 1: // Dados da Empresa
         if (!form.razaoSocial.trim()) {
-          if (showErrors) setMessage({ type: "error", text: "Razão Social é obrigatória" });
+          if (showErrors)
+            setMessage({ type: "error", text: "Razão Social é obrigatória" });
           return false;
         }
         if (!form.cnpj.trim()) {
-          if (showErrors) setMessage({ type: "error", text: "CNPJ é obrigatório" });
+          if (showErrors)
+            setMessage({ type: "error", text: "CNPJ é obrigatório" });
           return false;
         }
         if (!validarCNPJ(form.cnpj)) {
@@ -282,13 +342,18 @@ export default function CadastroClientePage() {
 
         for (const campo of camposEndereco) {
           if (!campo.valor.trim()) {
-            if (showErrors) setMessage({ type: "error", text: `${campo.nome} é obrigatório` });
+            if (showErrors)
+              setMessage({
+                type: "error",
+                text: `${campo.nome} é obrigatório`,
+              });
             return false;
           }
         }
 
         if (form.cep.replace(/\D/g, "").length !== 8) {
-          if (showErrors) setMessage({ type: "error", text: "CEP deve ter 8 dígitos" });
+          if (showErrors)
+            setMessage({ type: "error", text: "CEP deve ter 8 dígitos" });
           return false;
         }
 
@@ -297,18 +362,24 @@ export default function CadastroClientePage() {
 
       case 3: // Dados do Responsável
         if (!form.nomeResponsavel.trim()) {
-          if (showErrors) setMessage({ type: "error", text: "Nome do responsável é obrigatório" });
+          if (showErrors)
+            setMessage({
+              type: "error",
+              text: "Nome do responsável é obrigatório",
+            });
           return false;
         }
         if (!form.whatsappResponsavel.trim()) {
-          if (showErrors) setMessage({ type: "error", text: "WhatsApp é obrigatório" });
+          if (showErrors)
+            setMessage({ type: "error", text: "WhatsApp é obrigatório" });
           return false;
         }
         if (!validarWhatsApp(form.whatsappResponsavel)) {
-          if (showErrors) setMessage({
-            type: "error",
-            text: "WhatsApp inválido. Use o formato (11) 99999-9999",
-          });
+          if (showErrors)
+            setMessage({
+              type: "error",
+              text: "WhatsApp inválido. Use o formato (11) 99999-9999",
+            });
           return false;
         }
         if (showErrors) setMessage(null);
@@ -316,7 +387,8 @@ export default function CadastroClientePage() {
 
       case 4: // Dados de Acesso
         if (!form.emailResponsavel.trim()) {
-          if (showErrors) setMessage({ type: "error", text: "Email é obrigatório" });
+          if (showErrors)
+            setMessage({ type: "error", text: "Email é obrigatório" });
           return false;
         }
         if (!validarEmail(form.emailResponsavel)) {
@@ -324,19 +396,29 @@ export default function CadastroClientePage() {
           return false;
         }
         if (!form.senha.trim()) {
-          if (showErrors) setMessage({ type: "error", text: "Senha é obrigatória" });
+          if (showErrors)
+            setMessage({ type: "error", text: "Senha é obrigatória" });
           return false;
         }
         if (form.senha.length < 6) {
-          if (showErrors) setMessage({ type: "error", text: "Senha deve ter pelo menos 6 caracteres" });
+          if (showErrors)
+            setMessage({
+              type: "error",
+              text: "Senha deve ter pelo menos 6 caracteres",
+            });
           return false;
         }
         if (!form.confirmarSenha.trim()) {
-          if (showErrors) setMessage({ type: "error", text: "Confirmação de senha é obrigatória" });
+          if (showErrors)
+            setMessage({
+              type: "error",
+              text: "Confirmação de senha é obrigatória",
+            });
           return false;
         }
         if (form.senha !== form.confirmarSenha) {
-          if (showErrors) setMessage({ type: "error", text: "As senhas não coincidem" });
+          if (showErrors)
+            setMessage({ type: "error", text: "As senhas não coincidem" });
           return false;
         }
         if (showErrors) setMessage(null);
@@ -712,10 +794,21 @@ export default function CadastroClientePage() {
                           name="razaoSocial"
                           value={form.razaoSocial}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-primary transition-all duration-300 bg-white/80 hover:bg-white hover:border-primary/50"
+                          onBlur={() => handleBlur("razaoSocial")}
+                          className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-0 transition-all duration-300 bg-white/80 hover:bg-white ${
+                            getFieldError("razaoSocial")
+                              ? "border-red-500 focus:border-red-600"
+                              : "border-gray-200 focus:border-primary hover:border-primary/50"
+                          }`}
                           placeholder="Nome completo da empresa"
                           required
                         />
+                        {getFieldError("razaoSocial") && (
+                          <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                            <AlertCircle className="h-4 w-4" />
+                            {getFieldError("razaoSocial")}
+                          </p>
+                        )}
                       </div>
 
                       <div>
@@ -727,11 +820,22 @@ export default function CadastroClientePage() {
                           name="cnpj"
                           value={formatCnpjCpf(form.cnpj)}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-primary transition-all duration-300 bg-white/80 hover:bg-white hover:border-primary/50"
+                          onBlur={() => handleBlur("cnpj")}
+                          className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-0 transition-all duration-300 bg-white/80 hover:bg-white ${
+                            getFieldError("cnpj")
+                              ? "border-red-500 focus:border-red-600"
+                              : "border-gray-200 focus:border-primary hover:border-primary/50"
+                          }`}
                           placeholder="00.000.000/0000-00"
                           maxLength={18}
                           required
                         />
+                        {getFieldError("cnpj") && (
+                          <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                            <AlertCircle className="h-4 w-4" />
+                            {getFieldError("cnpj")}
+                          </p>
+                        )}
                       </div>
 
                       <div>
@@ -1180,13 +1284,17 @@ export default function CadastroClientePage() {
                         {isLoading ? (
                           <>
                             <Loader2 className="h-5 w-5 animate-spin" />
-                            <span className="hidden sm:inline">Enviando Solicitação...</span>
+                            <span className="hidden sm:inline">
+                              Enviando Solicitação...
+                            </span>
                             <span className="sm:hidden">Enviando...</span>
                           </>
                         ) : isSuccess ? (
                           <>
                             <CheckCircle className="h-5 w-5" />
-                            <span className="hidden sm:inline">Solicitação Enviada!</span>
+                            <span className="hidden sm:inline">
+                              Solicitação Enviada!
+                            </span>
                             <span className="sm:hidden">Enviada!</span>
                           </>
                         ) : (
@@ -1212,7 +1320,9 @@ export default function CadastroClientePage() {
                           className="flex-1 flex items-center justify-center gap-2 px-4 sm:px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-semibold text-sm sm:text-base"
                         >
                           <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-                          <span className="hidden sm:inline">Voltar ao Login</span>
+                          <span className="hidden sm:inline">
+                            Voltar ao Login
+                          </span>
                           <span className="sm:hidden">Login</span>
                         </Link>
                       </div>
