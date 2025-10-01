@@ -51,54 +51,67 @@ export async function GET(request: NextRequest) {
 
     const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
 
-    const [pedidosHoje, pedidosMes, pedidosRecentes] = await Promise.all([
-      // Pedidos de hoje
-      prisma.pedido.count({
-        where: {
-          userId: { in: clientesIds },
-          createdAt: { gte: hoje },
-        },
-      }),
+    const [pedidosHoje, pedidosMes, pedidosConcluidosMes, pedidosRecentes] =
+      await Promise.all([
+        // Pedidos de hoje
+        prisma.pedido.count({
+          where: {
+            userId: { in: clientesIds },
+            createdAt: { gte: hoje },
+          },
+        }),
 
-      // Pedidos do mês
-      prisma.pedido.findMany({
-        where: {
-          userId: { in: clientesIds },
-          createdAt: { gte: inicioMes },
-        },
-        select: {
-          total: true,
-        },
-      }),
+        // Pedidos do mês (para contagem total)
+        prisma.pedido.findMany({
+          where: {
+            userId: { in: clientesIds },
+            createdAt: { gte: inicioMes },
+          },
+          select: {
+            total: true,
+          },
+        }),
 
-      // Pedidos recentes
-      prisma.pedido.findMany({
-        where: {
-          userId: { in: clientesIds },
-        },
-        take: 10,
-        orderBy: { createdAt: "desc" },
-        include: {
-          user: {
-            include: {
-              cliente: {
-                select: {
-                  razaoSocial: true,
+        // Pedidos concluídos do mês (para cálculo de comissão)
+        prisma.pedido.findMany({
+          where: {
+            userId: { in: clientesIds },
+            createdAt: { gte: inicioMes },
+            status: "ENTREGUE", // Apenas pedidos concluídos
+          },
+          select: {
+            total: true,
+          },
+        }),
+
+        // Pedidos recentes
+        prisma.pedido.findMany({
+          where: {
+            userId: { in: clientesIds },
+          },
+          take: 10,
+          orderBy: { createdAt: "desc" },
+          include: {
+            user: {
+              include: {
+                cliente: {
+                  select: {
+                    razaoSocial: true,
+                  },
                 },
               },
             },
           },
-        },
-      }),
-    ]);
+        }),
+      ]);
 
-    // Calcular comissão do mês
-    const totalVendasMes = pedidosMes.reduce(
+    // Calcular comissão do mês (apenas pedidos ENTREGUES)
+    const totalVendasConcluidas = pedidosConcluidosMes.reduce(
       (acc, pedido) => acc + parseFloat(pedido.total.toString()),
       0
     );
     const comissaoMes =
-      (totalVendasMes *
+      (totalVendasConcluidas *
         parseFloat(representante.comissaoPercentual.toString())) /
       100;
 

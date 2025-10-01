@@ -194,7 +194,10 @@ function RedefinirSenhaContent() {
           </div>
 
           {/* Card */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-2xl p-6 sm:p-8 border border-white/20 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+          <div
+            className="bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-2xl p-6 sm:p-8 border border-white/20 animate-fade-in-up"
+            style={{ animationDelay: "0.1s" }}
+          >
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Código de Verificação */}
               <div>
@@ -314,7 +317,9 @@ function RedefinirSenhaContent() {
                 {loading ? (
                   <>
                     <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
-                    <span className="hidden sm:inline">Redefinindo senha...</span>
+                    <span className="hidden sm:inline">
+                      Redefinindo senha...
+                    </span>
                     <span className="sm:hidden">Redefinindo...</span>
                   </>
                 ) : (
