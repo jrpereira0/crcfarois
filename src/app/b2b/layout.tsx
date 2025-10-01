@@ -100,16 +100,6 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
 
   useEffect(() => {
     setMounted(true);
-
-    // Aplicar overflow hidden ao body apenas no B2B
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-
-    // Cleanup ao sair do B2B
-    return () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-    };
   }, []);
 
   useEffect(() => {
@@ -143,7 +133,7 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
   }
 
   return (
-    <div className="b2b-layout bg-gray-50 flex">
+    <div className="bg-gray-50 flex min-h-screen">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
@@ -154,11 +144,11 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:relative lg:flex lg:flex-col ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full lg:h-screen">
           {/* Logo */}
           <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
             <div className="flex items-center gap-3">
@@ -259,9 +249,9 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 overflow-auto lg:ml-64">
         {/* Top bar */}
-        <div className="bg-white shadow-sm border-b border-gray-200 flex-shrink-0">
+        <div className="bg-white shadow-sm border-b border-gray-200 flex-shrink-0 sticky top-0 z-10">
           <div className="flex items-center justify-between h-16 px-6">
             <div className="flex items-center gap-4">
               <button
@@ -295,7 +285,7 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
         </div>
 
         {/* Page content */}
-        <main className="b2b-main flex-1 bg-gray-50">
+        <main className="flex-1 bg-gray-50">
           <div className="p-6">{children}</div>
         </main>
       </div>

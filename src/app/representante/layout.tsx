@@ -2,10 +2,13 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { RepresentanteCartProvider } from "@/contexts/RepresentanteCartContext";
+import {
+  RepresentanteCartProvider,
+  useRepresentanteCart,
+} from "@/contexts/RepresentanteCartContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 import {
   Users,
@@ -23,6 +26,69 @@ import {
 interface RepresentanteLayoutProps {
   children: React.ReactNode;
 }
+
+// Componente separado para o link do carrinho que usa o contexto
+const CartLink = memo(function CartLink({
+  pathname,
+  setSidebarOpen,
+}: {
+  pathname: string;
+  setSidebarOpen: (open: boolean) => void;
+}) {
+  const { items, isLoaded } = useRepresentanteCart();
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [prevTotalItems, setPrevTotalItems] = useState(0);
+
+  const totalItems = items.reduce((sum, item) => sum + item.quantidade, 0);
+
+  // Animar quando items são adicionados
+  useEffect(() => {
+    if (totalItems > prevTotalItems && prevTotalItems > 0) {
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 600);
+    }
+    setPrevTotalItems(totalItems);
+  }, [totalItems, prevTotalItems]);
+
+  const handleCartClick = useCallback(() => {
+    setSidebarOpen(false);
+  }, [setSidebarOpen]);
+
+  return (
+    <Link
+      href="/representante/carrinho"
+      className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
+        pathname === "/representante/carrinho"
+          ? "bg-primary text-white shadow-sm"
+          : "text-gray-700 hover:bg-gray-100"
+      } ${isAnimating ? "scale-110" : "scale-100"}`}
+      onClick={handleCartClick}
+    >
+      <div className="relative">
+        <ShoppingCart
+          className={`h-5 w-5 transition-transform duration-300 ${
+            isAnimating ? "scale-125" : "scale-100"
+          }`}
+        />
+        {totalItems > 0 && (
+          <span
+            className={`absolute -top-2 -right-2 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium transition-all duration-300 ${
+              isAnimating ? "scale-125 bg-green-500" : "scale-100"
+            }`}
+          >
+            {totalItems > 99 ? "99+" : totalItems}
+          </span>
+        )}
+      </div>
+      <span className="font-medium">Carrinho</span>
+      {totalItems > 0 && (
+        <span className="ml-auto text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">
+          {totalItems}
+        </span>
+      )}
+    </Link>
+  );
+});
 
 // Componente interno que usa o contexto
 function RepresentanteLayoutContent({ children }: RepresentanteLayoutProps) {
@@ -163,18 +229,7 @@ function RepresentanteLayoutContent({ children }: RepresentanteLayoutProps) {
               <span className="font-medium">Pedidos</span>
             </Link>
 
-            <Link
-              href="/representante/carrinho"
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                pathname.startsWith("/representante/carrinho")
-                  ? "bg-primary text-white shadow-sm"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-              onClick={() => setSidebarOpen(false)}
-            >
-              <ShoppingCart className="h-5 w-5" />
-              <span className="font-medium">Carrinho</span>
-            </Link>
+            <CartLink pathname={pathname} setSidebarOpen={setSidebarOpen} />
 
             <Link
               href="/representante/novo-pedido"

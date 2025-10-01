@@ -159,12 +159,28 @@ export async function POST(request: NextRequest) {
     });
 
     if (itemExistente) {
-      // Atualizar quantidade
-      const novaQuantidade = Math.min(
-        itemExistente.quantidade + quantidade,
-        maxQuantidade
-      );
+      // Calcular nova quantidade total
+      const novaQuantidade = itemExistente.quantidade + quantidade;
 
+      // Verificar se excede o máximo permitido
+      if (novaQuantidade > maxQuantidade) {
+        return NextResponse.json(
+          {
+            error: `Você já tem ${itemExistente.quantidade} unidade(s) deste produto no carrinho. Quantidade máxima permitida: ${maxQuantidade}`,
+          },
+          { status: 400 }
+        );
+      }
+
+      // Validar quantidade mínima (não é necessário para atualização, mas mantém consistência)
+      if (novaQuantidade < produto.compraMinima) {
+        return NextResponse.json(
+          { error: `Quantidade mínima: ${produto.compraMinima}` },
+          { status: 400 }
+        );
+      }
+
+      // Atualizar quantidade
       await prisma.carrinhoItem.update({
         where: { id: itemExistente.id },
         data: {
@@ -242,11 +258,30 @@ export async function PUT(request: NextRequest) {
         },
       });
     } else {
-      // Validar quantidade
-      const quantidadeValida = Math.max(
-        produto.compraMinima,
-        Math.min(quantidade, produto.compraMaxima || produto.quantidadeEstoque)
-      );
+      // Validar quantidade mínima
+      if (quantidade < produto.compraMinima) {
+        return NextResponse.json(
+          { error: `Quantidade mínima: ${produto.compraMinima}` },
+          { status: 400 }
+        );
+      }
+
+      // Validar quantidade máxima
+      const maxQuantidade = produto.compraMaxima || produto.quantidadeEstoque;
+      if (quantidade > maxQuantidade) {
+        return NextResponse.json(
+          { error: `Quantidade máxima: ${maxQuantidade}` },
+          { status: 400 }
+        );
+      }
+
+      // Validar estoque
+      if (quantidade > produto.quantidadeEstoque) {
+        return NextResponse.json(
+          { error: `Estoque disponível: ${produto.quantidadeEstoque}` },
+          { status: 400 }
+        );
+      }
 
       await prisma.carrinhoItem.upsert({
         where: {
@@ -256,13 +291,13 @@ export async function PUT(request: NextRequest) {
           },
         },
         update: {
-          quantidade: quantidadeValida,
+          quantidade: quantidade,
           precoUnitario: produto.preco,
         },
         create: {
           carrinhoId: carrinho.id,
           produtoId: produtoId,
-          quantidade: quantidadeValida,
+          quantidade: quantidade,
           precoUnitario: produto.preco,
         },
       });
@@ -308,4 +343,3 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
-

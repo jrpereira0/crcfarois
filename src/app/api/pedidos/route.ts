@@ -127,13 +127,15 @@ export async function POST(request: NextRequest) {
     });
     console.log("Último pedido encontrado:", ultimoPedido);
 
-    let numeroSequencial = 1;
+    let numeroSequencial = 2025;
     if (ultimoPedido) {
-      const ultimoNumero = parseInt(ultimoPedido.numero.replace("PED-", ""));
-      numeroSequencial = ultimoNumero + 1;
+      const ultimoNumero = parseInt(ultimoPedido.numero);
+      if (!isNaN(ultimoNumero)) {
+        numeroSequencial = ultimoNumero + 1;
+      }
     }
 
-    const numeroPedido = `PED-${numeroSequencial.toString().padStart(6, "0")}`;
+    const numeroPedido = numeroSequencial.toString();
 
     // Buscar produtos para validar preços e calcular totais
     const produtoIds = itens.map((item: any) => item.produtoId);

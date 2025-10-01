@@ -70,7 +70,18 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 
       if (existingItemIndex >= 0) {
         const newItems = [...state.items];
-        newItems[existingItemIndex].quantidade += action.payload.quantidade;
+        const itemAtual = newItems[existingItemIndex];
+        const maxQuantidade =
+          action.payload.produto.compraMaxima ||
+          action.payload.produto.quantidadeEstoque;
+        const novaQuantidade = itemAtual.quantidade + action.payload.quantidade;
+
+        // Se ultrapassar o máximo, não adiciona
+        if (novaQuantidade > maxQuantidade) {
+          return state; // Mantém estado atual
+        }
+
+        newItems[existingItemIndex].quantidade = novaQuantidade;
         return { ...state, items: newItems };
       } else {
         return {
@@ -173,14 +184,35 @@ export function RepresentanteCartProvider({
   }, [state]);
 
   const addItem = async (produto: Produto, quantidade: number) => {
-    // Validar quantidade
+    // Verificar se o produto já existe no carrinho
+    const itemExistente = state.items.find(
+      (item) => item.produto.id === produto.id
+    );
+
+    // Validar quantidade inicial
     if (quantidade < produto.compraMinima) {
       throw new Error(`Quantidade mínima: ${produto.compraMinima}`);
     }
-    if (produto.compraMaxima && quantidade > produto.compraMaxima) {
-      throw new Error(`Quantidade máxima: ${produto.compraMaxima}`);
+
+    // Calcular quantidade total que ficaria no carrinho
+    const quantidadeTotal = itemExistente
+      ? itemExistente.quantidade + quantidade
+      : quantidade;
+
+    // Validar quantidade máxima considerando o que já está no carrinho
+    const maxQuantidade = produto.compraMaxima || produto.quantidadeEstoque;
+    if (quantidadeTotal > maxQuantidade) {
+      if (itemExistente) {
+        throw new Error(
+          `Você já tem ${itemExistente.quantidade} unidade(s) deste produto no carrinho. Quantidade máxima permitida: ${maxQuantidade}`
+        );
+      } else {
+        throw new Error(`Quantidade máxima: ${maxQuantidade}`);
+      }
     }
-    if (quantidade > produto.quantidadeEstoque) {
+
+    // Validar estoque
+    if (quantidadeTotal > produto.quantidadeEstoque) {
       throw new Error(`Estoque disponível: ${produto.quantidadeEstoque}`);
     }
 

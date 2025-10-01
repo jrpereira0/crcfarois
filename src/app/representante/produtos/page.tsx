@@ -292,9 +292,13 @@ export default function ProdutosRepresentantePage() {
           return newSet;
         });
       }, 2000);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao adicionar produto ao carrinho:", error);
-      showToast("Erro ao adicionar produto ao carrinho", "error");
+      // Mostrar mensagem de erro específica ao usuário
+      showToast(
+        error.message || "Erro ao adicionar produto ao carrinho",
+        "error"
+      );
     } finally {
       setAddingToCart(null);
     }

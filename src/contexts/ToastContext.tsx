@@ -95,22 +95,29 @@ function ToastContainer({
 
   return (
     <>
-      {/* Desktop Toast Container */}
-      <div className="hidden md:block fixed bottom-4 right-4 z-50 space-y-2 max-w-sm">
+      {/* Toast Container - TESTE: Forçando visibilidade total */}
+      <div
+        data-toast-container="universal"
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          zIndex: 999999,
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
+          maxWidth: "400px",
+          pointerEvents: "none",
+        }}
+      >
         {toasts.map((toast) => (
-          <ToastItem key={toast.id} toast={toast} onRemove={removeToast} />
-        ))}
-      </div>
-
-      {/* Mobile Toast Container */}
-      <div className="md:hidden fixed top-20 left-4 right-4 z-50 space-y-2">
-        {toasts.map((toast) => (
-          <ToastItem
+          <div
             key={toast.id}
-            toast={toast}
-            onRemove={removeToast}
-            isMobile
-          />
+            style={{ pointerEvents: "auto" }}
+            data-toast-id={toast.id}
+          >
+            <ToastItem toast={toast} onRemove={removeToast} />
+          </div>
         ))}
       </div>
     </>
@@ -156,11 +163,18 @@ function ToastItem({
   if (toast.type === "cart" && toast.product) {
     return (
       <div
-        className={`flex items-start gap-3 p-4 rounded-xl border-2 shadow-xl bg-white border-primary/20 ${
-          isMobile
-            ? "w-full toast-enter-mobile"
-            : "min-w-[350px] max-w-[400px] toast-enter-desktop"
-        }`}
+        style={{
+          backgroundColor: "#ffffff",
+          border: "3px solid #3b82f6",
+          borderRadius: "12px",
+          padding: "16px",
+          minWidth: "350px",
+          maxWidth: "400px",
+          boxShadow: "0 10px 40px rgba(0, 0, 0, 0.3)",
+          display: "flex",
+          alignItems: "start",
+          gap: "12px",
+        }}
       >
         {/* Produto Image */}
         <div className="relative w-12 h-12 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
@@ -199,7 +213,14 @@ function ToastItem({
         {/* Ações */}
         <div className="flex flex-col gap-2">
           <button
-            onClick={() => (window.location.href = "/b2b/carrinho")}
+            onClick={() => {
+              // Detectar se está no painel do representante ou B2B
+              const isRepresentante =
+                window.location.pathname.startsWith("/representante");
+              window.location.href = isRepresentante
+                ? "/representante/carrinho"
+                : "/b2b/carrinho";
+            }}
             className="text-xs bg-primary text-white px-3 py-1.5 rounded-lg hover:bg-primary/90 transition-colors font-medium"
           >
             Ver Carrinho
@@ -216,13 +237,32 @@ function ToastItem({
   }
 
   // Toast normal
+  const bgColor =
+    toast.type === "error"
+      ? "#fee2e2"
+      : toast.type === "success"
+      ? "#dcfce7"
+      : "#dbeafe";
+  const borderColor =
+    toast.type === "error"
+      ? "#ef4444"
+      : toast.type === "success"
+      ? "#22c55e"
+      : "#3b82f6";
+
   return (
     <div
-      className={`flex items-center gap-3 p-4 rounded-lg border shadow-lg ${
-        isMobile
-          ? "w-full toast-enter-mobile"
-          : "min-w-[300px] toast-enter-desktop"
-      } ${getStyles()}`}
+      style={{
+        backgroundColor: bgColor,
+        border: `3px solid ${borderColor}`,
+        borderRadius: "8px",
+        padding: "16px",
+        minWidth: "300px",
+        boxShadow: "0 10px 40px rgba(0, 0, 0, 0.3)",
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+      }}
     >
       {getIcon()}
       <span className="flex-1 text-sm font-medium">{toast.message}</span>

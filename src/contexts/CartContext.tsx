@@ -58,13 +58,18 @@ function cartReducer(state: CartState, action: CartAction): CartState {
       let newItems: CartItem[];
 
       if (existingItemIndex > -1) {
-        // Item já existe, atualizar quantidade
+        // Item já existe, verificar se pode adicionar mais
+        const itemAtual = state.items[existingItemIndex];
+        const maxQuantidade = produto.compraMaxima || produto.quantidadeEstoque;
+        const novaQuantidade = itemAtual.quantidade + quantidade;
+
+        // Se ultrapassar o máximo, manter a quantidade atual (servidor validará)
+        if (novaQuantidade > maxQuantidade) {
+          return state; // Não altera o estado, servidor retornará erro
+        }
+
         newItems = state.items.map((item, index) => {
           if (index === existingItemIndex) {
-            const novaQuantidade = Math.min(
-              item.quantidade + quantidade,
-              produto.compraMaxima || produto.quantidadeEstoque
-            );
             return {
               ...item,
               quantidade: novaQuantidade,
@@ -267,20 +272,32 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const addItem = async (produto: any, quantidade: number) => {
-    // Atualizar estado local imediatamente para responsividade
-    dispatch({ type: "ADD_ITEM", payload: { produto, quantidade } });
-
     // Sincronizar com servidor se online
     if (isOnline) {
       try {
-        await fetch("/api/carrinho", {
+        const response = await fetch("/api/carrinho", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ produtoId: produto.id, quantidade }),
         });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          // Se houver erro, mostrar ao usuário
+          throw new Error(data.error || "Erro ao adicionar item ao carrinho");
+        }
+
+        // Se sucesso, recarregar carrinho do servidor para garantir sincronia
+        await loadCartFromServer();
       } catch (error) {
-        console.error("Erro ao sincronizar adição com servidor:", error);
+        console.error("Erro ao adicionar item:", error);
+        // Re-lançar erro para ser capturado pelo componente que chamou
+        throw error;
       }
+    } else {
+      // Se offline, atualizar estado local apenas
+      dispatch({ type: "ADD_ITEM", payload: { produto, quantidade } });
     }
   };
 

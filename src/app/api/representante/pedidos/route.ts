@@ -244,10 +244,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Buscar o representante logado
+    const representante = await prisma.representante.findUnique({
+      where: { userId: session.user.id },
+    });
+
+    if (!representante) {
+      return NextResponse.json(
+        { error: "Representante não encontrado" },
+        { status: 404 }
+      );
+    }
+
     // Verificar se o cliente está atribuído ao representante
     const relacionamento = await prisma.representanteCliente.findFirst({
       where: {
-        representanteId: session.user.id,
+        representanteId: representante.id,
         clienteId: clienteId,
       },
       include: {
@@ -312,11 +324,15 @@ export async function POST(request: NextRequest) {
       select: { numero: true },
     });
 
-    const ultimoNumero = ultimoPedido?.numero || "0000";
-    const proximoNumero = (parseInt(ultimoNumero) + 1)
-      .toString()
-      .padStart(4, "0");
-    const numeroPedido = proximoNumero;
+    let numeroSequencial = 2025;
+    if (ultimoPedido) {
+      const ultimoNumero = parseInt(ultimoPedido.numero);
+      if (!isNaN(ultimoNumero)) {
+        numeroSequencial = ultimoNumero + 1;
+      }
+    }
+
+    const numeroPedido = numeroSequencial.toString();
 
     // Criar pedido
     const pedido = await prisma.pedido.create({
