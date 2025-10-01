@@ -406,7 +406,7 @@ export async function POST(request: NextRequest) {
     // Enviar email para o cliente
     const emailClientePromise = enviarEmailNovoPedidoCliente({
       nomeCliente:
-        pedido.user.cliente?.nomeResponsavel || pedido.user.name || "Cliente",
+        pedido.user.cliente?.responsavel || pedido.user.name || "Cliente",
       emailCliente: pedido.user.email || "",
       numeroPedido: pedido.numero,
       dataPedido: dataFormatada,
