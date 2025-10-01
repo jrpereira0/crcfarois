@@ -222,16 +222,16 @@ export default function Produtos() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {categorias.map((categoria, index) => (
               <div
                 key={categoria.id}
-                className="group bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-8 border border-gray-100 hover:scale-105"
+                className="group bg-white rounded-2xl md:rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-5 md:p-8 border border-gray-100 hover:scale-105"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="text-center mb-6">
+                <div className="text-center mb-4 md:mb-6">
                   <div
-                    className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 ${
+                    className={`w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center mx-auto mb-4 md:mb-6 ${
                       categoria.cor === "primary"
                         ? "bg-primary/10"
                         : "bg-yellow-300/20"
@@ -239,29 +239,29 @@ export default function Produtos() {
                   >
                     {categoria.icone}
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">
                     {categoria.nome}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
                     {categoria.descricao}
                   </p>
                 </div>
 
-                <div className="space-y-3 mb-8">
+                <div className="space-y-2 md:space-y-3 mb-6 md:mb-8">
                   {categoria.produtos.map((produto, produtoIndex) => (
                     <div
                       key={produtoIndex}
-                      className="flex items-center space-x-3"
+                      className="flex items-center space-x-2 md:space-x-3"
                     >
-                      <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
-                      <span className="text-gray-700 text-sm">{produto}</span>
+                      <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full flex-shrink-0"></div>
+                      <span className="text-gray-700 text-xs md:text-sm">{produto}</span>
                     </div>
                   ))}
                 </div>
 
                 <Link
                   href="/login"
-                  className={`w-full py-4 px-6 rounded-xl font-semibold text-center inline-flex items-center justify-center transition-all duration-300 ${
+                  className={`w-full py-3 md:py-4 px-4 md:px-6 rounded-lg md:rounded-xl font-semibold text-sm md:text-base text-center inline-flex items-center justify-center transition-all duration-300 ${
                     categoria.cor === "primary"
                       ? "bg-primary text-white hover:bg-primary/90"
                       : "bg-yellow-300 text-primary hover:bg-yellow-400"
