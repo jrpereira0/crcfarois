@@ -72,7 +72,7 @@ export default function Header() {
                 </div>
                 <div className="flex items-center space-x-1 flex-shrink-0">
                   <Mail size={12} />
-                  <span>contato@crc.ind.br</span>
+                  <span>contato@crcfarois.ind.br</span>
                 </div>
                 <div className="flex items-center space-x-1 flex-shrink-0">
                   <MapPin size={12} />
@@ -91,7 +91,7 @@ export default function Header() {
                 </div>
                 <div className="flex items-center space-x-1 flex-shrink-0">
                   <Mail size={12} />
-                  <span>contato@crc.ind.br</span>
+                  <span>contato@crcfarois.ind.br</span>
                 </div>
                 <div className="flex items-center space-x-1 flex-shrink-0">
                   <MapPin size={12} />
@@ -115,7 +115,7 @@ export default function Header() {
             </div>
             <div className="flex items-center space-x-1">
               <Mail size={14} />
-              <span>contato@crc.ind.br</span>
+              <span>contato@crcfarois.ind.br</span>
             </div>
             <div className="flex items-center space-x-1">
               <MapPin size={14} />

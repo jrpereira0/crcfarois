@@ -123,7 +123,7 @@ export default function Footer() {
               <div className="flex items-center space-x-3">
                 <Mail size={18} className="text-primary flex-shrink-0" />
                 <span className="text-gray-300 text-sm">
-                  contato@crc.ind.br
+                  contato@crcfarois.ind.br
                 </span>
               </div>
 

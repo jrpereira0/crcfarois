@@ -157,24 +157,24 @@ export default function Contato() {
                 </div>
                 <h3 className="text-2xl font-bold mb-3">Envie um E-mail</h3>
                 <p className="text-primary/80 mb-6">
-                  Receba uma resposta detalhada em até 24 horas
+                  Tire suas dúvidas com a nossa equipe.
                 </p>
                 <div className="space-y-3">
                   <div className="flex items-center">
                     <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
                     <span className="font-semibold">
-                      contato@crc.ind.br
+                      contato@crcfarois.ind.br
                     </span>
                   </div>
                   <div className="flex items-center">
                     <Clock size={16} className="text-primary/70 mr-3" />
                     <span className="text-primary/70">
-                      Resposta em até 24 horas
+                      Resposta em até 48 horas
                     </span>
                   </div>
                 </div>
                 <a
-                  href="mailto:contato@crc.ind.br"
+                  href="mailto:contato@crcfarois.ind.br"
                   className="inline-flex items-center mt-6 bg-white/30 backdrop-blur-sm hover:bg-white/40 text-primary px-6 py-3 rounded-xl font-semibold transition-all duration-300 group-hover:translate-x-1"
                 >
                   <Mail size={16} className="mr-2" />
@@ -572,7 +572,7 @@ export default function Contato() {
               Ligar Agora
             </a>
             <a
-              href="mailto:contato@crc.ind.br"
+              href="mailto:contato@crcfarois.ind.br"
               className="border-2 border-primary bg-white text-primary px-8 py-4 rounded-xl font-semibold text-lg hover:bg-primary hover:text-white hover:scale-105 transition-all duration-300 inline-flex items-center justify-center"
             >
               <Mail className="mr-2" size={20} />

@@ -527,7 +527,8 @@ export default function QuemSomos() {
                       Horário de Funcionamento
                     </p>
                     <p className="font-medium text-gray-900">
-                      Seg - Sex: 8h às 18h
+                      Seg - Qui: 8h às 17h <br />
+                      Sex: 8h às 16h
                     </p>
                   </div>
                 </div>

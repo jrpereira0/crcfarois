@@ -266,7 +266,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-5 h-5 text-blue-400" />
-                    <span className="font-medium">Aprovação em até 24h</span>
+                    <span className="font-medium">Aprovação em até 48h</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Headphones className="w-5 h-5 text-yellow-400" />
@@ -578,12 +578,12 @@ export default function Home() {
                   E-mail
                 </h3>
                 <p className="text-lg text-white/90 mb-4 font-semibold break-all">
-                  contato@crc.ind.br
+                  contato@crcfarois.ind.br
                 </p>
                 <div className="space-y-2">
                   <div className="inline-flex items-center bg-white/10 px-3 py-1 rounded-full text-sm text-white/80">
                     <CheckCircle className="w-3 h-3 mr-2 text-green-400" />
-                    Resposta em até 24h
+                    Resposta em até 48h
                   </div>
                   <div className="inline-flex items-center bg-white/10 px-3 py-1 rounded-full text-sm text-white/80">
                     <Headphones className="w-3 h-3 mr-2 text-yellow-400" />

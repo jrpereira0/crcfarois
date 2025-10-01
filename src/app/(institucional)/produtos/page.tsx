@@ -254,7 +254,9 @@ export default function Produtos() {
                       className="flex items-center space-x-2 md:space-x-3"
                     >
                       <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full flex-shrink-0"></div>
-                      <span className="text-gray-700 text-xs md:text-sm">{produto}</span>
+                      <span className="text-gray-700 text-xs md:text-sm">
+                        {produto}
+                      </span>
                     </div>
                   ))}
                 </div>
