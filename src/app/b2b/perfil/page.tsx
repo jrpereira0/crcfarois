@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
   User,
@@ -232,10 +232,10 @@ export default function PerfilClientePage() {
         setShowEmailModal(false);
         setNovoEmail("");
         setSenhaParaEmail("");
-        // Fazer logout após 3 segundos
-        setTimeout(() => {
-          window.location.href = "/login";
-        }, 3000);
+        // Fazer logout após 2 segundos
+        setTimeout(async () => {
+          await signOut({ callbackUrl: "/login", redirect: true });
+        }, 2000);
       } else {
         // Mostrar erro específico retornado pela API
         setError(data.error || "Erro ao alterar email");
