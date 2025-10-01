@@ -108,10 +108,7 @@ export async function PUT(
     if (email) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        return NextResponse.json(
-          { error: "Email inválido" },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "Email inválido" }, { status: 400 });
       }
 
       // Verificar se email já está em uso por outro usuário
@@ -232,4 +229,3 @@ export async function DELETE(
     );
   }
 }
-
