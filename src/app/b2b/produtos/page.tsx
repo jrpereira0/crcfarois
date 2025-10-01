@@ -16,6 +16,8 @@ import {
   Truck,
   Calendar,
   ChevronDown,
+  FileText,
+  ClipboardList,
 } from "lucide-react";
 import Image from "next/image";
 import { useCart } from "@/contexts/CartContext";
@@ -780,21 +782,23 @@ export default function ProdutosB2BPage() {
                     {/* Informações Técnicas */}
                     <div className="space-y-4">
                       <h4 className="text-lg font-semibold text-gray-900">
-                        Informações Técnicas
+                        Informações do Produto
                       </h4>
 
                       <div className="grid grid-cols-1 gap-4">
-                        <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-                          <div className="flex items-center gap-3 mb-2">
-                            <Package className="h-5 w-5 text-primary" />
-                            <h5 className="font-semibold text-gray-900">
-                              Categoria
-                            </h5>
+                        {selectedProduct.descricao && (
+                          <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+                            <div className="flex items-center gap-3 mb-2">
+                              <FileText className="h-5 w-5 text-primary" />
+                              <h5 className="font-semibold text-gray-900">
+                                Descrição
+                              </h5>
+                            </div>
+                            <div className="text-gray-700 ml-8 leading-relaxed whitespace-pre-line">
+                              {selectedProduct.descricao}
+                            </div>
                           </div>
-                          <p className="text-gray-700 ml-8">
-                            {selectedProduct.categoria.nome}
-                          </p>
-                        </div>
+                        )}
 
                         {selectedProduct.aplicacao && (
                           <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
@@ -804,24 +808,11 @@ export default function ProdutosB2BPage() {
                                 Aplicação
                               </h5>
                             </div>
-                            <p className="text-gray-700 ml-8">
+                            <div className="text-gray-700 ml-8 leading-relaxed whitespace-pre-line">
                               {selectedProduct.aplicacao}
-                            </p>
+                            </div>
                           </div>
                         )}
-
-                        <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-                          <div className="flex items-center gap-3 mb-2">
-                            <Truck className="h-5 w-5 text-primary" />
-                            <h5 className="font-semibold text-gray-900">
-                              Estoque
-                            </h5>
-                          </div>
-                          <p className="text-gray-700 ml-8">
-                            {selectedProduct.quantidadeEstoque} unidades
-                            disponíveis
-                          </p>
-                        </div>
 
                         <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
                           <div className="flex items-center gap-3 mb-2">
@@ -843,20 +834,6 @@ export default function ProdutosB2BPage() {
                             )}
                           </div>
                         </div>
-
-                        {selectedProduct.descricao && (
-                          <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-                            <div className="flex items-center gap-3 mb-2">
-                              <Calendar className="h-5 w-5 text-primary" />
-                              <h5 className="font-semibold text-gray-900">
-                                Descrição
-                              </h5>
-                            </div>
-                            <p className="text-gray-700 ml-8 leading-relaxed">
-                              {selectedProduct.descricao}
-                            </p>
-                          </div>
-                        )}
                       </div>
                     </div>
                   </div>
