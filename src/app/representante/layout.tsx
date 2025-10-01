@@ -20,7 +20,7 @@ import {
   Package,
   ShoppingBag,
   ShoppingCart,
-  Plus,
+  ChevronDown,
 } from "lucide-react";
 
 interface RepresentanteLayoutProps {
@@ -57,14 +57,14 @@ const CartLink = memo(function CartLink({
   return (
     <Link
       href="/representante/carrinho"
-      className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
+      className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
         pathname === "/representante/carrinho"
-          ? "bg-primary text-white shadow-sm"
+          ? "bg-primary text-white"
           : "text-gray-700 hover:bg-gray-100"
       } ${isAnimating ? "scale-110" : "scale-100"}`}
       onClick={handleCartClick}
     >
-      <div className="relative">
+      <div className="relative mr-3">
         <ShoppingCart
           className={`h-5 w-5 transition-transform duration-300 ${
             isAnimating ? "scale-125" : "scale-100"
@@ -80,12 +80,7 @@ const CartLink = memo(function CartLink({
           </span>
         )}
       </div>
-      <span className="font-medium">Carrinho</span>
-      {totalItems > 0 && (
-        <span className="ml-auto text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">
-          {totalItems}
-        </span>
-      )}
+      Carrinho
     </Link>
   );
 });
@@ -96,6 +91,7 @@ function RepresentanteLayoutContent({ children }: RepresentanteLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -144,116 +140,119 @@ function RepresentanteLayoutContent({ children }: RepresentanteLayoutProps) {
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:fixed lg:flex lg:flex-col ${
+        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out border-r border-gray-200 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
-            <div className="flex items-center gap-3">
-              <div className="bg-primary p-2 rounded-lg">
-                <Image
-                  src="/logobranca.svg"
-                  alt="CRC Faróis"
-                  width={120}
-                  height={44}
-                  className="h-8 w-auto"
-                  priority
-                />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-gray-900">CRC Vendas</h1>
-                <p className="text-xs text-gray-500">Representante</p>
-              </div>
-            </div>
+          <div className="flex items-center justify-center h-16 px-4 bg-primary relative">
+            <Image
+              src="/logobranca.svg"
+              alt="CRC Faróis"
+              width={140}
+              height={51}
+              className="h-9 w-auto"
+              priority
+            />
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-1 rounded-lg hover:bg-gray-100"
+              className="lg:hidden absolute right-4 text-white hover:text-gray-200"
             >
-              <X className="h-5 w-5 text-gray-500" />
+              <X className="h-6 w-6" />
             </button>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+          <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
             <Link
               href="/representante"
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                 pathname === "/representante"
-                  ? "bg-primary text-white shadow-sm"
+                  ? "bg-primary text-white"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
               onClick={() => setSidebarOpen(false)}
             >
-              <Home className="h-5 w-5" />
-              <span className="font-medium">Início</span>
+              <Home className="mr-3 h-5 w-5" />
+              Início
             </Link>
 
             <Link
               href="/representante/clientes"
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                 pathname.startsWith("/representante/clientes")
-                  ? "bg-primary text-white shadow-sm"
+                  ? "bg-primary text-white"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
               onClick={() => setSidebarOpen(false)}
             >
-              <Users className="h-5 w-5" />
-              <span className="font-medium">Meus Clientes</span>
+              <Users className="mr-3 h-5 w-5" />
+              Meus Clientes
             </Link>
 
             <Link
               href="/representante/produtos"
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                 pathname.startsWith("/representante/produtos")
-                  ? "bg-primary text-white shadow-sm"
+                  ? "bg-primary text-white"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
               onClick={() => setSidebarOpen(false)}
             >
-              <Package className="h-5 w-5" />
-              <span className="font-medium">Catálogo</span>
+              <Package className="mr-3 h-5 w-5" />
+              Catálogo
             </Link>
 
             <Link
               href="/representante/pedidos"
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+              className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                 pathname.startsWith("/representante/pedidos")
-                  ? "bg-primary text-white shadow-sm"
+                  ? "bg-primary text-white"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
               onClick={() => setSidebarOpen(false)}
             >
-              <ShoppingBag className="h-5 w-5" />
-              <span className="font-medium">Pedidos</span>
+              <ShoppingBag className="mr-3 h-5 w-5" />
+              Pedidos
             </Link>
 
             <CartLink pathname={pathname} setSidebarOpen={setSidebarOpen} />
           </nav>
 
-          {/* User info and logout */}
-          <div className="border-t border-gray-200 p-4">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-                <User className="h-5 w-5 text-white" />
+          {/* User menu */}
+          <div className="relative border-t border-gray-200">
+            <button
+              onClick={() => setUserMenuOpen(!userMenuOpen)}
+              className="flex items-center w-full px-4 py-4 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              <div className="flex items-center justify-center w-8 h-8 bg-primary text-white rounded-full mr-3">
+                <User className="h-4 w-4" />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">
-                  {session.user.name || "Representante"}
-                </p>
+              <div className="flex-1 text-left">
+                <p className="text-sm font-medium">{session.user.name || "Representante"}</p>
                 <p className="text-xs text-gray-500 truncate">
                   {session.user.email}
                 </p>
               </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-3 py-2 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
-            >
-              <LogOut className="h-5 w-5" />
-              <span className="font-medium">Sair</span>
+              <ChevronDown
+                className={`h-4 w-4 transition-transform ${
+                  userMenuOpen ? "rotate-180" : ""
+                }`}
+              />
             </button>
+
+            {userMenuOpen && (
+              <div className="absolute bottom-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mb-2 mx-4">
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg"
+                >
+                  <LogOut className="mr-3 h-4 w-4" />
+                  Sair
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
