@@ -226,11 +226,10 @@ function RepresentanteLayoutContent({ children }: RepresentanteLayoutProps) {
               onClick={() => setUserMenuOpen(!userMenuOpen)}
               className="flex items-center w-full px-4 py-4 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              <div className="flex items-center justify-center w-8 h-8 bg-primary text-white rounded-full mr-3">
-                <User className="h-4 w-4" />
-              </div>
               <div className="flex-1 text-left">
-                <p className="text-sm font-medium">{session.user.name || "Representante"}</p>
+                <p className="text-sm font-medium">
+                  {session.user.name || "Representante"}
+                </p>
                 <p className="text-xs text-gray-500 truncate">
                   {session.user.email}
                 </p>
