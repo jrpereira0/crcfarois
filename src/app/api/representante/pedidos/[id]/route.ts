@@ -90,6 +90,7 @@ export async function GET(
                 imagemPrincipal: true,
                 imagensUrls: true,
                 preco: true,
+                quantidadeEstoque: true,
                 categoria: {
                   select: {
                     id: true,
