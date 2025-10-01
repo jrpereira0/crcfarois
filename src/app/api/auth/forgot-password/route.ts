@@ -24,7 +24,8 @@ export async function POST(request: NextRequest) {
     if (!user) {
       return NextResponse.json({
         success: true,
-        message: "Se o email estiver cadastrado, você receberá um código de verificação",
+        message:
+          "Se o email estiver cadastrado, você receberá um código de verificação",
       });
     }
 
@@ -78,4 +79,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

@@ -132,7 +132,8 @@ export default function LoginPage() {
                   <span className="block text-yellow-300">CRC Faróis B2B</span>
                 </h1>
                 <p className="text-xl text-white/90 leading-relaxed">
-                  A plataforma de vendas mais completa do mercado. O melhor valor para você ter uma boa margem de lucro na suas vendas.
+                  A plataforma de vendas mais completa do mercado. O melhor
+                  valor para você ter uma boa margem de lucro na suas vendas.
                 </p>
               </div>
 
@@ -174,7 +175,6 @@ export default function LoginPage() {
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>

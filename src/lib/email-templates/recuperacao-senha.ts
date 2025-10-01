@@ -124,4 +124,3 @@ export function emailRecuperacaoSenhaTemplate({
 </html>
   `.trim();
 }
-

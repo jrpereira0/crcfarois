@@ -27,10 +27,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!resetToken) {
-      return NextResponse.json(
-        { error: "Token inválido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Token inválido" }, { status: 400 });
     }
 
     // Verificar se o token já foi usado
@@ -51,10 +48,7 @@ export async function POST(request: NextRequest) {
 
     // Verificar se o código está correto
     if (resetToken.code !== code) {
-      return NextResponse.json(
-        { error: "Código incorreto" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Código incorreto" }, { status: 400 });
     }
 
     // Buscar usuário
@@ -100,4 +94,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

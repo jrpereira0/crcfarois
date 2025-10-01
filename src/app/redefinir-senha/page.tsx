@@ -4,7 +4,14 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Lock, ArrowLeft, Loader2, Eye, EyeOff, CheckCircle } from "lucide-react";
+import {
+  Lock,
+  ArrowLeft,
+  Loader2,
+  Eye,
+  EyeOff,
+  CheckCircle,
+} from "lucide-react";
 
 function RedefinirSenhaContent() {
   const router = useRouter();
@@ -295,13 +302,14 @@ function RedefinirSenhaContent() {
 
 export default function RedefinirSenhaPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
       <RedefinirSenhaContent />
     </Suspense>
   );
 }
-
