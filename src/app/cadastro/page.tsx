@@ -252,22 +252,22 @@ export default function CadastroClientePage() {
     return numero.length === 11;
   };
 
-  const validateStep = (step: number): boolean => {
+  const validateStep = (step: number, showErrors: boolean = false): boolean => {
     switch (step) {
       case 1: // Dados da Empresa
         if (!form.razaoSocial.trim()) {
-          setMessage({ type: "error", text: "Razão Social é obrigatória" });
+          if (showErrors) setMessage({ type: "error", text: "Razão Social é obrigatória" });
           return false;
         }
         if (!form.cnpj.trim()) {
-          setMessage({ type: "error", text: "CNPJ é obrigatório" });
+          if (showErrors) setMessage({ type: "error", text: "CNPJ é obrigatório" });
           return false;
         }
         if (!validarCNPJ(form.cnpj)) {
-          setMessage({ type: "error", text: "CNPJ inválido" });
+          if (showErrors) setMessage({ type: "error", text: "CNPJ inválido" });
           return false;
         }
-        setMessage(null);
+        if (showErrors) setMessage(null);
         return true;
 
       case 2: // Endereço da Empresa
@@ -282,64 +282,64 @@ export default function CadastroClientePage() {
 
         for (const campo of camposEndereco) {
           if (!campo.valor.trim()) {
-            setMessage({ type: "error", text: `${campo.nome} é obrigatório` });
+            if (showErrors) setMessage({ type: "error", text: `${campo.nome} é obrigatório` });
             return false;
           }
         }
 
         if (form.cep.replace(/\D/g, "").length !== 8) {
-          setMessage({ type: "error", text: "CEP deve ter 8 dígitos" });
+          if (showErrors) setMessage({ type: "error", text: "CEP deve ter 8 dígitos" });
           return false;
         }
 
-        setMessage(null);
+        if (showErrors) setMessage(null);
         return true;
 
       case 3: // Dados do Responsável
         if (!form.nomeResponsavel.trim()) {
-          setMessage({ type: "error", text: "Nome do responsável é obrigatório" });
+          if (showErrors) setMessage({ type: "error", text: "Nome do responsável é obrigatório" });
           return false;
         }
         if (!form.whatsappResponsavel.trim()) {
-          setMessage({ type: "error", text: "WhatsApp é obrigatório" });
+          if (showErrors) setMessage({ type: "error", text: "WhatsApp é obrigatório" });
           return false;
         }
         if (!validarWhatsApp(form.whatsappResponsavel)) {
-          setMessage({
+          if (showErrors) setMessage({
             type: "error",
             text: "WhatsApp inválido. Use o formato (11) 99999-9999",
           });
           return false;
         }
-        setMessage(null);
+        if (showErrors) setMessage(null);
         return true;
 
       case 4: // Dados de Acesso
         if (!form.emailResponsavel.trim()) {
-          setMessage({ type: "error", text: "Email é obrigatório" });
+          if (showErrors) setMessage({ type: "error", text: "Email é obrigatório" });
           return false;
         }
         if (!validarEmail(form.emailResponsavel)) {
-          setMessage({ type: "error", text: "Email inválido" });
+          if (showErrors) setMessage({ type: "error", text: "Email inválido" });
           return false;
         }
         if (!form.senha.trim()) {
-          setMessage({ type: "error", text: "Senha é obrigatória" });
+          if (showErrors) setMessage({ type: "error", text: "Senha é obrigatória" });
           return false;
         }
         if (form.senha.length < 6) {
-          setMessage({ type: "error", text: "Senha deve ter pelo menos 6 caracteres" });
+          if (showErrors) setMessage({ type: "error", text: "Senha deve ter pelo menos 6 caracteres" });
           return false;
         }
         if (!form.confirmarSenha.trim()) {
-          setMessage({ type: "error", text: "Confirmação de senha é obrigatória" });
+          if (showErrors) setMessage({ type: "error", text: "Confirmação de senha é obrigatória" });
           return false;
         }
         if (form.senha !== form.confirmarSenha) {
-          setMessage({ type: "error", text: "As senhas não coincidem" });
+          if (showErrors) setMessage({ type: "error", text: "As senhas não coincidem" });
           return false;
         }
-        setMessage(null);
+        if (showErrors) setMessage(null);
         return true;
 
       default:
@@ -348,7 +348,7 @@ export default function CadastroClientePage() {
   };
 
   const nextStep = () => {
-    if (validateStep(currentStep) && currentStep < 4) {
+    if (validateStep(currentStep, true) && currentStep < 4) {
       setCurrentStep(currentStep + 1);
     }
   };
