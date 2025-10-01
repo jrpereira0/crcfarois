@@ -299,14 +299,14 @@ export default function PedidosPage() {
               >
                 <div className="p-6">
                   {/* Header do pedido */}
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
+                  <div className="flex flex-col gap-4 mb-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                         <h3 className="text-lg font-semibold text-gray-900">
                           Pedido {pedido.numero}
                         </h3>
                         <span
-                          className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${getStatusColor(
+                          className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium flex items-center gap-1 w-fit ${getStatusColor(
                             pedido.status
                           )}`}
                         >
@@ -314,35 +314,36 @@ export default function PedidosPage() {
                           {getStatusText(pedido.status)}
                         </span>
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-gray-500">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          {formatDate(pedido.createdAt)}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          {pedido.tipoEntrega === "ENTREGA" ? (
-                            <Truck className="h-4 w-4" />
-                          ) : (
-                            <MapPin className="h-4 w-4" />
-                          )}
-                          {pedido.tipoEntrega === "ENTREGA"
-                            ? "Entrega"
-                            : "Retirada"}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <CreditCard className="h-4 w-4" />
-                          {pedido.formaPagamento.replace("_", " ")}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-primary">
+                      <div className="text-left sm:text-right">
+                        <div className="text-2xl font-bold text-primary">
                         {formatPrice(pedido.total)}
                       </div>
                       <div className="text-sm text-gray-500">
                         {pedido.itens.length}{" "}
                         {pedido.itens.length === 1 ? "item" : "itens"}
                       </div>
+                    </div>
+                    </div>
+                    
+                    <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+                        {formatDate(pedido.createdAt)}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        {pedido.tipoEntrega === "ENTREGA" ? (
+                          <Truck className="h-3 w-3 sm:h-4 sm:w-4" />
+                        ) : (
+                          <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
+                        )}
+                        {pedido.tipoEntrega === "ENTREGA"
+                          ? "Entrega"
+                          : "Retirada"}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <CreditCard className="h-3 w-3 sm:h-4 sm:w-4" />
+                        {pedido.formaPagamento.replace("_", " ")}
+                      </span>
                     </div>
                   </div>
 
