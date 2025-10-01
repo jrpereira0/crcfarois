@@ -501,6 +501,16 @@ a {
   background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
 }
 
+/* Esconder scrollbar mas manter funcionalidade */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: light;

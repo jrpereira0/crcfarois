@@ -19,6 +19,7 @@ import {
 
 export default function Header() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { data: session } = useSession();
 
   const toggleSidebar = () => {
@@ -37,6 +38,16 @@ export default function Header() {
     };
   }, [isSidebarOpen]);
 
+  // Detectar scroll para esconder a barra amarela
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const handleLogout = () => {
     signOut({ callbackUrl: "/login" });
   };
@@ -44,10 +55,37 @@ export default function Header() {
   return (
     <header className="bg-primary shadow-lg sticky top-0 z-50">
       {/* Barra superior com informações de contato */}
-      <div className="bg-yellow-300 text-primary py-2">
+      <div
+        className={`bg-yellow-300 text-primary py-2 transition-all duration-300 overflow-hidden ${
+          isScrolled ? "max-h-0 opacity-0 py-0" : "max-h-20 opacity-100"
+        }`}
+      >
         <div className="container max-w-7xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center text-sm">
-            <div className="flex items-center space-x-4 mb-2 md:mb-0">
+          {/* Mobile - Scroll horizontal */}
+          <div className="md:hidden overflow-x-auto scrollbar-hide">
+            <div className="flex items-center space-x-6 text-xs whitespace-nowrap py-1">
+              <div className="flex items-center space-x-1 flex-shrink-0">
+                <Phone size={12} />
+                <span>(11) 99226-8645</span>
+              </div>
+              <div className="flex items-center space-x-1 flex-shrink-0">
+                <Mail size={12} />
+                <span>contato@crc.ind.br</span>
+              </div>
+              <div className="flex items-center space-x-1 flex-shrink-0">
+                <MapPin size={12} />
+                <span>Seg. - Qui. 08h-17h / Sex. 08h-16h</span>
+              </div>
+              <div className="flex items-center space-x-1 flex-shrink-0">
+                <MapPin size={12} />
+                <span>São Bernardo do Campo - SP</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop - Layout original */}
+          <div className="hidden md:flex flex-row justify-between items-center text-sm">
+            <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1">
                 <Phone size={14} />
                 <span>(11) 99226-8645</span>
@@ -79,7 +117,7 @@ export default function Header() {
               alt="CRC Faróis"
               width={200}
               height={73}
-              className="h-14 w-auto"
+              className="h-10 md:h-14 w-auto"
               priority
             />
           </Link>
