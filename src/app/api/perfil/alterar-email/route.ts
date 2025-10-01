@@ -9,12 +9,22 @@ export async function POST(request: NextRequest) {
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
+      console.log("❌ Não autorizado - sem sessão");
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    const { novoEmail, senhaAtual } = await request.json();
+    const body = await request.json();
+    const { novoEmail, senhaAtual } = body;
+
+    console.log("📧 Tentando alterar email:", {
+      userId: session.user.id,
+      emailAtual: session.user.email,
+      novoEmail,
+      temSenha: !!senhaAtual,
+    });
 
     if (!novoEmail || !senhaAtual) {
+      console.log("❌ Campos obrigatórios faltando:", { novoEmail: !!novoEmail, senhaAtual: !!senhaAtual });
       return NextResponse.json(
         { error: "Email e senha são obrigatórios" },
         { status: 400 }
@@ -24,6 +34,7 @@ export async function POST(request: NextRequest) {
     // Validar formato do email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(novoEmail)) {
+      console.log("❌ Email inválido:", novoEmail);
       return NextResponse.json(
         { error: "Email inválido" },
         { status: 400 }
@@ -36,6 +47,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user) {
+      console.log("❌ Usuário não encontrado:", session.user.id);
       return NextResponse.json(
         { error: "Usuário não encontrado" },
         { status: 404 }
@@ -46,6 +58,7 @@ export async function POST(request: NextRequest) {
     const senhaValida = await bcrypt.compare(senhaAtual, user.password);
 
     if (!senhaValida) {
+      console.log("❌ Senha incorreta");
       return NextResponse.json(
         { error: "Senha incorreta" },
         { status: 400 }
@@ -58,6 +71,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (emailExistente && emailExistente.id !== user.id) {
+      console.log("❌ Email já em uso:", novoEmail);
       return NextResponse.json(
         { error: "Este email já está em uso por outro usuário" },
         { status: 400 }
@@ -72,12 +86,14 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    console.log("✅ Email alterado com sucesso:", { de: user.email, para: novoEmail });
+
     return NextResponse.json({
       success: true,
       message: "Email alterado com sucesso. Faça login novamente com o novo email.",
     });
   } catch (error) {
-    console.error("Erro ao alterar email:", error);
+    console.error("❌ Erro ao alterar email:", error);
     return NextResponse.json(
       { error: "Erro ao alterar email" },
       { status: 500 }
