@@ -52,6 +52,7 @@ interface ClienteForm {
   telefone: string;
   whatsapp: string;
   ativo: boolean;
+  representanteId: string;
   // Campos de senha
   novaSenha: string;
   confirmarNovaSenha: string;
@@ -68,6 +69,8 @@ export default function EditarClientePage() {
   const [showNovaSenha, setShowNovaSenha] = useState(false);
   const [showConfirmarSenha, setShowConfirmarSenha] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null);
+  const [representantes, setRepresentantes] = useState<any[]>([]);
+  const [representantesLoading, setRepresentantesLoading] = useState(true);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -92,6 +95,7 @@ export default function EditarClientePage() {
     telefone: "",
     whatsapp: "",
     ativo: true,
+    representanteId: "",
     // Campos de senha
     novaSenha: "",
     confirmarNovaSenha: "",
@@ -167,12 +171,33 @@ export default function EditarClientePage() {
     }
   }, [params.id]);
 
+  // Buscar representantes ao carregar a página
+  useEffect(() => {
+    const fetchRepresentantes = async () => {
+      try {
+        const response = await fetch("/api/admin/representantes");
+        if (response.ok) {
+          const data = await response.json();
+          setRepresentantes(data.representantes || []);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar representantes:", error);
+      } finally {
+        setRepresentantesLoading(false);
+      }
+    };
+    fetchRepresentantes();
+  }, []);
+
   const fetchCliente = async (id: string) => {
     try {
       const response = await fetch(`/api/clientes/${id}`);
       const data = await response.json();
 
       if (response.ok) {
+        // Pegar o primeiro representante do cliente (assumindo que há pelo menos um)
+        const representanteAtual = data.representantes?.[0]?.representanteId || "";
+        
         setForm({
           razaoSocial: data.razaoSocial || "",
           responsavel: data.responsavel || "",
@@ -192,6 +217,7 @@ export default function EditarClientePage() {
           telefone: formatTelefoneDisplay(data.telefone || ""),
           whatsapp: formatTelefoneDisplay(data.whatsapp || ""),
           ativo: data.ativo,
+          representanteId: representanteAtual,
           // Campos de senha
           novaSenha: "",
           confirmarNovaSenha: "",
@@ -366,6 +392,7 @@ export default function EditarClientePage() {
         telefone: unformatValue(form.telefone),
         whatsapp: unformatValue(form.whatsapp),
         ativo: form.ativo,
+        representanteId: form.representanteId,
       };
 
       // Incluir senha apenas se for para alterar
@@ -603,6 +630,51 @@ export default function EditarClientePage() {
                     placeholder="000.000.000"
                   />
                 </div>
+              </div>
+            </div>
+
+            {/* Representante */}
+            <div className="border-t border-gray-200 pt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <User className="h-5 w-5 text-primary" />
+                Representante
+              </h3>
+              <div className="space-y-2">
+                <label
+                  htmlFor="representanteId"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Selecione o Representante *
+                </label>
+                {representantesLoading ? (
+                  <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                    <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                    <span className="text-sm text-gray-600">
+                      Carregando representantes...
+                    </span>
+                  </div>
+                ) : (
+                  <select
+                    id="representanteId"
+                    name="representanteId"
+                    required
+                    value={form.representanteId}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                  >
+                    <option value="">Selecione um representante</option>
+                    {representantes.map((rep) => (
+                      <option key={rep.id} value={rep.id}>
+                        {rep.user.name} - {rep.user.email}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {!representantesLoading && representantes.length === 0 && (
+                  <p className="text-sm text-red-600">
+                    Nenhum representante cadastrado.
+                  </p>
+                )}
               </div>
             </div>
 

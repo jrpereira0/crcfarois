@@ -111,6 +111,7 @@ export async function PUT(
       whatsapp,
       ativo,
       novaSenha,
+      representanteId,
     } = body;
 
     // Validações básicas
@@ -206,6 +207,31 @@ export async function PUT(
         where: { id: cliente.userId },
         data: userData,
       });
+
+      // Atualizar representante se fornecido
+      if (representanteId) {
+        // Verificar se o representante existe
+        const representanteExiste = await tx.representante.findUnique({
+          where: { id: representanteId },
+        });
+
+        if (!representanteExiste) {
+          throw new Error("Representante não encontrado");
+        }
+
+        // Deletar associações antigas
+        await tx.representanteCliente.deleteMany({
+          where: { clienteId: params.id },
+        });
+
+        // Criar nova associação
+        await tx.representanteCliente.create({
+          data: {
+            representanteId,
+            clienteId: params.id,
+          },
+        });
+      }
 
       return cliente;
     });
