@@ -199,7 +199,7 @@ export default function TermosUso() {
               </p>
               <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                 <p className="text-gray-700">
-                    <strong>E-mail:</strong> contato@crc.ind.br
+                    <strong>E-mail:</strong> contato@crcfarois.ind.br
                     <br />
                   <strong>Telefone:</strong> (11) 99226-8645
                   <br />

@@ -161,7 +161,7 @@ export const emailNovoClienteRepresentante = (
           <tr>
             <td style="background-color: #f8fafc; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
               <p style="margin: 0 0 10px 0; color: #64748b; font-size: 13px;">
-                Precisa de suporte? Entre em contato: contato@crc.ind.br | (11) 99226-8645
+                Precisa de suporte? Entre em contato: contato@crcfarois.ind.br | (11) 99226-8645
               </p>
               <p style="margin: 0; color: #94a3b8; font-size: 12px;">
                 © ${new Date().getFullYear()} CRC Faróis - Todos os direitos reservados

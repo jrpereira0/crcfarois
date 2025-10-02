@@ -107,7 +107,7 @@ export function emailRecuperacaoSenhaTemplate({
                         <td style="background-color: #1f2937; padding: 30px; text-align: center;">
                             <p style="margin: 0 0 15px; color: #9ca3af; font-size: 14px; line-height: 1.6;">
                                 <strong style="color: #ffffff; font-size: 16px;">CRC Faróis</strong><br>
-                                Iluminando o caminho da sua empresa
+                                Ilumine o seu caminho
                             </p>
                             <p style="margin: 0; color: #6b7280; font-size: 12px;">
                                 Este é um email automático, por favor não responda.<br>

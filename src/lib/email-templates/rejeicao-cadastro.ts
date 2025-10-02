@@ -57,7 +57,7 @@ export const emailRejeicaoCadastro = (data: RejeicaoCadastroData): string => {
               </p>
               
               <p style="margin: 0 0 8px 0; color: #64748b; font-size: 15px;">
-                📧 Email: contato@crc.ind.br
+                📧 Email: contato@crcfarois.ind.br
               </p>
               <p style="margin: 0 0 8px 0; color: #64748b; font-size: 15px;">
                 📞 Telefone: (11) 99226-8645

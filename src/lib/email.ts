@@ -39,7 +39,7 @@ export async function enviarEmailSolicitacaoCadastro(
     console.log("   Para:", params.emailResponsavel);
     console.log(
       "   Remetente:",
-      process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br"
+      process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br"
     );
 
     const sendSmtpEmail = new brevo.SendSmtpEmail();
@@ -47,7 +47,7 @@ export async function enviarEmailSolicitacaoCadastro(
     sendSmtpEmail.subject = "Solicitação de Cadastro Recebida - CRC Faróis";
     sendSmtpEmail.sender = {
       name: "CRC Faróis",
-      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
     };
     sendSmtpEmail.to = [
       {
@@ -88,7 +88,7 @@ export async function enviarEmailAprovacaoCadastro(
     sendSmtpEmail.subject = "🎉 Cadastro Aprovado - Bem-vindo à CRC Faróis!";
     sendSmtpEmail.sender = {
       name: "CRC Faróis",
-      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
     };
     sendSmtpEmail.to = [
       {
@@ -126,7 +126,7 @@ export async function enviarEmailRejeicaoCadastro(params: {
     sendSmtpEmail.subject = "Atualização sobre sua Solicitação - CRC Faróis";
     sendSmtpEmail.sender = {
       name: "CRC Faróis",
-      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
     };
     sendSmtpEmail.to = [
       {
@@ -169,7 +169,7 @@ export async function enviarEmailNovoClienteRepresentante(params: {
     sendSmtpEmail.subject = "🎯 Novo Cliente Atribuído - CRC Faróis";
     sendSmtpEmail.sender = {
       name: "CRC Faróis",
-      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
     };
     sendSmtpEmail.to = [
       {
@@ -210,7 +210,7 @@ export async function enviarEmailClienteCriadoAdmin(params: {
     sendSmtpEmail.subject = "🎉 Bem-vindo à CRC Faróis!";
     sendSmtpEmail.sender = {
       name: "CRC Faróis",
-      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
     };
     sendSmtpEmail.to = [
       {
@@ -252,7 +252,7 @@ export async function enviarEmailRepresentanteCriadoAdmin(params: {
     sendSmtpEmail.subject = "🎉 Bem-vindo à Equipe CRC Faróis!";
     sendSmtpEmail.sender = {
       name: "CRC Faróis",
-      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
     };
     sendSmtpEmail.to = [
       {
@@ -317,7 +317,7 @@ export async function enviarEmailNovoPedidoCliente(params: {
     sendSmtpEmail.subject = `✅ Pedido #${params.numeroPedido} Confirmado - CRC Faróis`;
     sendSmtpEmail.sender = {
       name: "CRC Faróis",
-      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
     };
     sendSmtpEmail.to = [
       {
@@ -370,7 +370,7 @@ export async function enviarEmailNovoPedidoRepresentante(params: {
     sendSmtpEmail.subject = `🎯 Novo Pedido #${params.numeroPedido} - ${params.clienteNome}`;
     sendSmtpEmail.sender = {
       name: "CRC Faróis",
-      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
     };
     sendSmtpEmail.to = [
       {
@@ -420,7 +420,7 @@ export async function enviarEmailNovoPedidoAdmin(params: {
     sendSmtpEmail.subject = `🔔 Novo Pedido #${params.numeroPedido} - CRC Faróis`;
     sendSmtpEmail.sender = {
       name: "CRC Faróis",
-      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
     };
     sendSmtpEmail.to = [
       {
@@ -481,7 +481,7 @@ export async function enviarEmailStatusPedidoAlterado(params: {
     }`;
     sendSmtpEmail.sender = {
       name: "CRC Faróis",
-      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
     };
     sendSmtpEmail.to = [
       {
@@ -529,7 +529,7 @@ export async function enviarEmailNovaSolicitacaoAdmin(params: {
     sendSmtpEmail.subject = "🔔 Nova Solicitação de Cadastro - CRC Faróis";
     sendSmtpEmail.sender = {
       name: "CRC Faróis",
-      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
     };
     sendSmtpEmail.to = [
       {
@@ -576,7 +576,7 @@ export async function enviarEmailRecuperacaoSenha(params: {
     sendSmtpEmail.subject = "Recuperação de Senha - CRC Faróis";
     sendSmtpEmail.sender = {
       name: "CRC Faróis",
-      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
     };
     sendSmtpEmail.to = [
       {

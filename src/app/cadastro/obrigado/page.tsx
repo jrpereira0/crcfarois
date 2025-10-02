@@ -268,7 +268,7 @@ export default function ObrigadoPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   <a
-                    href="tel:(11) 97900-2183"
+                    href="tel:(11) 99226-8645"
                     className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary/30"
                   >
                     <div className="flex items-center space-x-4">
@@ -283,7 +283,7 @@ export default function ObrigadoPage() {
                           Ligue Agora
                         </h4>
                         <p className="text-primary font-semibold">
-                          (11) 97900-2183
+                          (11) 99226-8645
                         </p>
                         <p className="text-sm text-gray-600">
                           Segunda à Quinta: 8h às 17h <br />
