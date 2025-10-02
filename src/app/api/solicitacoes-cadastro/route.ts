@@ -3,7 +3,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { enviarEmailSolicitacaoCadastro } from "@/lib/email";
+import {
+  enviarEmailSolicitacaoCadastro,
+  enviarEmailNovaSolicitacaoAdmin,
+} from "@/lib/email";
 
 // POST - Criar nova solicitação de cadastro
 export async function POST(request: NextRequest) {
@@ -120,7 +123,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Enviar email de confirmação
+    // Enviar email de confirmação para o cliente
     try {
       console.log("🔵 Tentando enviar email para:", emailResponsavel);
       const resultadoEmail = await enviarEmailSolicitacaoCadastro({
@@ -136,6 +139,45 @@ export async function POST(request: NextRequest) {
       }
     } catch (error) {
       console.error("❌ Erro crítico ao enviar email:", error);
+    }
+
+    // Enviar email de notificação para o admin
+    try {
+      // Buscar email do admin principal
+      const adminUser = await prisma.user.findFirst({
+        where: { role: "ADMIN" },
+        orderBy: { createdAt: "asc" }, // Primeiro admin cadastrado
+      });
+
+      if (adminUser) {
+        console.log("🔔 Enviando notificação ao admin:", adminUser.email);
+        const resultadoEmailAdmin = await enviarEmailNovaSolicitacaoAdmin({
+          razaoSocial,
+          cnpj,
+          nomeResponsavel,
+          emailResponsavel,
+          telefoneResponsavel,
+          whatsappResponsavel,
+          cidade,
+          estado,
+          tipoEmpresa: tipoEmpresa || "Não informado",
+          solicitacaoId: solicitacao.id,
+          adminEmail: adminUser.email,
+        });
+
+        if (resultadoEmailAdmin.success) {
+          console.log("✅ Notificação ao admin enviada com sucesso!");
+        } else {
+          console.error(
+            "❌ Falha ao enviar notificação ao admin:",
+            resultadoEmailAdmin.error
+          );
+        }
+      } else {
+        console.warn("⚠️ Nenhum admin encontrado para enviar notificação");
+      }
+    } catch (error) {
+      console.error("❌ Erro ao enviar notificação ao admin:", error);
     }
 
     return NextResponse.json({

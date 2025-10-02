@@ -11,6 +11,7 @@ import { emailNovoPedidoRepresentante } from "./email-templates/novo-pedido-repr
 import { emailNovoPedidoAdmin } from "./email-templates/novo-pedido-admin";
 import { emailStatusPedidoAlterado } from "./email-templates/status-pedido-alterado";
 import { emailRecuperacaoSenhaTemplate } from "./email-templates/recuperacao-senha";
+import { emailNovaSolicitacaoAdmin } from "./email-templates/nova-solicitacao-admin";
 
 interface EnviarEmailSolicitacaoParams {
   nomeResponsavel: string;
@@ -496,6 +497,64 @@ export async function enviarEmailStatusPedidoAlterado(params: {
     return { success: true };
   } catch (error: any) {
     console.error("Erro ao enviar email de alteração de status:", error);
+    return {
+      success: false,
+      error: error.message || "Erro desconhecido ao enviar email",
+    };
+  }
+}
+
+/**
+ * Envia email de notificação ao admin sobre nova solicitação
+ */
+export async function enviarEmailNovaSolicitacaoAdmin(params: {
+  razaoSocial: string;
+  cnpj: string;
+  nomeResponsavel: string;
+  emailResponsavel: string;
+  telefoneResponsavel?: string;
+  whatsappResponsavel: string;
+  cidade: string;
+  estado: string;
+  tipoEmpresa: string;
+  solicitacaoId: string;
+  adminEmail: string;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    console.log("📧 Enviando notificação de nova solicitação ao admin...");
+    console.log("   Para:", params.adminEmail);
+
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.subject = "🔔 Nova Solicitação de Cadastro - CRC Faróis";
+    sendSmtpEmail.sender = {
+      name: "CRC Faróis",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br",
+    };
+    sendSmtpEmail.to = [
+      {
+        email: params.adminEmail,
+        name: "Administrador",
+      },
+    ];
+    sendSmtpEmail.htmlContent = emailNovaSolicitacaoAdmin({
+      razaoSocial: params.razaoSocial,
+      cnpj: params.cnpj,
+      nomeResponsavel: params.nomeResponsavel,
+      emailResponsavel: params.emailResponsavel,
+      telefoneResponsavel: params.telefoneResponsavel,
+      whatsappResponsavel: params.whatsappResponsavel,
+      cidade: params.cidade,
+      estado: params.estado,
+      tipoEmpresa: params.tipoEmpresa,
+      solicitacaoId: params.solicitacaoId,
+    });
+
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log("✅ Email de notificação enviado ao admin:", response);
+    return { success: true };
+  } catch (error: any) {
+    console.error("❌ Erro ao enviar email ao admin:", error);
     return {
       success: false,
       error: error.message || "Erro desconhecido ao enviar email",
