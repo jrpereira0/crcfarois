@@ -141,8 +141,8 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out border-r border-gray-200 lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed inset-y-0 right-0 lg:left-0 lg:right-auto z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out border-l lg:border-l-0 lg:border-r border-gray-200 lg:translate-x-0 ${
+          sidebarOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"
         }`}
       >
         <div className="flex flex-col h-full">
@@ -160,7 +160,7 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
             </div>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden absolute right-4 text-white hover:text-gray-200"
+              className="lg:hidden absolute left-4 text-white hover:text-gray-200"
             >
               <X className="h-6 w-6" />
             </button>
@@ -266,29 +266,42 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 lg:ml-64 h-screen overflow-hidden">
         {/* Top bar - Fixed */}
-        <div className="bg-white shadow-sm border-b border-gray-200 flex-shrink-0">
-          <div className="flex items-center justify-between h-16 px-6">
+        <div className="bg-primary shadow-lg flex-shrink-0">
+          <div className="flex items-center justify-between h-16 px-4 lg:px-6">
+            {/* Logo - Mobile */}
+            <Link href="/b2b" className="lg:hidden">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-2 border border-white/20">
+                <Image
+                  src="/logobranca.svg"
+                  alt="CRC Faróis"
+                  width={120}
+                  height={44}
+                  className="h-7 w-auto"
+                  priority
+                />
+              </div>
+            </Link>
+
+            {/* Title - Desktop */}
+            <h1 className="hidden lg:block text-lg font-semibold text-white">
+              Plataforma B2B CRC Faróis
+            </h1>
+
             <div className="flex items-center gap-4">
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
-              >
-                <Menu className="h-5 w-5 text-gray-500" />
-              </button>
-
-              {/* Title */}
-              <h1 className="text-lg font-semibold text-gray-900">
-                Plataforma B2B CRC Faróis
-              </h1>
-            </div>
-
-            <div className="hidden lg:flex items-center gap-4">
-              {/* Notifications - Apenas no desktop */}
-              <button className="relative p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100">
+              {/* Notifications - Desktop only */}
+              <button className="hidden lg:flex relative p-2 text-white hover:text-gray-200 rounded-lg hover:bg-white/10">
                 <Bell className="h-5 w-5" />
                 <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                   0
                 </span>
+              </button>
+
+              {/* Menu button - Mobile */}
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden p-2 rounded-lg hover:bg-white/10 text-white"
+              >
+                <Menu className="h-6 w-6" />
               </button>
             </div>
           </div>
