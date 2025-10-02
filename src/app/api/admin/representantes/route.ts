@@ -178,10 +178,11 @@ export async function POST(request: NextRequest) {
       return representanteData;
     });
 
-    // Enviar email de boas-vindas ao representante (não bloquear se falhar)
+    // Enviar email de boas-vindas ao representante com a senha (não bloquear se falhar)
     enviarEmailRepresentanteCriadoAdmin({
       nomeRepresentante: name,
       emailRepresentante: email,
+      senhaAcesso: password, // Senha em texto plano para o email
     }).catch((error) => {
       console.error("Erro ao enviar email para representante:", error);
     });

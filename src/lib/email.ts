@@ -245,6 +245,7 @@ export async function enviarEmailClienteCriadoAdmin(params: {
 export async function enviarEmailRepresentanteCriadoAdmin(params: {
   nomeRepresentante: string;
   emailRepresentante: string;
+  senhaAcesso: string;
 }): Promise<{ success: boolean; error?: string }> {
   try {
     const sendSmtpEmail = new brevo.SendSmtpEmail();
@@ -260,7 +261,11 @@ export async function enviarEmailRepresentanteCriadoAdmin(params: {
         name: params.nomeRepresentante,
       },
     ];
-    sendSmtpEmail.htmlContent = emailRepresentanteCriadoAdmin(params);
+    sendSmtpEmail.htmlContent = emailRepresentanteCriadoAdmin({
+      nomeRepresentante: params.nomeRepresentante,
+      emailRepresentante: params.emailRepresentante,
+      senhaAcesso: params.senhaAcesso,
+    });
 
     const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
 

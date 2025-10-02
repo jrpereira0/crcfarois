@@ -1,6 +1,7 @@
 interface RepresentanteCriadoAdminData {
   nomeRepresentante: string;
   emailRepresentante: string;
+  senhaAcesso: string;
 }
 
 export const emailRepresentanteCriadoAdmin = (
@@ -43,17 +44,39 @@ export const emailRepresentanteCriadoAdmin = (
                 É com grande satisfação que informamos que você foi cadastrado como <strong style="color: #1e40af;">Representante Comercial</strong> na plataforma CRC Faróis!
               </p>
               
-              <!-- Box de destaque -->
+              <!-- Box de destaque com dados de acesso -->
               <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 8px; margin: 25px 0;">
                 <tr>
                   <td style="padding: 20px;">
-                    <p style="margin: 0 0 12px 0; color: #1e40af; font-size: 16px; font-weight: 600;">
-                      🚀 Acesse seu Painel de Representante
+                    <p style="margin: 0 0 16px 0; color: #1e40af; font-size: 16px; font-weight: 600;">
+                      🔐 Seus Dados de Acesso
                     </p>
-                    <p style="margin: 0; color: #475569; font-size: 15px; line-height: 1.6;">
-                      Utilize o email <strong>${
-                        data.emailRepresentante
-                      }</strong> e a senha que foi fornecida para fazer login e começar a gerenciar seus clientes.
+                    
+                    <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #ffffff; border-radius: 8px; padding: 16px;">
+                      <tr>
+                        <td style="padding: 12px 0;">
+                          <p style="margin: 0 0 4px 0; color: #64748b; font-size: 13px; font-weight: 600; text-transform: uppercase;">
+                            E-mail de Login:
+                          </p>
+                          <p style="margin: 0; color: #1e40af; font-size: 16px; font-weight: 600; font-family: 'Courier New', monospace;">
+                            ${data.emailRepresentante}
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 12px 0; border-top: 1px solid #e2e8f0;">
+                          <p style="margin: 0 0 4px 0; color: #64748b; font-size: 13px; font-weight: 600; text-transform: uppercase;">
+                            Senha de Acesso:
+                          </p>
+                          <p style="margin: 0; color: #1e40af; font-size: 18px; font-weight: 700; font-family: 'Courier New', monospace; letter-spacing: 2px;">
+                            ${data.senhaAcesso}
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                    
+                    <p style="margin: 16px 0 0 0; color: #dc2626; font-size: 13px; line-height: 1.6;">
+                      ⚠️ <strong>Importante:</strong> Guarde esta senha em local seguro. Recomendamos alterá-la no primeiro acesso.
                     </p>
                   </td>
                 </tr>
