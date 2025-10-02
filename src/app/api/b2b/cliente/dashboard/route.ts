@@ -11,10 +11,28 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    // Buscar cliente
+    // Buscar cliente e seu representante
     const cliente = await prisma.cliente.findUnique({
       where: { userId: session.user.id },
-      select: { id: true },
+      select: { 
+        id: true,
+        representantes: {
+          select: {
+            representante: {
+              select: {
+                id: true,
+                whatsapp: true,
+                user: {
+                  select: {
+                    name: true,
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!cliente) {
@@ -23,6 +41,9 @@ export async function GET(request: NextRequest) {
         { status: 404 }
       );
     }
+
+    // Pegar o primeiro representante (pode haver mais de um no futuro)
+    const representante = cliente.representantes[0]?.representante || null;
 
     // Buscar pedidos do cliente
     const pedidos = await prisma.pedido.findMany({
@@ -55,6 +76,11 @@ export async function GET(request: NextRequest) {
       pedidosPendentes,
       valorTotalCompras,
       pedidosRecentes,
+      representante: representante ? {
+        nome: representante.user.name,
+        email: representante.user.email,
+        whatsapp: representante.whatsapp,
+      } : null,
     });
   } catch (error) {
     console.error("Erro ao buscar estatísticas do cliente:", error);

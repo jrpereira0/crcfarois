@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
         razaoSocial,
         emailResponsavel,
       });
-      
+
       if (resultadoEmail.success) {
         console.log("✅ Email enviado com sucesso!");
       } else {

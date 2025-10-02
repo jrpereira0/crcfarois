@@ -16,6 +16,9 @@ import {
   CreditCard,
   AlertCircle,
   Eye,
+  User,
+  Mail,
+  MessageCircle,
 } from "lucide-react";
 
 interface DashboardStats {
@@ -32,6 +35,11 @@ interface DashboardStats {
   totalPedidos: number;
   pedidosPendentes: number;
   valorTotalCompras: number;
+  representante?: {
+    nome: string;
+    email: string;
+    whatsapp: string;
+  } | null;
 }
 
 export default function B2BHomePage() {
@@ -322,6 +330,65 @@ export default function B2BHomePage() {
             </div>
           </div>
         )}
+
+      {/* Representante Card */}
+      {stats?.representante && (
+        <div className="bg-gradient-to-br from-primary to-blue-600 rounded-xl shadow-lg p-6 text-white">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 bg-white/20 backdrop-blur-sm rounded-lg">
+              <User className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">Seu Representante</h3>
+              <p className="text-sm text-blue-100">
+                Entre em contato para dúvidas ou suporte
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3 bg-white/10 backdrop-blur-sm rounded-lg p-4">
+            <div className="flex items-center gap-3">
+              <User className="h-5 w-5 text-blue-200 flex-shrink-0" />
+              <div>
+                <p className="text-xs text-blue-200">Nome</p>
+                <p className="font-semibold">{stats.representante.nome}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Mail className="h-5 w-5 text-blue-200 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-blue-200">Email</p>
+                <a
+                  href={`mailto:${stats.representante.email}`}
+                  className="font-semibold hover:underline break-all"
+                >
+                  {stats.representante.email}
+                </a>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <MessageCircle className="h-5 w-5 text-blue-200 flex-shrink-0" />
+              <div>
+                <p className="text-xs text-blue-200">WhatsApp</p>
+                <a
+                  href={`https://wa.me/55${stats.representante.whatsapp.replace(
+                    /\D/g,
+                    ""
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold hover:underline inline-flex items-center gap-1"
+                >
+                  {stats.representante.whatsapp}
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Info Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">

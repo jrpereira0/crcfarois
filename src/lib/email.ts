@@ -36,8 +36,11 @@ export async function enviarEmailSolicitacaoCadastro(
   try {
     console.log("📧 Preparando email de solicitação de cadastro...");
     console.log("   Para:", params.emailResponsavel);
-    console.log("   Remetente:", process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br");
-    
+    console.log(
+      "   Remetente:",
+      process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br"
+    );
+
     const sendSmtpEmail = new brevo.SendSmtpEmail();
 
     sendSmtpEmail.subject = "Solicitação de Cadastro Recebida - CRC Faróis";
@@ -57,7 +60,7 @@ export async function enviarEmailSolicitacaoCadastro(
     const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
 
     console.log("✅ Email de solicitação enviado com sucesso!");
-    console.log("   Message ID:", response.messageId);
+    console.log("   Response:", response);
     return { success: true };
   } catch (error: any) {
     console.error("❌ Erro ao enviar email de solicitação:");
