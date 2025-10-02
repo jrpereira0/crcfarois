@@ -12,9 +12,9 @@ const sora = Sora({
 export const metadata: Metadata = {
   title: "CRC Faróis - Especialistas em Faróis Automotivos",
   description:
-    "Há mais de 30 anos oferecendo produtos de alta qualidade em faróis automotivos para todo o Brasil. Faróis, lanternas, pisca-piscas e acessórios automotivos.",
+    "Desde 2022 oferecendo produtos de alta qualidade em faróis automotivos para todo o Brasil. Faróis, lanternas, pisca e acessórios automotivos.",
   keywords:
-    "faróis automotivos, lanternas, pisca-piscas, refletores, lâmpadas automotivas, peças automotivas, São Bernardo do Campo",
+    "faróis automotivos, lanternas, pisca, refletores, lâmpadas automotivas, peças automotivas, Santo André, farol de milha",
   authors: [{ name: "CRC Faróis" }],
   icons: {
     icon: [
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "CRC Faróis - Especialistas em Faróis Automotivos",
     description:
-      "Há mais de 30 anos oferecendo produtos de alta qualidade em faróis automotivos para todo o Brasil.",
+      "Desde 2022 oferecendo produtos de alta qualidade em faróis automotivos para todo o Brasil.",
     url: "https://crcfarois.ind.br",
     siteName: "CRC Faróis",
     locale: "pt_BR",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "CRC Faróis - Especialistas em Faróis Automotivos",
     description:
-      "Há mais de 30 anos oferecendo produtos de alta qualidade em faróis automotivos para todo o Brasil.",
+        "Desde 2022 oferecendo produtos de alta qualidade em faróis automotivos para todo o Brasil.",
   },
   robots: {
     index: true,
