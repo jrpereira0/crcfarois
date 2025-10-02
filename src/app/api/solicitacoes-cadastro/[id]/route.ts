@@ -150,7 +150,8 @@ export async function PUT(
         emailResponsavel: solicitacao.emailResponsavel,
         representanteNome: resultado.representante.user.name || "Representante",
         representanteEmail: resultado.representante.user.email,
-        representanteWhatsapp: resultado.representante.whatsapp || "Não informado",
+        representanteWhatsapp:
+          resultado.representante.whatsapp || "Não informado",
       }).catch((error) => {
         console.error("Erro ao enviar email de aprovação:", error);
       });

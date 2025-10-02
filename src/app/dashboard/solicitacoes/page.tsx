@@ -80,9 +80,9 @@ export default function SolicitacoesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [showModal, setShowModal] = useState<string | null>(null);
-  const [modalAction, setModalAction] = useState<"APROVAR" | "NEGAR" | "CANCELAR" | null>(
-    null
-  );
+  const [modalAction, setModalAction] = useState<
+    "APROVAR" | "NEGAR" | "CANCELAR" | null
+  >(null);
   const [selectedRepresentante, setSelectedRepresentante] = useState("");
   const [motivoRejeicao, setMotivoRejeicao] = useState("");
   const [processing, setProcessing] = useState(false);
@@ -190,30 +190,40 @@ export default function SolicitacoesPage() {
   };
 
   // Abrir modal de aprovação/rejeição
-  const openModal = (solicitacaoId: string, action: "APROVAR" | "NEGAR" | "CANCELAR") => {
+  const openModal = (
+    solicitacaoId: string,
+    action: "APROVAR" | "NEGAR" | "CANCELAR"
+  ) => {
     setShowModal(solicitacaoId);
     setModalAction(action);
     setSelectedRepresentante("");
     setMotivoRejeicao("");
   };
-  
+
   // Processar cancelamento direto (sem modal)
   const cancelarSolicitacao = async (solicitacaoId: string) => {
-    if (!confirm("Tem certeza que deseja cancelar e voltar esta solicitação para PENDENTE?")) {
+    if (
+      !confirm(
+        "Tem certeza que deseja cancelar e voltar esta solicitação para PENDENTE?"
+      )
+    ) {
       return;
     }
-    
+
     setProcessing(true);
     try {
-      const response = await fetch(`/api/solicitacoes-cadastro/${solicitacaoId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          acao: "CANCELAR",
-        }),
-      });
+      const response = await fetch(
+        `/api/solicitacoes-cadastro/${solicitacaoId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            acao: "CANCELAR",
+          }),
+        }
+      );
 
       if (response.ok) {
         await fetchSolicitacoes(); // Recarregar lista
@@ -492,7 +502,7 @@ export default function SolicitacoesPage() {
                       </button>
                     </>
                   )}
-                  
+
                   {solicitacao.status === "APROVADA" && (
                     <>
                       <button
@@ -513,7 +523,7 @@ export default function SolicitacoesPage() {
                       </button>
                     </>
                   )}
-                  
+
                   {solicitacao.status === "NEGADA" && (
                     <>
                       <button

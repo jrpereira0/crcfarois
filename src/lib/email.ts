@@ -34,6 +34,10 @@ export async function enviarEmailSolicitacaoCadastro(
   params: EnviarEmailSolicitacaoParams
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    console.log("📧 Preparando email de solicitação de cadastro...");
+    console.log("   Para:", params.emailResponsavel);
+    console.log("   Remetente:", process.env.BREVO_SENDER_EMAIL || "contato@crc.ind.br");
+    
     const sendSmtpEmail = new brevo.SendSmtpEmail();
 
     sendSmtpEmail.subject = "Solicitação de Cadastro Recebida - CRC Faróis";
@@ -49,12 +53,18 @@ export async function enviarEmailSolicitacaoCadastro(
     ];
     sendSmtpEmail.htmlContent = emailSolicitacaoCadastro(params);
 
+    console.log("📤 Enviando email via Brevo...");
     const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
 
-    console.log("Email de solicitação enviado com sucesso:", response);
+    console.log("✅ Email de solicitação enviado com sucesso!");
+    console.log("   Message ID:", response.messageId);
     return { success: true };
   } catch (error: any) {
-    console.error("Erro ao enviar email de solicitação:", error);
+    console.error("❌ Erro ao enviar email de solicitação:");
+    console.error("   Mensagem:", error.message);
+    console.error("   Status:", error.status || error.statusCode);
+    console.error("   Body:", error.body || error.response?.body);
+    console.error("   Stack:", error.stack);
     return {
       success: false,
       error: error.message || "Erro desconhecido ao enviar email",

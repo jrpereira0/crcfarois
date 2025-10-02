@@ -120,15 +120,23 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Enviar email de confirmação (não bloquear a resposta se falhar)
-    enviarEmailSolicitacaoCadastro({
-      nomeResponsavel,
-      razaoSocial,
-      emailResponsavel,
-    }).catch((error) => {
-      console.error("Erro ao enviar email de confirmação:", error);
-      // Não bloqueia a criação da solicitação se o email falhar
-    });
+    // Enviar email de confirmação
+    try {
+      console.log("🔵 Tentando enviar email para:", emailResponsavel);
+      const resultadoEmail = await enviarEmailSolicitacaoCadastro({
+        nomeResponsavel,
+        razaoSocial,
+        emailResponsavel,
+      });
+      
+      if (resultadoEmail.success) {
+        console.log("✅ Email enviado com sucesso!");
+      } else {
+        console.error("❌ Falha ao enviar email:", resultadoEmail.error);
+      }
+    } catch (error) {
+      console.error("❌ Erro crítico ao enviar email:", error);
+    }
 
     return NextResponse.json({
       message: "Solicitação enviada com sucesso",
