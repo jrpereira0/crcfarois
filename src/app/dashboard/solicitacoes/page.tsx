@@ -80,7 +80,7 @@ export default function SolicitacoesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [showModal, setShowModal] = useState<string | null>(null);
-  const [modalAction, setModalAction] = useState<"APROVAR" | "NEGAR" | null>(
+  const [modalAction, setModalAction] = useState<"APROVAR" | "NEGAR" | "CANCELAR" | null>(
     null
   );
   const [selectedRepresentante, setSelectedRepresentante] = useState("");
@@ -190,11 +190,43 @@ export default function SolicitacoesPage() {
   };
 
   // Abrir modal de aprovação/rejeição
-  const openModal = (solicitacaoId: string, action: "APROVAR" | "NEGAR") => {
+  const openModal = (solicitacaoId: string, action: "APROVAR" | "NEGAR" | "CANCELAR") => {
     setShowModal(solicitacaoId);
     setModalAction(action);
     setSelectedRepresentante("");
     setMotivoRejeicao("");
+  };
+  
+  // Processar cancelamento direto (sem modal)
+  const cancelarSolicitacao = async (solicitacaoId: string) => {
+    if (!confirm("Tem certeza que deseja cancelar e voltar esta solicitação para PENDENTE?")) {
+      return;
+    }
+    
+    setProcessing(true);
+    try {
+      const response = await fetch(`/api/solicitacoes-cadastro/${solicitacaoId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          acao: "CANCELAR",
+        }),
+      });
+
+      if (response.ok) {
+        await fetchSolicitacoes(); // Recarregar lista
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || "Erro ao cancelar solicitação");
+      }
+    } catch (error) {
+      console.error("Erro ao cancelar solicitação:", error);
+      alert("Erro de conexão");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -439,24 +471,70 @@ export default function SolicitacoesPage() {
                 </div>
 
                 {/* Ações */}
-                {solicitacao.status === "PENDENTE" && (
-                  <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-                    <button
-                      onClick={() => openModal(solicitacao.id, "NEGAR")}
-                      className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors font-medium"
-                    >
-                      <XCircle className="h-4 w-4" />
-                      Negar
-                    </button>
-                    <button
-                      onClick={() => openModal(solicitacao.id, "APROVAR")}
-                      className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium"
-                    >
-                      <CheckCircle className="h-4 w-4" />
-                      Aprovar
-                    </button>
-                  </div>
-                )}
+                <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                  {solicitacao.status === "PENDENTE" && (
+                    <>
+                      <button
+                        onClick={() => openModal(solicitacao.id, "NEGAR")}
+                        className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors font-medium"
+                        disabled={processing}
+                      >
+                        <XCircle className="h-4 w-4" />
+                        Negar
+                      </button>
+                      <button
+                        onClick={() => openModal(solicitacao.id, "APROVAR")}
+                        className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium"
+                        disabled={processing}
+                      >
+                        <CheckCircle className="h-4 w-4" />
+                        Aprovar
+                      </button>
+                    </>
+                  )}
+                  
+                  {solicitacao.status === "APROVADA" && (
+                    <>
+                      <button
+                        onClick={() => cancelarSolicitacao(solicitacao.id)}
+                        className="flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors font-medium"
+                        disabled={processing}
+                      >
+                        <Clock className="h-4 w-4" />
+                        Cancelar Aprovação
+                      </button>
+                      <button
+                        onClick={() => openModal(solicitacao.id, "NEGAR")}
+                        className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors font-medium"
+                        disabled={processing}
+                      >
+                        <XCircle className="h-4 w-4" />
+                        Negar
+                      </button>
+                    </>
+                  )}
+                  
+                  {solicitacao.status === "NEGADA" && (
+                    <>
+                      <button
+                        onClick={() => cancelarSolicitacao(solicitacao.id)}
+                        className="flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors font-medium"
+                        disabled={processing}
+                      >
+                        <Clock className="h-4 w-4" />
+                        Voltar para Pendente
+                      </button>
+                      <button
+                        onClick={() => openModal(solicitacao.id, "APROVAR")}
+                        className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium"
+                        disabled={processing}
+                      >
+                        <CheckCircle className="h-4 w-4" />
+                        Aprovar
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
             ))}
           </div>

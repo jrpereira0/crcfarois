@@ -8,7 +8,7 @@ import {
   enviarEmailNovoClienteRepresentante,
 } from "@/lib/email";
 
-// PUT - Aprovar ou negar solicitação
+// PUT - Aprovar, negar ou alterar status de solicitação
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -36,11 +36,18 @@ export async function PUT(
       );
     }
 
-    if (solicitacao.status !== "PENDENTE") {
-      return NextResponse.json(
-        { error: "Solicitação já foi processada" },
-        { status: 400 }
-      );
+    // Verificar se o email já existe no sistema ao tentar aprovar ou mudar de NEGADA para APROVADA
+    if (acao === "APROVAR") {
+      const usuarioExistente = await prisma.user.findUnique({
+        where: { email: solicitacao.emailResponsavel },
+      });
+
+      if (usuarioExistente) {
+        return NextResponse.json(
+          { error: "Este email já está cadastrado no sistema" },
+          { status: 400 }
+        );
+      }
     }
 
     if (acao === "APROVAR") {
@@ -136,22 +143,22 @@ export async function PUT(
         };
       });
 
-      // Enviar email de aprovação para o cliente (não bloquear se falhar)
+      // Enviar email de aprovação para o cliente (sempre que aprovar ou mudar de NEGADA para APROVADA)
       enviarEmailAprovacaoCadastro({
         nomeResponsavel: solicitacao.nomeResponsavel,
         razaoSocial: solicitacao.razaoSocial,
         emailResponsavel: solicitacao.emailResponsavel,
-        representanteNome: representante.user.name || "Representante",
-        representanteEmail: representante.user.email,
-        representanteWhatsapp: representante.whatsapp || "Não informado",
+        representanteNome: resultado.representante.user.name || "Representante",
+        representanteEmail: resultado.representante.user.email,
+        representanteWhatsapp: resultado.representante.whatsapp || "Não informado",
       }).catch((error) => {
         console.error("Erro ao enviar email de aprovação:", error);
       });
 
       // Enviar email separado para o representante (não bloquear se falhar)
       enviarEmailNovoClienteRepresentante({
-        representanteNome: representante.user.name || "Representante",
-        representanteEmail: representante.user.email,
+        representanteNome: resultado.representante.user.name || "Representante",
+        representanteEmail: resultado.representante.user.email,
         clienteRazaoSocial: solicitacao.razaoSocial,
         clienteResponsavel: solicitacao.nomeResponsavel,
         clienteEmail: solicitacao.emailResponsavel,
@@ -173,6 +180,7 @@ export async function PUT(
       });
     } else if (acao === "NEGAR") {
       // Negar solicitação
+      const statusAnterior = solicitacao.status;
       const solicitacaoAtualizada = await prisma.solicitacaoCadastro.update({
         where: { id: solicitacaoId },
         data: {
@@ -184,16 +192,18 @@ export async function PUT(
         },
       });
 
-      // Enviar email de rejeição (não bloquear se falhar)
-      enviarEmailRejeicaoCadastro({
-        nomeResponsavel: solicitacao.nomeResponsavel,
-        razaoSocial: solicitacao.razaoSocial,
-        emailResponsavel: solicitacao.emailResponsavel,
-        motivoRejeicao:
-          motivoRejeicao || "Solicitação negada pelo administrador",
-      }).catch((error) => {
-        console.error("Erro ao enviar email de rejeição:", error);
-      });
+      // Enviar email de rejeição apenas se status mudou (não bloquear se falhar)
+      if (statusAnterior !== "NEGADA") {
+        enviarEmailRejeicaoCadastro({
+          nomeResponsavel: solicitacao.nomeResponsavel,
+          razaoSocial: solicitacao.razaoSocial,
+          emailResponsavel: solicitacao.emailResponsavel,
+          motivoRejeicao:
+            motivoRejeicao || "Solicitação negada pelo administrador",
+        }).catch((error) => {
+          console.error("Erro ao enviar email de rejeição:", error);
+        });
+      }
 
       return NextResponse.json({
         message: "Solicitação negada",
@@ -202,9 +212,29 @@ export async function PUT(
           status: solicitacaoAtualizada.status,
         },
       });
+    } else if (acao === "CANCELAR") {
+      // Cancelar solicitação (voltar para PENDENTE)
+      const solicitacaoAtualizada = await prisma.solicitacaoCadastro.update({
+        where: { id: solicitacaoId },
+        data: {
+          status: "PENDENTE",
+          aprovadoPorId: null,
+          representanteId: null,
+          motivoRejeicao: null,
+          aprovadaEm: null,
+        },
+      });
+
+      return NextResponse.json({
+        message: "Solicitação voltou para pendente",
+        solicitacao: {
+          id: solicitacaoAtualizada.id,
+          status: solicitacaoAtualizada.status,
+        },
+      });
     } else {
       return NextResponse.json(
-        { error: "Ação inválida. Use 'APROVAR' ou 'NEGAR'" },
+        { error: "Ação inválida. Use 'APROVAR', 'NEGAR' ou 'CANCELAR'" },
         { status: 400 }
       );
     }
