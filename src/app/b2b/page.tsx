@@ -177,9 +177,7 @@ export default function B2BHomePage() {
               <Package className="h-6 w-6 text-primary group-hover:text-white transition-colors" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-gray-900 mb-1">
-                Ver Catálogo
-              </h3>
+              <h3 className="font-semibold text-gray-900 mb-1">Ver Catálogo</h3>
               <p className="text-sm text-gray-600">
                 Navegue pelos nossos produtos
               </p>
@@ -198,9 +196,7 @@ export default function B2BHomePage() {
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-gray-900 mb-1">Meu Carrinho</h3>
-              <p className="text-sm text-gray-600">
-                Finalize seus pedidos
-              </p>
+              <p className="text-sm text-gray-600">Finalize seus pedidos</p>
             </div>
             <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-primary group-hover:translate-x-1 transition-all" />
           </div>
@@ -215,12 +211,8 @@ export default function B2BHomePage() {
               <FileText className="h-6 w-6 text-primary group-hover:text-white transition-colors" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-gray-900 mb-1">
-                Meus Pedidos
-              </h3>
-              <p className="text-sm text-gray-600">
-                Acompanhe seus pedidos
-              </p>
+              <h3 className="font-semibold text-gray-900 mb-1">Meus Pedidos</h3>
+              <p className="text-sm text-gray-600">Acompanhe seus pedidos</p>
             </div>
             <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-primary group-hover:translate-x-1 transition-all" />
           </div>
@@ -271,8 +263,14 @@ export default function B2BHomePage() {
                       </div>
                       <p className="text-sm text-gray-600">
                         {formatDate(pedido.createdAt)} •{" "}
-                        {pedido.itens.reduce((acc, item) => acc + item.quantidade, 0)}{" "}
-                        {pedido.itens.reduce((acc, item) => acc + item.quantidade, 0) === 1
+                        {pedido.itens.reduce(
+                          (acc, item) => acc + item.quantidade,
+                          0
+                        )}{" "}
+                        {pedido.itens.reduce(
+                          (acc, item) => acc + item.quantidade,
+                          0
+                        ) === 1
                           ? "item"
                           : "itens"}
                       </p>
@@ -300,28 +298,30 @@ export default function B2BHomePage() {
       )}
 
       {/* Empty State */}
-      {!loading && stats?.pedidosRecentes && stats.pedidosRecentes.length === 0 && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12">
-          <div className="text-center max-w-md mx-auto">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <ShoppingBag className="h-8 w-8 text-gray-400" />
+      {!loading &&
+        stats?.pedidosRecentes &&
+        stats.pedidosRecentes.length === 0 && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12">
+            <div className="text-center max-w-md mx-auto">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ShoppingBag className="h-8 w-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Nenhum pedido ainda
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Comece a explorar nosso catálogo e faça seu primeiro pedido!
+              </p>
+              <Link
+                href="/b2b/produtos"
+                className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium"
+              >
+                <Package className="h-5 w-5" />
+                Ver Produtos
+              </Link>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Nenhum pedido ainda
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Comece a explorar nosso catálogo e faça seu primeiro pedido!
-            </p>
-            <Link
-              href="/b2b/produtos"
-              className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium"
-            >
-              <Package className="h-5 w-5" />
-              Ver Produtos
-            </Link>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Info Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">

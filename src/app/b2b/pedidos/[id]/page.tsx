@@ -262,40 +262,43 @@ export default function PedidoDetalhesPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-4 mb-2">
-          <Link
-            href="/b2b/pedidos"
-            className="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors font-medium"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            <span>Voltar aos Pedidos</span>
-          </Link>
-        </div>
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-2xl font-bold text-gray-900">
-                Pedido {pedido.numero}
-              </h1>
-              <button
-                onClick={copyPedidoNumber}
-                className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
-                title="Copiar número do pedido"
-              >
-                <Copy className="h-4 w-4" />
-              </button>
+        <Link
+          href="/b2b/pedidos"
+          className="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors font-medium"
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="hidden sm:inline">Voltar aos Pedidos</span>
+          <span className="sm:hidden">Voltar</span>
+        </Link>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  Pedido {pedido.numero}
+                </h1>
+                <button
+                  onClick={copyPedidoNumber}
+                  className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors flex-shrink-0"
+                  title="Copiar número do pedido"
+                >
+                  <Copy className="h-4 w-4" />
+                </button>
+              </div>
+              <p className="text-sm text-gray-600">
+                {formatDate(pedido.createdAt)}
+              </p>
             </div>
-            <p className="text-gray-600">
-              Realizado em {formatDate(pedido.createdAt)}
-            </p>
           </div>
+
           <div
-            className={`px-4 py-2 rounded-full border-2 flex items-center gap-2 font-medium ${getStatusColor(
+            className={`px-3 py-2 rounded-lg border flex items-center justify-center gap-2 font-medium text-sm ${getStatusColor(
               pedido.status
             )}`}
           >
             {getStatusIcon(pedido.status)}
-            {getStatusText(pedido.status)}
+            <span>{getStatusText(pedido.status)}</span>
           </div>
         </div>
       </div>
@@ -304,46 +307,48 @@ export default function PedidoDetalhesPage() {
         {/* Conteúdo principal */}
         <div className="lg:col-span-2 space-y-6">
           {/* Itens do pedido */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
               Itens do Pedido
             </h2>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {pedido.itens.map((item) => (
                 <div
                   key={item.id}
-                  className="flex gap-4 p-4 bg-gray-50 rounded-lg"
+                  className="flex gap-3 p-3 bg-gray-50 rounded-lg"
                 >
-                  <div className="relative w-16 h-16 bg-white rounded-lg overflow-hidden flex-shrink-0">
+                  <div className="relative w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-lg overflow-hidden flex-shrink-0">
                     {item.produto.imagemPrincipal ? (
                       <Image
                         src={item.produto.imagemPrincipal}
                         alt={item.produtoTitulo}
                         fill
-                        className="object-contain p-2"
+                        className="object-contain p-1.5 sm:p-2"
                         sizes="64px"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Package className="h-6 w-6 text-gray-300" />
+                        <Package className="h-5 w-5 sm:h-6 sm:w-6 text-gray-300" />
                       </div>
                     )}
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 mb-1">
+                    <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 line-clamp-2">
                       {item.produtoTitulo}
                     </h3>
-                    <div className="text-sm text-gray-500 mb-2">
-                      SKU: {item.produtoSku} • Categoria:{" "}
-                      {item.produto.categoria.nome}
+                    <div className="text-xs sm:text-sm text-gray-500 mb-2">
+                      <div>SKU: {item.produtoSku}</div>
+                      <div className="sm:inline sm:before:content-['•'] sm:before:mx-1">
+                        {item.produto.categoria.nome}
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm text-gray-600">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-xs sm:text-sm text-gray-600">
                         {item.quantidade} × {formatPrice(item.precoUnitario)}
                       </div>
-                      <div className="font-semibold text-gray-900">
+                      <div className="font-semibold text-gray-900 text-sm sm:text-base whitespace-nowrap">
                         {formatPrice(item.subtotal)}
                       </div>
                     </div>
@@ -354,20 +359,20 @@ export default function PedidoDetalhesPage() {
           </div>
 
           {/* Informações de entrega */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center gap-3 mb-4">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+            <div className="flex items-center gap-2 sm:gap-3 mb-4">
               {pedido.tipoEntrega === "ENTREGA" ? (
-                <Truck className="h-6 w-6 text-primary" />
+                <Truck className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               ) : (
-                <MapPin className="h-6 w-6 text-primary" />
+                <MapPin className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               )}
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                 {pedido.tipoEntrega === "ENTREGA" ? "Entrega" : "Retirada"}
               </h2>
             </div>
 
             {pedido.tipoEntrega === "ENTREGA" ? (
-              <div className="space-y-2">
+              <div className="space-y-2 text-sm sm:text-base">
                 <div className="font-medium text-gray-900">
                   Endereço de entrega:
                 </div>
@@ -383,7 +388,7 @@ export default function PedidoDetalhesPage() {
                 <div className="text-gray-600">CEP: {pedido.cepEntrega}</div>
               </div>
             ) : (
-              <div className="text-gray-600">
+              <div className="text-sm sm:text-base text-gray-600">
                 O pedido será retirado na loja. Você será notificado quando
                 estiver pronto para retirada.
               </div>
@@ -392,14 +397,14 @@ export default function PedidoDetalhesPage() {
 
           {/* Observações */}
           {pedido.observacoes && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <FileText className="h-6 w-6 text-primary" />
-                <h2 className="text-xl font-semibold text-gray-900">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+              <div className="flex items-center gap-2 sm:gap-3 mb-4">
+                <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                   Observações
                 </h2>
               </div>
-              <div className="text-gray-600 whitespace-pre-wrap">
+              <div className="text-sm sm:text-base text-gray-600 whitespace-pre-wrap">
                 {pedido.observacoes}
               </div>
             </div>
@@ -407,23 +412,23 @@ export default function PedidoDetalhesPage() {
         </div>
 
         {/* Sidebar */}
-        <div className="lg:col-span-1 space-y-6">
+        <div className="lg:col-span-1 space-y-4 sm:space-y-6">
           {/* Resumo do pedido */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">
               Resumo do Pedido
             </h2>
 
-            <div className="space-y-3 mb-6">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Subtotal</span>
-                <span className="font-medium text-gray-900">
+            <div className="space-y-3 mb-4 sm:mb-6">
+              <div className="flex justify-between items-center">
+                <span className="text-sm sm:text-base text-gray-600">Subtotal</span>
+                <span className="text-sm sm:text-base font-medium text-gray-900">
                   {formatPrice(pedido.subtotal)}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Frete</span>
-                <span className="font-medium text-gray-900">
+              <div className="flex justify-between items-center">
+                <span className="text-sm sm:text-base text-gray-600">Frete</span>
+                <span className="text-sm sm:text-base font-medium text-gray-900">
                   {pedido.frete > 0
                     ? formatPrice(pedido.frete)
                     : pedido.tipoEntrega === "RETIRADA"
@@ -431,32 +436,32 @@ export default function PedidoDetalhesPage() {
                     : "A consultar"}
                 </span>
               </div>
-              <div className="border-t border-gray-200 pt-3 flex justify-between text-lg font-semibold">
-                <span className="text-gray-900">Total</span>
-                <span className="text-primary">
+              <div className="border-t border-gray-200 pt-3 flex justify-between items-center">
+                <span className="text-base sm:text-lg font-semibold text-gray-900">Total</span>
+                <span className="text-base sm:text-lg font-semibold text-primary">
                   {formatPrice(pedido.total)}
                 </span>
               </div>
             </div>
 
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center gap-2">
-                <CreditCard className="h-4 w-4 text-gray-400" />
-                <span className="text-gray-600">
+            <div className="space-y-2.5 sm:space-y-3 text-xs sm:text-sm">
+              <div className="flex items-start gap-2">
+                <CreditCard className="h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5" />
+                <span className="text-gray-600 break-words">
                   {pedido.formaPagamento.replace("_", " ")}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-gray-400" />
-                <span className="text-gray-600">
-                  Pedido realizado em {formatDate(pedido.createdAt)}
+              <div className="flex items-start gap-2">
+                <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5" />
+                <span className="text-gray-600 break-words">
+                  Realizado em {formatDate(pedido.createdAt)}
                 </span>
               </div>
               {pedido.updatedAt !== pedido.createdAt && (
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-gray-400" />
-                  <span className="text-gray-600">
-                    Última atualização: {formatDate(pedido.updatedAt)}
+                <div className="flex items-start gap-2">
+                  <Clock className="h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 break-words">
+                    Atualizado em {formatDate(pedido.updatedAt)}
                   </span>
                 </div>
               )}
@@ -464,34 +469,34 @@ export default function PedidoDetalhesPage() {
           </div>
 
           {/* Dados do cliente */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <User className="h-6 w-6 text-primary" />
-              <h2 className="text-xl font-semibold text-gray-900">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+            <div className="flex items-center gap-2 sm:gap-3 mb-4">
+              <User className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                 Dados do Cliente
               </h2>
             </div>
 
-            <div className="space-y-3 text-sm">
+            <div className="space-y-2.5 sm:space-y-3 text-xs sm:text-sm">
               <div>
-                <div className="font-medium text-gray-900">
+                <div className="font-medium text-gray-900 break-words">
                   {pedido.user.cliente?.razaoSocial || pedido.user.name}
                 </div>
                 {pedido.user.cliente?.cnpjCpf && (
-                  <div className="text-gray-600">
+                  <div className="text-gray-600 mt-1">
                     CNPJ/CPF: {pedido.user.cliente.cnpjCpf}
                   </div>
                 )}
               </div>
 
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-gray-400" />
-                <span className="text-gray-600">{pedido.user.email}</span>
+              <div className="flex items-start gap-2">
+                <Mail className="h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5" />
+                <span className="text-gray-600 break-all">{pedido.user.email}</span>
               </div>
 
               {pedido.user.cliente?.whatsapp && (
-                <div className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-gray-400" />
+                <div className="flex items-start gap-2">
+                  <Phone className="h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-600">
                     {pedido.user.cliente.whatsapp}
                   </span>
