@@ -80,7 +80,7 @@ export default function Header() {
                 </div>
                 <div className="flex items-center space-x-1 flex-shrink-0">
                   <MapPin size={12} />
-                  <span>São Bernardo do Campo - SP</span>
+                  <span>Santo André - SP</span>
                 </div>
               </div>
               {/* Duplicata para loop infinito */}
@@ -99,7 +99,7 @@ export default function Header() {
                 </div>
                 <div className="flex items-center space-x-1 flex-shrink-0">
                   <MapPin size={12} />
-                  <span>São Bernardo do Campo - SP</span>
+                  <span>Santo André - SP</span>
                 </div>
               </div>
             </div>
@@ -123,7 +123,7 @@ export default function Header() {
             </div>
             <div className="flex items-center space-x-1">
               <MapPin size={14} />
-              <span>São Bernardo do Campo - SP</span>
+              <span>Santo André - SP</span>
             </div>
           </div>
         </div>
