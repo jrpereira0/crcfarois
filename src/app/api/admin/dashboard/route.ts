@@ -168,16 +168,25 @@ export async function GET(request: NextRequest) {
         createdAt: "desc",
       },
       include: {
-        cliente: {
+        user: {
           select: {
-            razaoSocial: true,
-          },
-        },
-        representante: {
-          include: {
-            user: {
+            name: true,
+            cliente: {
               select: {
-                name: true,
+                razaoSocial: true,
+                representantes: {
+                  select: {
+                    representante: {
+                      select: {
+                        user: {
+                          select: {
+                            name: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
               },
             },
           },
@@ -208,12 +217,20 @@ export async function GET(request: NextRequest) {
       solicitacoesTotal,
       pedidosRecentes: pedidosRecentes.map((p) => ({
         id: p.id,
-        numeroPedido: p.numeroPedido,
+        numeroPedido: p.numero,
         status: p.status,
         total: Number(p.total),
         createdAt: p.createdAt.toISOString(),
-        cliente: p.cliente,
-        representante: p.representante,
+        cliente: {
+          razaoSocial: p.user.cliente?.razaoSocial || "N/A",
+        },
+        representante: {
+          user: {
+            name:
+              p.user.cliente?.representantes?.[0]?.representante?.user?.name ||
+              "N/A",
+          },
+        },
       })),
     });
   } catch (error) {
