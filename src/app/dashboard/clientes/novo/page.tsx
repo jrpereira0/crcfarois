@@ -364,6 +364,7 @@ export default function NovoClientePage() {
             whatsapp: "",
             senha: "",
             confirmarSenha: "",
+            representanteId: "",
           });
 
           // Redirecionar após mostrar sucesso
