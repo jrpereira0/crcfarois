@@ -13,11 +13,13 @@ Sistema web completo para a CRC Faróis com site institucional e área administr
 ## Como rodar
 
 1. Instalar dependências:
+
 ```bash
 npm install
 ```
 
 2. Configurar `.env.local`:
+
 ```env
 DATABASE_URL="sua_url_do_banco"
 NEXTAUTH_SECRET="sua_chave_secreta"
@@ -29,12 +31,14 @@ BREVO_API_KEY="sua_chave_brevo"
 ```
 
 3. Configurar banco:
+
 ```bash
 npx prisma db push
 npx prisma db seed
 ```
 
 4. Rodar projeto:
+
 ```bash
 npm run dev
 ```

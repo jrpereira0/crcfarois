@@ -49,12 +49,13 @@ export async function POST(request: NextRequest) {
       !senha ||
       !cep ||
       !endereco ||
-      !numero
+      !numero ||
+      !representanteId
     ) {
       return NextResponse.json(
         {
           error:
-            "Campos obrigatórios: Razão social, responsável, CNPJ/CPF, endereço completo, email, WhatsApp e senha",
+            "Campos obrigatórios: Razão social, responsável, CNPJ/CPF, endereço completo, email, WhatsApp, senha e representante",
         },
         { status: 400 }
       );
@@ -136,58 +137,38 @@ export async function POST(request: NextRequest) {
       return { user, cliente };
     });
 
-    // Buscar dados do representante (se houver) para incluir no email
-    let representanteDados = null;
-    if (representanteId) {
-      const representante = await prisma.representante.findUnique({
-        where: { id: representanteId },
-        include: {
-          user: {
-            select: {
-              name: true,
-              email: true,
-            },
+    // Buscar dados do representante para incluir no email
+    const representante = await prisma.representante.findUnique({
+      where: { id: representanteId },
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
           },
         },
-      });
+      },
+    });
 
-      if (representante) {
-        representanteDados = {
-          nome: representante.user.name || "Representante",
-          email: representante.user.email,
-          whatsapp: representante.whatsapp || "Não informado",
-        };
-      }
+    if (!representante) {
+      return NextResponse.json(
+        { error: "Representante não encontrado" },
+        { status: 400 }
+      );
     }
 
-    // Se não houver representante, buscar um admin para contato
-    if (!representanteDados) {
-      const admin = await prisma.user.findFirst({
-        where: { role: "ADMIN" },
-      });
-
-      if (admin) {
-        representanteDados = {
-          nome: "Equipe CRC Faróis",
-          email: admin.email,
-          whatsapp: "(11) 99226-8645",
-        };
-      }
-    }
-
-    // Enviar email para o cliente (não bloquear se falhar)
-    if (representanteDados) {
-      enviarEmailClienteCriadoAdmin({
-        nomeResponsavel: responsavel,
-        razaoSocial,
-        emailResponsavel: email,
-        representanteNome: representanteDados.nome,
-        representanteEmail: representanteDados.email,
-        representanteWhatsapp: representanteDados.whatsapp,
-      }).catch((error) => {
-        console.error("Erro ao enviar email para cliente:", error);
-      });
-    }
+    // Enviar email para o cliente com os dados de acesso (não bloquear se falhar)
+    enviarEmailClienteCriadoAdmin({
+      nomeResponsavel: responsavel,
+      razaoSocial,
+      emailResponsavel: email,
+      senhaAcesso: senha, // Senha em texto puro para o cliente
+      representanteNome: representante.user.name || "Representante",
+      representanteEmail: representante.user.email,
+      representanteWhatsapp: representante.whatsapp || "Não informado",
+    }).catch((error) => {
+      console.error("Erro ao enviar email para cliente:", error);
+    });
 
     return NextResponse.json(result.cliente, { status: 201 });
   } catch (error) {

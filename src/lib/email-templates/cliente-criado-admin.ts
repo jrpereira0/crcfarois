@@ -2,6 +2,7 @@ interface ClienteCriadoAdminData {
   nomeResponsavel: string;
   razaoSocial: string;
   emailResponsavel: string;
+  senhaAcesso: string;
   representanteNome: string;
   representanteEmail: string;
   representanteWhatsapp: string;
@@ -49,17 +50,29 @@ export const emailClienteCriadoAdmin = (
                 }</strong> foi cadastrada em nossa plataforma B2B!
               </p>
               
-              <!-- Box de destaque -->
+              <!-- Box de destaque - Dados de Acesso -->
               <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 8px; margin: 25px 0;">
                 <tr>
                   <td style="padding: 20px;">
-                    <p style="margin: 0 0 12px 0; color: #1e40af; font-size: 16px; font-weight: 600;">
-                      🚀 Acesse a Plataforma
+                    <p style="margin: 0 0 16px 0; color: #1e40af; font-size: 16px; font-weight: 600;">
+                      🔐 Seus Dados de Acesso
                     </p>
-                    <p style="margin: 0; color: #475569; font-size: 15px; line-height: 1.6;">
-                      Utilize o email <strong>${
-                        data.emailResponsavel
-                      }</strong> e a senha que foi fornecida para fazer login e começar a explorar nosso catálogo completo de produtos.
+                    <div style="background-color: #ffffff; padding: 16px; border-radius: 6px; margin-bottom: 12px;">
+                      <p style="margin: 0 0 4px 0; color: #64748b; font-size: 13px;">
+                        <strong style="color: #1e293b;">Email:</strong>
+                      </p>
+                      <p style="margin: 0 0 12px 0; color: #1e40af; font-size: 16px; font-weight: 600; font-family: 'Courier New', monospace;">
+                        ${data.emailResponsavel}
+                      </p>
+                      <p style="margin: 0 0 4px 0; color: #64748b; font-size: 13px;">
+                        <strong style="color: #1e293b;">Senha:</strong>
+                      </p>
+                      <p style="margin: 0; color: #1e40af; font-size: 16px; font-weight: 600; font-family: 'Courier New', monospace;">
+                        ${data.senhaAcesso}
+                      </p>
+                    </div>
+                    <p style="margin: 0; color: #475569; font-size: 14px; line-height: 1.6;">
+                      💡 <em>Por segurança, recomendamos alterar sua senha após o primeiro acesso.</em>
                     </p>
                   </td>
                 </tr>
@@ -133,7 +146,7 @@ export const emailClienteCriadoAdmin = (
           <tr>
             <td style="background-color: #f8fafc; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
               <p style="margin: 0 0 10px 0; color: #64748b; font-size: 13px;">
-                Precisa de ajuda? Entre em contato: contato@crc.ind.br | (11) 99226-8645
+                Precisa de ajuda? Entre em contato: contato@crcfarois.ind.br) 99226-8645
               </p>
               <p style="margin: 0; color: #94a3b8; font-size: 12px;">
                 © ${new Date().getFullYear()} CRC Faróis - Todos os direitos reservados
