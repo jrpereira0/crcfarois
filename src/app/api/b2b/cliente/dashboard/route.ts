@@ -42,7 +42,10 @@ export async function GET(request: NextRequest) {
     const pedidosPendentes = pedidos.filter(
       (p) => p.status === "PENDENTE" || p.status === "CONFIRMADO"
     ).length;
-    const valorTotalCompras = pedidos.reduce((acc, p) => acc + p.total, 0);
+    const valorTotalCompras = pedidos.reduce(
+      (acc, p) => acc + Number(p.total),
+      0
+    );
 
     // Pegar últimos 5 pedidos
     const pedidosRecentes = pedidos.slice(0, 5);
