@@ -282,8 +282,8 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
               </h1>
             </div>
 
-            <div className="flex items-center gap-4">
-              {/* Notifications */}
+            <div className="hidden lg:flex items-center gap-4">
+              {/* Notifications - Apenas no desktop */}
               <button className="relative p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100">
                 <Bell className="h-5 w-5" />
                 <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
