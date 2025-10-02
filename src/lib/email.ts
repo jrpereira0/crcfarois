@@ -185,6 +185,7 @@ export async function enviarEmailClienteCriadoAdmin(params: {
   nomeResponsavel: string;
   razaoSocial: string;
   emailResponsavel: string;
+  senhaAcesso: string;
   representanteNome: string;
   representanteEmail: string;
   representanteWhatsapp: string;
