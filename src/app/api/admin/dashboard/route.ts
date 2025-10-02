@@ -69,7 +69,9 @@ export async function GET(request: NextRequest) {
     });
     const pedidosAprovados = await prisma.pedido.count({
       where: {
-        status: "APROVADO",
+        status: {
+          in: ["CONFIRMADO", "PREPARANDO", "PRONTO", "ENVIADO"],
+        },
         createdAt: {
           gte: startOfMonth,
         },
@@ -77,7 +79,7 @@ export async function GET(request: NextRequest) {
     });
     const pedidosRecusados = await prisma.pedido.count({
       where: {
-        status: "RECUSADO",
+        status: "CANCELADO",
         createdAt: {
           gte: startOfMonth,
         },
@@ -99,11 +101,11 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Faturamento (apenas pedidos aprovados)
+    // Faturamento (pedidos confirmados, em preparação, prontos e enviados)
     const pedidosAprovadosMesAtual = await prisma.pedido.findMany({
       where: {
         status: {
-          in: ["APROVADO", "PRODUCAO", "ENVIADO", "ENTREGUE"],
+          in: ["CONFIRMADO", "PREPARANDO", "PRONTO", "ENVIADO"],
         },
         createdAt: {
           gte: startOfMonth,
@@ -117,7 +119,7 @@ export async function GET(request: NextRequest) {
     const pedidosAprovadosMesAnterior = await prisma.pedido.findMany({
       where: {
         status: {
-          in: ["APROVADO", "PRODUCAO", "ENVIADO", "ENTREGUE"],
+          in: ["CONFIRMADO", "PREPARANDO", "PRONTO", "ENVIADO"],
         },
         createdAt: {
           gte: startOfLastMonth,
@@ -132,7 +134,7 @@ export async function GET(request: NextRequest) {
     const pedidosAprovadosTotal = await prisma.pedido.findMany({
       where: {
         status: {
-          in: ["APROVADO", "PRODUCAO", "ENVIADO", "ENTREGUE"],
+          in: ["CONFIRMADO", "PREPARANDO", "PRONTO", "ENVIADO"],
         },
       },
       select: {

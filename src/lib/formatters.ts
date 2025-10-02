@@ -116,3 +116,11 @@ export const formatWhatsAppUrl = (whatsappNumber: string): string => {
   // Se não tem o prefixo, adiciona +55
   return `55${cleanNumber}`;
 };
+
+// Função para formatar valores monetários
+export const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
+};

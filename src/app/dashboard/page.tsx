@@ -91,22 +91,25 @@ export default function DashboardPage() {
         label: "Pendente",
         className: "bg-yellow-100 text-yellow-800",
       },
-      APROVADO: {
-        label: "Aprovado",
+      CONFIRMADO: {
+        label: "Confirmado",
         className: "bg-green-100 text-green-800",
       },
-      RECUSADO: {
-        label: "Recusado",
-        className: "bg-red-100 text-red-800",
-      },
-      PRODUCAO: {
-        label: "Produção",
+      PREPARANDO: {
+        label: "Preparando",
         className: "bg-blue-100 text-blue-800",
       },
-      ENVIADO: { label: "Enviado", className: "bg-purple-100 text-purple-800" },
-      ENTREGUE: {
-        label: "Entregue",
-        className: "bg-gray-100 text-gray-800",
+      PRONTO: {
+        label: "Pronto",
+        className: "bg-indigo-100 text-indigo-800",
+      },
+      ENVIADO: { 
+        label: "Enviado", 
+        className: "bg-purple-100 text-purple-800" 
+      },
+      CANCELADO: {
+        label: "Cancelado",
+        className: "bg-red-100 text-red-800",
       },
     };
 
@@ -652,3 +655,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
