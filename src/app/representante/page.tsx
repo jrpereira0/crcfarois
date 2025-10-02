@@ -6,7 +6,6 @@ import {
   Users,
   Package,
   ShoppingBag,
-  Plus,
   TrendingUp,
   Calendar,
   DollarSign,
@@ -167,7 +166,7 @@ export default function RepresentanteDashboard() {
       </div>
 
       {/* Ações rápidas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link
           href="/representante/clientes"
           className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow group"
@@ -198,21 +197,6 @@ export default function RepresentanteDashboard() {
               <p className="text-sm text-gray-600">
                 Visualizar produtos disponíveis
               </p>
-            </div>
-          </div>
-        </Link>
-
-        <Link
-          href="/representante/novo-pedido"
-          className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow group"
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-              <Plus className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Novo Pedido</h3>
-              <p className="text-sm text-gray-600">Criar pedido para cliente</p>
             </div>
           </div>
         </Link>

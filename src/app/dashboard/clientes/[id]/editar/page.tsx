@@ -196,8 +196,9 @@ export default function EditarClientePage() {
 
       if (response.ok) {
         // Pegar o primeiro representante do cliente (assumindo que há pelo menos um)
-        const representanteAtual = data.representantes?.[0]?.representanteId || "";
-        
+        const representanteAtual =
+          data.representantes?.[0]?.representanteId || "";
+
         setForm({
           razaoSocial: data.razaoSocial || "",
           responsavel: data.responsavel || "",
