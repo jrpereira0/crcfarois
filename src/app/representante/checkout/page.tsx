@@ -181,18 +181,26 @@ export default function RepresentanteCheckoutPage() {
     []
   );
 
+  // Estado para input de frete (string para permitir digitação livre)
+  const [freteInput, setFreteInput] = useState<string>("");
+
   // Handler para mudança de frete
   const handleFreteChange = (value: string) => {
-    // Remover caracteres não numéricos exceto vírgula e ponto
+    // Permitir apenas números, vírgula e ponto
     const cleanValue = value.replace(/[^\d.,]/g, "");
+    
+    // Atualizar o input visual
+    setFreteInput(cleanValue);
 
-    // Converter vírgula para ponto para parseFloat
-    const numericValue = parseFloat(cleanValue.replace(",", "."));
-
-    if (!isNaN(numericValue)) {
-      setFrete(numericValue);
-    } else if (cleanValue === "" || cleanValue === "0") {
+    // Converter para número para cálculos
+    if (cleanValue === "" || cleanValue === "0" || cleanValue === "0," || cleanValue === "0.") {
       setFrete(0);
+    } else {
+      // Substituir vírgula por ponto e converter
+      const numericValue = parseFloat(cleanValue.replace(",", "."));
+      if (!isNaN(numericValue) && numericValue >= 0) {
+        setFrete(numericValue);
+      }
     }
   };
 
@@ -834,15 +842,25 @@ export default function RepresentanteCheckoutPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Valor do Frete
                     </label>
-                    <input
-                      type="text"
-                      value={frete > 0 ? formatPrice(frete) : ""}
-                      onChange={(e) => handleFreteChange(e.target.value)}
-                      placeholder="R$ 0,00"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    />
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        R$
+                      </span>
+                      <input
+                        type="text"
+                        value={freteInput}
+                        onChange={(e) => handleFreteChange(e.target.value)}
+                        placeholder="0,00"
+                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                      />
+                    </div>
                     <p className="text-xs text-gray-500 mt-1">
                       Deixe vazio se o frete for gratuito ou a consultar
+                      {frete > 0 && (
+                        <span className="font-medium text-primary ml-2">
+                          = {formatPrice(frete)}
+                        </span>
+                      )}
                     </p>
                   </div>
                 </div>
