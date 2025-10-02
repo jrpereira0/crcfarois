@@ -188,12 +188,17 @@ export default function RepresentanteCheckoutPage() {
   const handleFreteChange = (value: string) => {
     // Permitir apenas números, vírgula e ponto
     const cleanValue = value.replace(/[^\d.,]/g, "");
-    
+
     // Atualizar o input visual
     setFreteInput(cleanValue);
 
     // Converter para número para cálculos
-    if (cleanValue === "" || cleanValue === "0" || cleanValue === "0," || cleanValue === "0.") {
+    if (
+      cleanValue === "" ||
+      cleanValue === "0" ||
+      cleanValue === "0," ||
+      cleanValue === "0."
+    ) {
       setFrete(0);
     } else {
       // Substituir vírgula por ponto e converter
