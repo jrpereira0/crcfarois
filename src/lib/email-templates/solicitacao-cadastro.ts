@@ -93,7 +93,7 @@ export const emailSolicitacaoCadastro = (
                         </td>
                         <td style="vertical-align: middle;">
                           <p style="margin: 0; color: #64748b; font-size: 13px;">Email</p>
-                          <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: 500;">contato@crc.ind.br</p>
+                          <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: 500;">contato@crcfarois.ind.br</p>
                         </td>
                       </tr>
                     </table>

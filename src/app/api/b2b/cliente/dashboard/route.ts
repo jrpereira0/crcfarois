@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     // Buscar cliente e seu representante
     const cliente = await prisma.cliente.findUnique({
       where: { userId: session.user.id },
-      select: { 
+      select: {
         id: true,
         representantes: {
           select: {
@@ -76,11 +76,13 @@ export async function GET(request: NextRequest) {
       pedidosPendentes,
       valorTotalCompras,
       pedidosRecentes,
-      representante: representante ? {
-        nome: representante.user.name,
-        email: representante.user.email,
-        whatsapp: representante.whatsapp,
-      } : null,
+      representante: representante
+        ? {
+            nome: representante.user.name,
+            email: representante.user.email,
+            whatsapp: representante.whatsapp,
+          }
+        : null,
     });
   } catch (error) {
     console.error("Erro ao buscar estatísticas do cliente:", error);
