@@ -71,6 +71,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" className={sora.variable} suppressHydrationWarning>
+      <head>
+        {/* Google Tag (gtag.js) */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17062260628"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-17062260628');
+            `,
+          }}
+        />
+      </head>
       <body className={sora.className}>
         <AuthProvider>{children}</AuthProvider>
       </body>
