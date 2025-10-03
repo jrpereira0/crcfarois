@@ -317,10 +317,9 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen pb-12">
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col gap-4">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4 mb-2">
           <Link
             href="/b2b/carrinho"
@@ -986,7 +985,6 @@ export default function CheckoutPage() {
             </div>
           </div>
         </div>
-      </div>
       </div>
     </div>
   );
