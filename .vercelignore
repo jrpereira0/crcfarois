@@ -9,4 +9,4 @@ prisma/migrations
 .DS_Store
 README.md
 test-*.md
-scripts/test-*.js
+scripts/

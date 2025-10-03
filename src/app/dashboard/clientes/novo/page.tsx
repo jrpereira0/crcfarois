@@ -321,8 +321,6 @@ export default function NovoClientePage() {
         representanteId: form.representanteId, // Representante obrigatório
       };
 
-      console.log("Enviando dados:", clienteData);
-
       const response = await fetch("/api/clientes", {
         method: "POST",
         headers: {
@@ -332,7 +330,6 @@ export default function NovoClientePage() {
       });
 
       const data = await response.json();
-      console.log("Resposta da API:", data);
 
       if (response.ok) {
         setIsSuccess(true);

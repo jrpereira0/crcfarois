@@ -79,13 +79,8 @@ export default function CheckoutPage() {
           setCondicoesDisponiveis(data.condicoes || []);
           // Se só tem uma condição, seleciona automaticamente
           if (data.condicoes && data.condicoes.length === 1) {
-            console.log(
-              "Selecionando condição automaticamente:",
-              data.condicoes[0]
-            );
             setCondicaoPagamento(data.condicoes[0]);
           } else if (data.condicoes && data.condicoes.length === 0) {
-            console.log("Nenhuma condição disponível");
             setCondicaoPagamento("");
           }
         }
@@ -190,10 +185,6 @@ export default function CheckoutPage() {
       condicoesDisponiveis.length > 0 &&
       (!condicaoPagamento || condicaoPagamento.trim() === "")
     ) {
-      console.log("Erro na validação:", {
-        condicoesDisponiveis,
-        condicaoPagamento,
-      });
       erros.push("Selecione uma condição de pagamento");
     }
 
