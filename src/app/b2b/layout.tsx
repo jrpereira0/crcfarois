@@ -264,9 +264,9 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0 lg:ml-64 h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 lg:ml-64">
         {/* Top bar - Fixed */}
-        <div className="bg-primary shadow-lg flex-shrink-0">
+        <div className="bg-primary shadow-lg flex-shrink-0 sticky top-0 z-10">
           <div className="flex items-center justify-between h-16 px-4 lg:px-6">
             {/* Logo - Mobile */}
             <Link href="/b2b" className="lg:hidden">
@@ -308,8 +308,8 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
         </div>
 
         {/* Page content - Scrollable */}
-        <main className="flex-1 bg-gray-50 overflow-y-auto overflow-x-hidden">
-          <div className="p-6 max-w-full">{children}</div>
+        <main className="flex-1 bg-gray-50">
+          <div className="p-6 max-w-full min-h-screen">{children}</div>
         </main>
       </div>
     </div>
