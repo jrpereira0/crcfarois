@@ -427,10 +427,9 @@ export default function CheckoutPage() {
               </h2>
             </div>
 
-            <div className="condicoes-pagamento-container">
-              {loadingCondicoes ? (
-                /* Loading skeleton */
-                <div className="condicoes-loading space-y-3">
+            {loadingCondicoes ? (
+              /* Loading skeleton */
+              <div className="space-y-3">
                   <div className="animate-pulse">
                     <div className="h-4 bg-gray-200 rounded w-1/2 mb-3"></div>
                     <div className="space-y-2">
@@ -439,76 +438,75 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                 </div>
-              ) : condicoesDisponiveis.length === 0 ? (
-                /* Sem condições disponíveis */
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="h-5 w-5 text-amber-600" />
-                    <span className="text-amber-800 font-medium">
-                      Nenhuma condição de pagamento configurada para sua conta
-                    </span>
-                  </div>
+            ) : condicoesDisponiveis.length === 0 ? (
+              /* Sem condições disponíveis */
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="h-5 w-5 text-amber-600" />
+                  <span className="text-amber-800 font-medium">
+                    Nenhuma condição de pagamento configurada para sua conta
+                  </span>
                 </div>
-              ) : (
-                <>
-                  {condicoesDisponiveis.length === 1 ? (
-                    /* Uma única condição - seleção automática */
-                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="h-5 w-5 text-blue-600" />
-                        <span className="text-blue-800 font-medium">
-                          Condição selecionada: {condicoesDisponiveis[0]}
-                        </span>
-                      </div>
+              </div>
+            ) : (
+              <>
+                {condicoesDisponiveis.length === 1 ? (
+                  /* Uma única condição - seleção automática */
+                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-blue-600" />
+                      <span className="text-blue-800 font-medium">
+                        Condição selecionada: {condicoesDisponiveis[0]}
+                      </span>
                     </div>
-                  ) : (
-                    /* Múltiplas condições - seleção manual */
-                    <div className="space-y-3">
-                      {condicoesDisponiveis.map((condicao) => (
-                        <label
-                          key={condicao}
-                          className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all hover:border-primary/30 ${
-                            condicaoPagamento === condicao
-                              ? "border-primary bg-primary/5"
-                              : "border-gray-200 hover:bg-gray-50"
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name="condicaoPagamento"
-                            value={condicao}
-                            checked={condicaoPagamento === condicao}
-                            onChange={(e) => {
-                              setCondicaoPagamento(e.target.value);
-                              setShowValidationErrors(false);
-                            }}
-                            className="sr-only"
-                          />
-                          <div className="flex items-center justify-between w-full">
-                            <div className="flex items-center gap-3">
-                              <div
-                                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                                  condicaoPagamento === condicao
-                                    ? "border-primary bg-primary"
-                                    : "border-gray-300"
-                                }`}
-                              >
-                                {condicaoPagamento === condicao && (
-                                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                                )}
-                              </div>
-                              <span className="font-medium text-gray-900">
-                                {condicao}
-                              </span>
+                  </div>
+                ) : (
+                  /* Múltiplas condições - seleção manual */
+                  <div className="space-y-3">
+                    {condicoesDisponiveis.map((condicao) => (
+                      <label
+                        key={condicao}
+                        className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all hover:border-primary/30 ${
+                          condicaoPagamento === condicao
+                            ? "border-primary bg-primary/5"
+                            : "border-gray-200 hover:bg-gray-50"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="condicaoPagamento"
+                          value={condicao}
+                          checked={condicaoPagamento === condicao}
+                          onChange={(e) => {
+                            setCondicaoPagamento(e.target.value);
+                            setShowValidationErrors(false);
+                          }}
+                          className="sr-only"
+                        />
+                        <div className="flex items-center justify-between w-full">
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                                condicaoPagamento === condicao
+                                  ? "border-primary bg-primary"
+                                  : "border-gray-300"
+                              }`}
+                            >
+                              {condicaoPagamento === condicao && (
+                                <div className="w-2 h-2 bg-white rounded-full"></div>
+                              )}
                             </div>
+                            <span className="font-medium text-gray-900">
+                              {condicao}
+                            </span>
                           </div>
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
           </div>
 
           {/* Tipo de Entrega */}
