@@ -317,9 +317,10 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4">
+    <div className="min-h-screen pb-12">
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4 mb-2">
           <Link
             href="/b2b/carrinho"
@@ -528,14 +529,17 @@ export default function CheckoutPage() {
                     : "border-gray-200 hover:border-gray-300"
                 }`}
               >
-                <input
-                  type="radio"
-                  name="tipoEntrega"
-                  value="RETIRADA"
-                  checked={tipoEntrega === "RETIRADA"}
-                  onChange={(e) => setTipoEntrega(e.target.value as "RETIRADA")}
-                  className="sr-only"
-                />
+                  <input
+                    type="radio"
+                    name="tipoEntrega"
+                    value="RETIRADA"
+                    checked={tipoEntrega === "RETIRADA"}
+                    onChange={(e) => {
+                      e.preventDefault();
+                      setTipoEntrega("RETIRADA");
+                    }}
+                    className="sr-only"
+                  />
                 <Package className="h-6 w-6 text-primary" />
                 <div>
                   <div className="font-medium text-gray-900">Retirada</div>
@@ -553,14 +557,17 @@ export default function CheckoutPage() {
                     : "border-gray-200 hover:border-gray-300"
                 }`}
               >
-                <input
-                  type="radio"
-                  name="tipoEntrega"
-                  value="ENTREGA"
-                  checked={tipoEntrega === "ENTREGA"}
-                  onChange={(e) => setTipoEntrega(e.target.value as "ENTREGA")}
-                  className="sr-only"
-                />
+                  <input
+                    type="radio"
+                    name="tipoEntrega"
+                    value="ENTREGA"
+                    checked={tipoEntrega === "ENTREGA"}
+                    onChange={(e) => {
+                      e.preventDefault();
+                      setTipoEntrega("ENTREGA");
+                    }}
+                    className="sr-only"
+                  />
                 <Truck className="h-6 w-6 text-primary" />
                 <div>
                   <div className="font-medium text-gray-900">Entrega</div>
@@ -979,6 +986,7 @@ export default function CheckoutPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
