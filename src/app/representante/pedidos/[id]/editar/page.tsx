@@ -176,8 +176,10 @@ export default function EditarPedidoRepresentantePage() {
         itens: pedido.itens || [],
       });
 
-      // Definir frete inicial
-      const freteInicial = pedido.frete || 0;
+      // Definir frete inicial (converter de Decimal para número)
+      const freteInicial = typeof pedido.frete === 'number' 
+        ? pedido.frete 
+        : Number(pedido.frete) || 0;
       setFreteCustomizado(freteInicial);
       setFreteInputValue(
         freteInicial > 0
