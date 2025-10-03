@@ -12,6 +12,7 @@ import { emailNovoPedidoAdmin } from "./email-templates/novo-pedido-admin";
 import { emailStatusPedidoAlterado } from "./email-templates/status-pedido-alterado";
 import { emailRecuperacaoSenhaTemplate } from "./email-templates/recuperacao-senha";
 import { emailNovaSolicitacaoAdmin } from "./email-templates/nova-solicitacao-admin";
+import { emailUsuarioCriadoAdmin } from "./email-templates/usuario-criado-admin";
 
 interface EnviarEmailSolicitacaoParams {
   nomeResponsavel: string;
@@ -560,6 +561,50 @@ export async function enviarEmailNovaSolicitacaoAdmin(params: {
     return { success: true };
   } catch (error: any) {
     console.error("❌ Erro ao enviar email ao admin:", error);
+    return {
+      success: false,
+      error: error.message || "Erro desconhecido ao enviar email",
+    };
+  }
+}
+
+/**
+ * Envia email para usuário (admin/funcionário) criado pelo admin
+ */
+export async function enviarEmailUsuarioCriadoAdmin(params: {
+  nomeUsuario: string;
+  emailUsuario: string;
+  senhaAcesso: string;
+  tipoUsuario: "ADMIN" | "FUNCIONARIO";
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    console.log("📧 Enviando email para novo usuário:", params.emailUsuario);
+
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.subject = "🎉 Bem-vindo ao Sistema CRC Faróis!";
+    sendSmtpEmail.sender = {
+      name: "CRC Faróis",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
+    };
+    sendSmtpEmail.to = [
+      {
+        email: params.emailUsuario,
+        name: params.nomeUsuario,
+      },
+    ];
+    sendSmtpEmail.htmlContent = emailUsuarioCriadoAdmin({
+      nomeUsuario: params.nomeUsuario,
+      emailUsuario: params.emailUsuario,
+      senhaAcesso: params.senhaAcesso,
+      tipoUsuario: params.tipoUsuario,
+    });
+
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log("✅ Email enviado para usuário criado pelo admin:", response);
+    return { success: true };
+  } catch (error: any) {
+    console.error("❌ Erro ao enviar email para usuário:", error);
     return {
       success: false,
       error: error.message || "Erro desconhecido ao enviar email",

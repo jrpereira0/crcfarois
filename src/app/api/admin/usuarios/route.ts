@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import bcryptjs from "bcryptjs";
+import { enviarEmailUsuarioCriadoAdmin } from "@/lib/email";
 
 // GET - Listar todos os usuários admin/funcionário
 export async function GET(request: NextRequest) {
@@ -111,6 +112,16 @@ export async function POST(request: NextRequest) {
         role: true,
         createdAt: true,
       },
+    });
+
+    // Enviar email com credenciais de acesso (não bloquear se falhar)
+    enviarEmailUsuarioCriadoAdmin({
+      nomeUsuario: name,
+      emailUsuario: email,
+      senhaAcesso: password, // Senha em texto plano para o email
+      tipoUsuario: role as "ADMIN" | "FUNCIONARIO",
+    }).catch((error) => {
+      console.error("Erro ao enviar email para usuário:", error);
     });
 
     return NextResponse.json(
