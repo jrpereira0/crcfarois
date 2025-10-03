@@ -308,8 +308,8 @@ function B2BLayoutContent({ children }: B2BLayoutProps) {
         </div>
 
         {/* Page content - Scrollable */}
-        <main className="flex-1 bg-gray-50 overflow-y-auto">
-          <div className="p-6">{children}</div>
+        <main className="flex-1 bg-gray-50 overflow-y-auto overflow-x-hidden">
+          <div className="p-6 max-w-full">{children}</div>
         </main>
       </div>
     </div>
