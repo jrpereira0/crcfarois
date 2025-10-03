@@ -387,7 +387,10 @@ export default function EditarPedidoRepresentantePage() {
   const calcularTotais = useCallback(() => {
     if (!form) return { subtotal: 0, frete: 0, total: 0 };
 
-    const subtotal = form.itens.reduce((sum, item) => sum + item.subtotal, 0);
+    const subtotal = form.itens.reduce((sum, item) => {
+      const itemSubtotal = typeof item.subtotal === 'number' ? item.subtotal : Number(item.subtotal) || 0;
+      return sum + itemSubtotal;
+    }, 0);
     const frete = form.tipoEntrega === "ENTREGA" ? freteCustomizado : 0;
     const total = subtotal + frete;
 
