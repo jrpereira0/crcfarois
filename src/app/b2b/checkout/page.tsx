@@ -345,7 +345,7 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-6">
         {/* Formulário de checkout */}
         <div className="lg:col-span-2 space-y-6">
           {/* Forma de Pagamento */}
@@ -772,7 +772,7 @@ export default function CheckoutPage() {
 
         {/* Resumo do pedido */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 lg:sticky lg:top-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">
               Resumo do Pedido
             </h2>
