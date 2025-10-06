@@ -100,18 +100,25 @@ export function Sidebar() {
   useEffect(() => {
     const fetchContadores = async () => {
       try {
+        console.log("🔄 Buscando contadores...");
         const response = await fetch("/api/admin/contadores");
+        console.log("📊 Status da resposta:", response.status);
+        
         if (response.ok) {
           const data = await response.json();
+          console.log("✅ Contadores recebidos:", data);
           setContadores(data);
+        } else {
+          console.error("❌ Erro na resposta:", response.status, response.statusText);
         }
       } catch (error) {
-        console.error("Erro ao buscar contadores:", error);
+        console.error("❌ Erro ao buscar contadores:", error);
       }
     };
 
     // Buscar contadores inicialmente
     if (session?.user?.role === "ADMIN" || session?.user?.role === "FUNCIONARIO") {
+      console.log("👤 Usuário autenticado como:", session.user.role);
       fetchContadores();
 
       // Atualizar contadores a cada 30 segundos
@@ -182,15 +189,15 @@ export function Sidebar() {
                 (item.href === "/dashboard/usuarios" &&
                   pathname.startsWith("/dashboard/usuarios"));
               
-              // Determinar se deve mostrar badge
-              const showBadge = 
-                (item.href === "/dashboard/solicitacoes" && contadores.solicitacoesPendentes > 0) ||
-                (item.href === "/dashboard/pedidos" && contadores.pedidosPendentes > 0);
+              // Determinar se deve mostrar badge (sempre mostrar para debug)
+              const isSolicitacoes = item.href === "/dashboard/solicitacoes";
+              const isPedidos = item.href === "/dashboard/pedidos";
+              const showBadge = isSolicitacoes || isPedidos;
               
               const badgeCount = 
-                item.href === "/dashboard/solicitacoes" 
+                isSolicitacoes
                   ? contadores.solicitacoesPendentes 
-                  : item.href === "/dashboard/pedidos" 
+                  : isPedidos
                     ? contadores.pedidosPendentes 
                     : 0;
 
@@ -273,18 +280,18 @@ export function Sidebar() {
                     pathname.startsWith("/dashboard/pedidos")) ||
                   (item.href === "/dashboard/faturamento" &&
                     pathname.startsWith("/dashboard/faturamento")) ||
-                  (item.href === "/dashboard/usuarios" &&
-                    pathname.startsWith("/dashboard/usuarios"));
+                (item.href === "/dashboard/usuarios" &&
+                  pathname.startsWith("/dashboard/usuarios"));
                 
-                // Determinar se deve mostrar badge
-                const showBadge = 
-                  (item.href === "/dashboard/solicitacoes" && contadores.solicitacoesPendentes > 0) ||
-                  (item.href === "/dashboard/pedidos" && contadores.pedidosPendentes > 0);
+                // Determinar se deve mostrar badge (sempre mostrar para debug)
+                const isSolicitacoes = item.href === "/dashboard/solicitacoes";
+                const isPedidos = item.href === "/dashboard/pedidos";
+                const showBadge = isSolicitacoes || isPedidos;
                 
                 const badgeCount = 
-                  item.href === "/dashboard/solicitacoes" 
+                  isSolicitacoes
                     ? contadores.solicitacoesPendentes 
-                    : item.href === "/dashboard/pedidos" 
+                    : isPedidos
                       ? contadores.pedidosPendentes 
                       : 0;
 
