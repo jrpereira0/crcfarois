@@ -102,6 +102,7 @@ export async function PUT(
             inscricaoEstadual: solicitacao.inscricaoEstadual,
             inscricaoMunicipal: solicitacao.inscricaoMunicipal,
             tipoEmpresa: solicitacao.tipoEmpresa,
+            condicoesPagamento: ["À Vista"], // Condição de pagamento padrão
             cep: solicitacao.cep,
             endereco: solicitacao.endereco,
             numero: solicitacao.numero,
