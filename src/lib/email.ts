@@ -677,7 +677,7 @@ export async function enviarEmailFormularioContato(params: {
     };
     sendSmtpEmail.to = [
       {
-        email: "contato@crcfarois.com.br",
+        email: "contato@crcfarois.ind.br",
         name: "Contato CRC Faróis",
       },
     ];
