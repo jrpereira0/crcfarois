@@ -692,10 +692,20 @@ export async function enviarEmailFormularioContato(params: {
     console.log("   Response:", response);
     return { success: true };
   } catch (error: any) {
-    console.error("❌ Erro ao enviar email do formulário de contato:", error);
+    console.error("❌ Erro ao enviar email do formulário de contato:");
+    console.error("   Mensagem:", error.message);
+    console.error("   Status:", error.status || error.statusCode);
+    console.error("   Body:", JSON.stringify(error.body || error.response?.body, null, 2));
+    console.error("   Stack:", error.stack);
+    
+    // Se for hard bounce, mostrar detalhes
+    if (error.body?.message) {
+      console.error("   Detalhes Brevo:", error.body.message);
+    }
+    
     return {
       success: false,
-      error: error.message || "Erro desconhecido ao enviar email",
+      error: error.body?.message || error.message || "Erro desconhecido ao enviar email",
     };
   }
 }
