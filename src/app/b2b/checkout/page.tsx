@@ -77,10 +77,17 @@ export default function CheckoutPage() {
         if (response.ok) {
           const data = await response.json();
           setCondicoesDisponiveis(data.condicoes || []);
-          // Se só tem uma condição, seleciona automaticamente
-          if (data.condicoes && data.condicoes.length === 1) {
-            setCondicaoPagamento(data.condicoes[0]);
-          } else if (data.condicoes && data.condicoes.length === 0) {
+          
+          // Priorizar "À Vista" como padrão
+          if (data.condicoes && data.condicoes.length > 0) {
+            const aVista = data.condicoes.find((c: string) => c === "À Vista");
+            if (aVista) {
+              setCondicaoPagamento(aVista);
+            } else {
+              // Se não tem "À Vista", seleciona a primeira
+              setCondicaoPagamento(data.condicoes[0]);
+            }
+          } else {
             setCondicaoPagamento("");
           }
         }
