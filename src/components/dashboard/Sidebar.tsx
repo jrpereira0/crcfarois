@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -89,8 +89,37 @@ const navigation = [
 export function Sidebar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [contadores, setContadores] = useState({
+    solicitacoesPendentes: 0,
+    pedidosPendentes: 0,
+  });
   const pathname = usePathname();
   const { data: session } = useSession();
+
+  // Buscar contadores
+  useEffect(() => {
+    const fetchContadores = async () => {
+      try {
+        const response = await fetch("/api/admin/contadores");
+        if (response.ok) {
+          const data = await response.json();
+          setContadores(data);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar contadores:", error);
+      }
+    };
+
+    // Buscar contadores inicialmente
+    if (session?.user?.role === "ADMIN" || session?.user?.role === "FUNCIONARIO") {
+      fetchContadores();
+
+      // Atualizar contadores a cada 30 segundos
+      const interval = setInterval(fetchContadores, 30000);
+
+      return () => clearInterval(interval);
+    }
+  }, [session]);
 
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/login" });
@@ -152,20 +181,45 @@ export function Sidebar() {
                   pathname.startsWith("/dashboard/faturamento")) ||
                 (item.href === "/dashboard/usuarios" &&
                   pathname.startsWith("/dashboard/usuarios"));
+              
+              // Determinar se deve mostrar badge
+              const showBadge = 
+                (item.href === "/dashboard/solicitacoes" && contadores.solicitacoesPendentes > 0) ||
+                (item.href === "/dashboard/pedidos" && contadores.pedidosPendentes > 0);
+              
+              const badgeCount = 
+                item.href === "/dashboard/solicitacoes" 
+                  ? contadores.solicitacoesPendentes 
+                  : item.href === "/dashboard/pedidos" 
+                    ? contadores.pedidosPendentes 
+                    : 0;
+
               return (
                 <Link
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    "group flex items-center px-3 py-2 text-sm font-medium rounded-md mb-2 transition-colors",
+                    "group flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md mb-2 transition-colors",
                     isActive
                       ? "bg-primary text-white"
                       : "text-gray-700 hover:bg-gray-100"
                   )}
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <item.icon className="mr-3 h-5 w-5" />
-                  {item.name}
+                  <div className="flex items-center">
+                    <item.icon className="mr-3 h-5 w-5" />
+                    {item.name}
+                  </div>
+                  {showBadge && (
+                    <span className={cn(
+                      "ml-auto inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none rounded-full",
+                      isActive
+                        ? "bg-white text-primary"
+                        : "bg-red-500 text-white"
+                    )}>
+                      {badgeCount}
+                    </span>
+                  )}
                 </Link>
               );
             })}
@@ -221,19 +275,44 @@ export function Sidebar() {
                     pathname.startsWith("/dashboard/faturamento")) ||
                   (item.href === "/dashboard/usuarios" &&
                     pathname.startsWith("/dashboard/usuarios"));
+                
+                // Determinar se deve mostrar badge
+                const showBadge = 
+                  (item.href === "/dashboard/solicitacoes" && contadores.solicitacoesPendentes > 0) ||
+                  (item.href === "/dashboard/pedidos" && contadores.pedidosPendentes > 0);
+                
+                const badgeCount = 
+                  item.href === "/dashboard/solicitacoes" 
+                    ? contadores.solicitacoesPendentes 
+                    : item.href === "/dashboard/pedidos" 
+                      ? contadores.pedidosPendentes 
+                      : 0;
+
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
                     className={cn(
-                      "group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                      "group flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md transition-colors",
                       isActive
                         ? "bg-primary text-white"
                         : "text-gray-700 hover:bg-gray-100"
                     )}
                   >
-                    <item.icon className="mr-3 h-5 w-5" />
-                    {item.name}
+                    <div className="flex items-center">
+                      <item.icon className="mr-3 h-5 w-5" />
+                      {item.name}
+                    </div>
+                    {showBadge && (
+                      <span className={cn(
+                        "ml-auto inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none rounded-full",
+                        isActive
+                          ? "bg-white text-primary"
+                          : "bg-red-500 text-white"
+                      )}>
+                        {badgeCount}
+                      </span>
+                    )}
                   </Link>
                 );
               })}

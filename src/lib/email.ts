@@ -13,6 +13,7 @@ import { emailStatusPedidoAlterado } from "./email-templates/status-pedido-alter
 import { emailRecuperacaoSenhaTemplate } from "./email-templates/recuperacao-senha";
 import { emailNovaSolicitacaoAdmin } from "./email-templates/nova-solicitacao-admin";
 import { emailUsuarioCriadoAdmin } from "./email-templates/usuario-criado-admin";
+import { emailFormularioContato } from "./email-templates/formulario-contato";
 
 interface EnviarEmailSolicitacaoParams {
   nomeResponsavel: string;
@@ -644,6 +645,54 @@ export async function enviarEmailRecuperacaoSenha(params: {
     return { success: true };
   } catch (error: any) {
     console.error("Erro ao enviar email de recuperação de senha:", error);
+    return {
+      success: false,
+      error: error.message || "Erro desconhecido ao enviar email",
+    };
+  }
+}
+
+/**
+ * Envia email do formulário de contato para o admin
+ */
+export async function enviarEmailFormularioContato(params: {
+  nome: string;
+  email: string;
+  telefone: string;
+  empresa: string;
+  assunto: string;
+  mensagem: string;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    console.log("📧 Enviando email do formulário de contato...");
+    console.log("   De:", params.email);
+    console.log("   Nome:", params.nome);
+
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.subject = `Novo Contato: ${params.assunto} - ${params.nome}`;
+    sendSmtpEmail.sender = {
+      name: "Site CRC Faróis",
+      email: process.env.BREVO_SENDER_EMAIL || "contato@crcfarois.ind.br",
+    };
+    sendSmtpEmail.to = [
+      {
+        email: "contato@crcfarois.ind.br",
+        name: "Contato CRC Faróis",
+      },
+    ];
+    sendSmtpEmail.replyTo = {
+      email: params.email,
+      name: params.nome,
+    };
+    sendSmtpEmail.htmlContent = emailFormularioContato(params);
+
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log("✅ Email do formulário de contato enviado com sucesso!");
+    console.log("   Response:", response);
+    return { success: true };
+  } catch (error: any) {
+    console.error("❌ Erro ao enviar email do formulário de contato:", error);
     return {
       success: false,
       error: error.message || "Erro desconhecido ao enviar email",

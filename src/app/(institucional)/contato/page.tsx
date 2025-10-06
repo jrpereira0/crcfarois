@@ -42,24 +42,45 @@ export default function Contato() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simular envio
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-
-    // Reset após 5 segundos
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({
-        nome: "",
-        email: "",
-        telefone: "",
-        empresa: "",
-        assunto: "",
-        mensagem: "",
+    try {
+      const response = await fetch("/api/contato", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
-    }, 5000);
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erro ao enviar mensagem");
+      }
+
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+
+      // Reset após 5 segundos
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormData({
+          nome: "",
+          email: "",
+          telefone: "",
+          empresa: "",
+          assunto: "",
+          mensagem: "",
+        });
+      }, 5000);
+    } catch (error) {
+      console.error("Erro ao enviar formulário:", error);
+      setIsSubmitting(false);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Erro ao enviar mensagem. Tente novamente."
+      );
+    }
   };
 
   return (
