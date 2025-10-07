@@ -22,6 +22,7 @@ import {
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import ImageSlider from "@/components/ui/ImageSlider";
+import B2BModal from "@/components/ui/B2BModal";
 
 // URLs das imagens dos produtos (substitua pelos seus links)
 const imagemFarol =
@@ -35,6 +36,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
+      <B2BModal />
 
       <main className="flex-1">
         {/* Hero Section com Slider - Largura Total */}
