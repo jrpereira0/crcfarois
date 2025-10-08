@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { renderToStream } from "@react-pdf/renderer";
 import { prisma } from "@/lib/prisma";
+import React from "react";
 import CatalogPDF from "@/lib/pdf-catalog";
 
 export async function GET() {
@@ -23,11 +24,13 @@ export async function GET() {
     console.log(`[PDF] Gerando catálogo com ${produtos.length} produtos`);
 
     // URL da logo (você pode ajustar conforme necessário)
-    const logoUrl = `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/logobranca.svg`;
+    const logoUrl = `${
+      process.env.NEXTAUTH_URL || "http://localhost:3000"
+    }/logobranca.svg`;
 
-    // Gerar o PDF
+    // Gerar o PDF usando React.createElement
     const stream = await renderToStream(
-      <CatalogPDF products={produtos} logoUrl={logoUrl} />
+      React.createElement(CatalogPDF, { products: produtos, logoUrl: logoUrl })
     );
 
     // Converter stream para buffer
@@ -55,4 +58,3 @@ export async function GET() {
     );
   }
 }
-

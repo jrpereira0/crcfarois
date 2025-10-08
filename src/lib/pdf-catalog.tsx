@@ -175,9 +175,7 @@ const groupByOrigin = (products: Product[]) => {
   const sortedGroups: { [key: string]: Product[] } = {};
 
   priorityOrder.forEach((origin) => {
-    const key = Object.keys(groups).find(
-      (k) => k.toUpperCase() === origin
-    );
+    const key = Object.keys(groups).find((k) => k.toUpperCase() === origin);
     if (key) {
       sortedGroups[key] = groups[key];
     }
@@ -205,7 +203,9 @@ const CatalogPDF: React.FC<CatalogPDFProps> = ({ products, logoUrl }) => {
             {logoUrl ? (
               <Image src={logoUrl} style={styles.logo} />
             ) : (
-              <Text style={{ fontSize: 18, color: "#2b308c", fontWeight: "bold" }}>
+              <Text
+                style={{ fontSize: 18, color: "#2b308c", fontWeight: "bold" }}
+              >
                 CRC FARÓIS
               </Text>
             )}
@@ -290,4 +290,3 @@ const CatalogPDF: React.FC<CatalogPDFProps> = ({ products, logoUrl }) => {
 };
 
 export default CatalogPDF;
-

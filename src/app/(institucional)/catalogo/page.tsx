@@ -87,11 +87,16 @@ export default async function CatalogoPage() {
 
             {/* Description */}
             <p className="text-xl lg:text-2xl text-white/90 leading-relaxed mb-12 max-w-4xl mx-auto animate-fade-in-up animation-delay-400">
-              Mais de <span className="font-bold text-yellow-300">{stats.total} produtos</span> em{" "}
-              <span className="font-bold text-yellow-300">faróis</span>,{" "}
+              Mais de{" "}
+              <span className="font-bold text-yellow-300">
+                {stats.total} produtos
+              </span>{" "}
+              em <span className="font-bold text-yellow-300">faróis</span>,{" "}
               <span className="font-bold text-yellow-300">lanternas</span> e{" "}
-              <span className="font-bold text-yellow-300">acessórios automotivos</span> com a
-              qualidade e tradição que você confia.
+              <span className="font-bold text-yellow-300">
+                acessórios automotivos
+              </span>{" "}
+              com a qualidade e tradição que você confia.
             </p>
 
             {/* Stats */}
@@ -100,7 +105,9 @@ export default async function CatalogoPage() {
                 <div className="text-4xl font-black text-white mb-2">
                   {stats.total}+
                 </div>
-                <div className="text-white/90 font-medium">Produtos no Catálogo</div>
+                <div className="text-white/90 font-medium">
+                  Produtos no Catálogo
+                </div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                 <div className="text-4xl font-black text-white mb-2">
@@ -112,7 +119,9 @@ export default async function CatalogoPage() {
                 <div className="text-4xl font-black text-white mb-2">
                   {stats.quantidadeOrigens}
                 </div>
-                <div className="text-white/90 font-medium">Linhas de Produtos</div>
+                <div className="text-white/90 font-medium">
+                  Linhas de Produtos
+                </div>
               </div>
             </div>
 
@@ -137,11 +146,12 @@ export default async function CatalogoPage() {
           <div className="max-w-7xl mx-auto px-4 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-                Por que escolher a <span className="text-primary">CRC Faróis?</span>
+                Por que escolher a{" "}
+                <span className="text-primary">CRC Faróis?</span>
               </h2>
               <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Nossa missão é fornecer produtos de alta qualidade com preços competitivos
-                e atendimento diferenciado para nossos parceiros.
+                Nossa missão é fornecer produtos de alta qualidade com preços
+                competitivos e atendimento diferenciado para nossos parceiros.
               </p>
             </div>
 
@@ -197,8 +207,8 @@ export default async function CatalogoPage() {
                   Tradição e Confiança
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Mais de 3 anos atendendo o mercado brasileiro com excelência
-                  e compromisso com nossos clientes.
+                  Mais de 3 anos atendendo o mercado brasileiro com excelência e
+                  compromisso com nossos clientes.
                 </p>
               </div>
             </div>
@@ -265,8 +275,9 @@ export default async function CatalogoPage() {
                   Veja todos os nossos produtos
                 </h3>
                 <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-                  Baixe o catálogo completo em PDF com todos os produtos organizados
-                  por categoria, incluindo especificações, SKUs e disponibilidade.
+                  Baixe o catálogo completo em PDF com todos os produtos
+                  organizados por categoria, incluindo especificações, SKUs e
+                  disponibilidade.
                 </p>
                 <a
                   href="/api/catalogo/pdf"
@@ -308,4 +319,3 @@ export default async function CatalogoPage() {
     </div>
   );
 }
-
