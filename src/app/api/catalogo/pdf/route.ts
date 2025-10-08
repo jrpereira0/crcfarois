@@ -46,6 +46,7 @@ export async function GET() {
     const doc = new PDFDocument({
       size: "A4",
       margins: { top: 50, bottom: 50, left: 50, right: 50 },
+      autoFirstPage: true,
     });
 
     const chunks: Buffer[] = [];
@@ -58,21 +59,18 @@ export async function GET() {
     doc
       .fontSize(24)
       .fillColor("#2b308c")
-      .font("Helvetica-Bold")
-      .text("CRC FARÓIS", { align: "center" });
+      .text("CRC FAROIS", { align: "center" });
 
     doc
       .fontSize(16)
       .fillColor("#2b308c")
-      .font("Helvetica-Bold")
-      .text("CATÁLOGO 2025", { align: "center" });
+      .text("CATALOGO 2025", { align: "center" });
 
     doc
       .moveDown(0.5)
       .fontSize(10)
       .fillColor("#666666")
-      .font("Helvetica")
-      .text("Faróis e Lanternas Automotivos - Qualidade e Confiança", {
+      .text("Farois e Lanternas Automotivos - Qualidade e Confianca", {
         align: "center",
       });
 
@@ -103,7 +101,6 @@ export async function GET() {
       doc
         .fontSize(14)
         .fillColor("#ffffff")
-        .font("Helvetica-Bold")
         .text(
           `${origem.toUpperCase()} (${prods.length} ${
             prods.length === 1 ? "produto" : "produtos"
@@ -133,7 +130,6 @@ export async function GET() {
         doc
           .fontSize(11)
           .fillColor("#333333")
-          .font("Helvetica-Bold")
           .text(produto.titulo, 60, startY + 10, {
             width: 400,
             height: 15,
@@ -144,12 +140,11 @@ export async function GET() {
         doc
           .fontSize(9)
           .fillColor("#666666")
-          .font("Helvetica")
           .text(`SKU: ${produto.sku}`, 60, startY + 28);
 
         // Status
         const statusColor = produto.ativo ? "#10b981" : "#6b7280";
-        const statusText = produto.ativo ? "✓ Disponível" : "○ Indisponível";
+        const statusText = produto.ativo ? "Disponivel" : "Indisponivel";
 
         doc
           .rect(60, startY + 42, 80, 12)
@@ -158,7 +153,6 @@ export async function GET() {
         doc
           .fontSize(8)
           .fillColor("#ffffff")
-          .font("Helvetica-Bold")
           .text(statusText, 63, startY + 44, { width: 75 });
 
         doc.y = startY + 65;
@@ -175,7 +169,6 @@ export async function GET() {
       doc
         .fontSize(8)
         .fillColor("#666666")
-        .font("Helvetica")
         .text(
           "www.crcfarois.ind.br | contato@crcfarois.ind.br | (11) 99226-8645",
           50,
