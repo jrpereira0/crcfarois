@@ -46,8 +46,11 @@ export async function GET() {
     const doc = new PDFDocument({
       size: "A4",
       margins: { top: 50, bottom: 50, left: 50, right: 50 },
-      autoFirstPage: true,
+      autoFirstPage: false,
     });
+    
+    // Adicionar primeira página manualmente para evitar inicialização automática de fontes
+    doc.addPage();
 
     const chunks: Buffer[] = [];
     doc.on("data", (chunk) => chunks.push(chunk));
@@ -94,9 +97,7 @@ export async function GET() {
       }
 
       // Header da seção
-      doc
-        .rect(50, doc.y, 495, 30)
-        .fillAndStroke("#2b308c", "#2b308c");
+      doc.rect(50, doc.y, 495, 30).fillAndStroke("#2b308c", "#2b308c");
 
       doc
         .fontSize(14)
@@ -122,9 +123,7 @@ export async function GET() {
         const startY = doc.y;
 
         // Box do produto
-        doc
-          .rect(50, startY, 495, 60)
-          .fillAndStroke("#f9f9f9", "#e0e0e0");
+        doc.rect(50, startY, 495, 60).fillAndStroke("#f9f9f9", "#e0e0e0");
 
         // Nome do produto
         doc
@@ -176,12 +175,9 @@ export async function GET() {
           { align: "center" }
         );
 
-      doc.text(
-        `Página ${i + 1} de ${range.count}`,
-        50,
-        doc.page.height - 30,
-        { align: "right" }
-      );
+      doc.text(`Página ${i + 1} de ${range.count}`, 50, doc.page.height - 30, {
+        align: "right",
+      });
     }
 
     // Finalizar PDF
