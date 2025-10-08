@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { renderToStream } from "@react-pdf/renderer";
 import { prisma } from "@/lib/prisma";
-import React from "react";
-import CatalogPDF from "@/lib/pdf-catalog";
+import PDFDocument from "pdfkit";
 
 export async function GET() {
   try {
@@ -23,26 +21,183 @@ export async function GET() {
 
     console.log(`[PDF] Gerando catálogo com ${produtos.length} produtos`);
 
-    // URL da logo (você pode ajustar conforme necessário)
-    const logoUrl = `${
-      process.env.NEXTAUTH_URL || "http://localhost:3000"
-    }/logobranca.svg`;
+    // Agrupar produtos por origem
+    const produtosPorOrigem: { [key: string]: typeof produtos } = {};
+    produtos.forEach((produto) => {
+      const origem = produto.origem || "Outros";
+      if (!produtosPorOrigem[origem]) {
+        produtosPorOrigem[origem] = [];
+      }
+      produtosPorOrigem[origem].push(produto);
+    });
 
-    // Gerar o PDF usando React.createElement
-    const stream = await renderToStream(
-      React.createElement(CatalogPDF, { products: produtos, logoUrl: logoUrl })
-    );
+    // Ordenar origens por prioridade
+    const prioridade = ["EXCLUSIVO", "IMPORTADO", "NACIONAL"];
+    const origensOrdenadas = Object.keys(produtosPorOrigem).sort((a, b) => {
+      const aIndex = prioridade.findIndex((p) => a.toUpperCase().includes(p));
+      const bIndex = prioridade.findIndex((p) => b.toUpperCase().includes(p));
+      if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
+      if (aIndex === -1) return 1;
+      if (bIndex === -1) return -1;
+      return aIndex - bIndex;
+    });
 
-    // Converter stream para buffer
-    const chunks: Uint8Array[] = [];
-    for await (const chunk of stream) {
-      chunks.push(chunk);
+    // Criar PDF
+    const doc = new PDFDocument({
+      size: "A4",
+      margins: { top: 50, bottom: 50, left: 50, right: 50 },
+    });
+
+    const chunks: Buffer[] = [];
+    doc.on("data", (chunk) => chunks.push(chunk));
+    doc.on("end", () => {
+      console.log(`[PDF] PDF gerado com sucesso`);
+    });
+
+    // Cabeçalho
+    doc
+      .fontSize(24)
+      .fillColor("#2b308c")
+      .font("Helvetica-Bold")
+      .text("CRC FARÓIS", { align: "center" });
+
+    doc
+      .fontSize(16)
+      .fillColor("#2b308c")
+      .font("Helvetica-Bold")
+      .text("CATÁLOGO 2025", { align: "center" });
+
+    doc
+      .moveDown(0.5)
+      .fontSize(10)
+      .fillColor("#666666")
+      .font("Helvetica")
+      .text("Faróis e Lanternas Automotivos - Qualidade e Confiança", {
+        align: "center",
+      });
+
+    doc.moveDown(1);
+    doc
+      .strokeColor("#2b308c")
+      .lineWidth(2)
+      .moveTo(50, doc.y)
+      .lineTo(545, doc.y)
+      .stroke();
+
+    doc.moveDown(1.5);
+
+    // Percorrer cada origem
+    origensOrdenadas.forEach((origem, indexOrigem) => {
+      const prods = produtosPorOrigem[origem];
+
+      // Se não couber na página, adicionar nova página
+      if (doc.y > 700) {
+        doc.addPage();
+      }
+
+      // Header da seção
+      doc
+        .rect(50, doc.y, 495, 30)
+        .fillAndStroke("#2b308c", "#2b308c");
+
+      doc
+        .fontSize(14)
+        .fillColor("#ffffff")
+        .font("Helvetica-Bold")
+        .text(
+          `${origem.toUpperCase()} (${prods.length} ${
+            prods.length === 1 ? "produto" : "produtos"
+          })`,
+          55,
+          doc.y - 22,
+          { width: 485 }
+        );
+
+      doc.moveDown(0.5);
+
+      // Listar produtos
+      prods.forEach((produto, index) => {
+        // Verificar se precisa de nova página
+        if (doc.y > 700) {
+          doc.addPage();
+        }
+
+        const startY = doc.y;
+
+        // Box do produto
+        doc
+          .rect(50, startY, 495, 60)
+          .fillAndStroke("#f9f9f9", "#e0e0e0");
+
+        // Nome do produto
+        doc
+          .fontSize(11)
+          .fillColor("#333333")
+          .font("Helvetica-Bold")
+          .text(produto.titulo, 60, startY + 10, {
+            width: 400,
+            height: 15,
+            ellipsis: true,
+          });
+
+        // SKU
+        doc
+          .fontSize(9)
+          .fillColor("#666666")
+          .font("Helvetica")
+          .text(`SKU: ${produto.sku}`, 60, startY + 28);
+
+        // Status
+        const statusColor = produto.ativo ? "#10b981" : "#6b7280";
+        const statusText = produto.ativo ? "✓ Disponível" : "○ Indisponível";
+
+        doc
+          .rect(60, startY + 42, 80, 12)
+          .fillAndStroke(statusColor, statusColor);
+
+        doc
+          .fontSize(8)
+          .fillColor("#ffffff")
+          .font("Helvetica-Bold")
+          .text(statusText, 63, startY + 44, { width: 75 });
+
+        doc.y = startY + 65;
+      });
+
+      doc.moveDown(1);
+    });
+
+    // Rodapé em todas as páginas
+    const range = doc.bufferedPageRange();
+    for (let i = range.start; i < range.start + range.count; i++) {
+      doc.switchToPage(i);
+
+      doc
+        .fontSize(8)
+        .fillColor("#666666")
+        .font("Helvetica")
+        .text(
+          "www.crcfarois.ind.br | contato@crcfarois.ind.br | (11) 99226-8645",
+          50,
+          doc.page.height - 30,
+          { align: "center" }
+        );
+
+      doc.text(
+        `Página ${i + 1} de ${range.count}`,
+        50,
+        doc.page.height - 30,
+        { align: "right" }
+      );
     }
+
+    // Finalizar PDF
+    doc.end();
+
+    // Aguardar conclusão e retornar
+    await new Promise((resolve) => doc.on("end", resolve));
     const buffer = Buffer.concat(chunks);
 
-    console.log(`[PDF] PDF gerado com sucesso - ${buffer.length} bytes`);
-
-    // Retornar o PDF
     return new NextResponse(buffer, {
       headers: {
         "Content-Type": "application/pdf",
