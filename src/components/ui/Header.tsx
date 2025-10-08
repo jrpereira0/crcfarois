@@ -15,6 +15,7 @@ import {
   Home,
   Info,
   MessageSquare,
+  FileText,
 } from "lucide-react";
 
 export default function Header() {
@@ -163,6 +164,13 @@ export default function Header() {
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
+              href="/catalogo"
+              className="relative text-white hover:text-yellow-300 font-medium transition-colors py-2 group"
+            >
+              Catálogo
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+            <Link
               href="/contato"
               className="relative text-white hover:text-yellow-300 font-medium transition-colors py-2 group"
             >
@@ -293,6 +301,14 @@ export default function Header() {
               >
                 <Info className="h-5 w-5" />
                 Quem Somos
+              </Link>
+              <Link
+                href="/catalogo"
+                className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-primary/5 hover:text-primary rounded-lg transition-colors font-medium"
+                onClick={toggleSidebar}
+              >
+                <FileText className="h-5 w-5" />
+                Catálogo
               </Link>
               <Link
                 href="/contato"
