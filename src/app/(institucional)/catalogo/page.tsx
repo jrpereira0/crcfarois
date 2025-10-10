@@ -127,7 +127,7 @@ export default async function CatalogoPage() {
 
             {/* CTA Button */}
             <a
-              href={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/raw/upload/v1/catalogo/catalogo-crc-farois-2025.pdf`}
+              href="https://res.cloudinary.com/dn7nvyvss/image/upload/v1760089662/catalogo-crc-farois-2025_sozrsx.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center bg-white text-primary px-12 py-5 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-white/20 transition-all duration-500 hover:scale-105 transform group"
@@ -281,7 +281,7 @@ export default async function CatalogoPage() {
                   disponibilidade.
                 </p>
                 <a
-                  href={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/raw/upload/v1/catalogo/catalogo-crc-farois-2025.pdf`}
+                  href="https://res.cloudinary.com/dn7nvyvss/image/upload/v1760089662/catalogo-crc-farois-2025_sozrsx.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center bg-primary text-white px-10 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 transform group"
