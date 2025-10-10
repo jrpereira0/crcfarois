@@ -23,6 +23,8 @@ import {
   Calendar,
   FileText,
   Tag,
+  Mail,
+  Phone,
 } from "lucide-react";
 
 interface ProdutoDisponivel {
@@ -86,12 +88,32 @@ interface PedidoForm {
   itens: ItemPedido[];
 }
 
+interface PedidoCompleto {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    cliente?: {
+      razaoSocial: string;
+      representanteCliente?: {
+        representante: {
+          id: string;
+          nome: string;
+          email: string;
+          telefone?: string;
+        };
+      }[];
+    };
+  };
+}
+
 export default function EditarPedidoPage() {
   const params = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<PedidoForm | null>(null);
+  const [pedidoInfo, setPedidoInfo] = useState<PedidoCompleto | null>(null);
   const [produtosDisponiveis, setProdutosDisponiveis] = useState<
     ProdutoDisponivel[]
   >([]);
@@ -158,6 +180,11 @@ export default function EditarPedidoPage() {
 
       console.log("📋 Dados do pedido recebidos:", pedido);
       console.log("📦 Itens do pedido:", pedido.itens);
+
+      // Armazenar informações do cliente e representante
+      setPedidoInfo({
+        user: pedido.user,
+      });
 
       setForm({
         id: pedido.id,
@@ -501,8 +528,35 @@ export default function EditarPedidoPage() {
               Editar Pedido {form.numero}
             </h1>
             <p className="text-gray-600">
-              Modifique produtos, quantidades e informações do pedido
+              {pedidoInfo?.user?.cliente?.razaoSocial || pedidoInfo?.user?.name}
             </p>
+            {/* Representante responsável */}
+            {pedidoInfo?.user?.cliente?.representanteCliente?.[0]
+              ?.representante && (
+              <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md w-fit mt-1">
+                <User className="h-3 w-3" />
+                <span className="font-medium">Representante:</span>
+                <span>
+                  {
+                    pedidoInfo.user.cliente.representanteCliente[0]
+                      .representante.nome
+                  }
+                </span>
+                {pedidoInfo.user.cliente.representanteCliente[0].representante
+                  .telefone && (
+                  <>
+                    <span className="text-gray-300">•</span>
+                    <Phone className="h-3 w-3" />
+                    <span>
+                      {
+                        pedidoInfo.user.cliente.representanteCliente[0]
+                          .representante.telefone
+                      }
+                    </span>
+                  </>
+                )}
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-3">
             <button

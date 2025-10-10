@@ -58,6 +58,14 @@ interface Pedido {
       cnpjCpf: string;
       telefone?: string;
       whatsapp?: string;
+      representanteCliente?: {
+        representante: {
+          id: string;
+          nome: string;
+          email: string;
+          telefone?: string;
+        };
+      }[];
     };
   };
   // Itens
@@ -1055,6 +1063,34 @@ export default function PedidosAdminPage() {
                           </span>
                         )}
                       </div>
+
+                      {/* Representante responsável */}
+                      {pedido.user.cliente?.representanteCliente?.[0]
+                        ?.representante && (
+                        <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md w-fit mb-2">
+                          <User className="h-3 w-3" />
+                          <span className="font-medium">Representante:</span>
+                          <span>
+                            {
+                              pedido.user.cliente.representanteCliente[0]
+                                .representante.nome
+                            }
+                          </span>
+                          {pedido.user.cliente.representanteCliente[0]
+                            .representante.telefone && (
+                            <>
+                              <span className="text-gray-300">•</span>
+                              <Phone className="h-3 w-3" />
+                              <span>
+                                {
+                                  pedido.user.cliente.representanteCliente[0]
+                                    .representante.telefone
+                                }
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      )}
 
                       {/* Informações do pedido */}
                       <div className="flex items-center gap-4 text-sm text-gray-500">

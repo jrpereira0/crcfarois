@@ -88,10 +88,14 @@ interface PedidoDetalhes {
       cidade?: string;
       estado?: string;
       cep?: string;
-      representante?: {
-        nome: string;
-        email: string;
-      };
+      representanteCliente?: {
+        representante: {
+          id: string;
+          nome: string;
+          email: string;
+          telefone?: string;
+        };
+      }[];
     };
   };
 }
@@ -512,6 +516,43 @@ export default function PedidoAdminDetalhesPage() {
                   </label>
                   <div className="text-gray-900">{pedido.user.email}</div>
                 </div>
+
+                {/* Representante responsável */}
+                {pedido.user.cliente?.representanteCliente?.[0]
+                  ?.representante && (
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">
+                      Representante Responsável
+                    </label>
+                    <div className="text-gray-900">
+                      <div className="font-medium">
+                        {
+                          pedido.user.cliente.representanteCliente[0]
+                            .representante.nome
+                        }
+                      </div>
+                      <div className="text-sm text-gray-600 space-y-1 mt-1">
+                        <div className="flex items-center gap-2">
+                          <Mail className="h-3 w-3" />
+                          {
+                            pedido.user.cliente.representanteCliente[0]
+                              .representante.email
+                          }
+                        </div>
+                        {pedido.user.cliente.representanteCliente[0]
+                          .representante.telefone && (
+                          <div className="flex items-center gap-2">
+                            <Phone className="h-3 w-3" />
+                            {
+                              pedido.user.cliente.representanteCliente[0]
+                                .representante.telefone
+                            }
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Contatos e Endereço */}

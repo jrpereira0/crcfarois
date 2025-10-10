@@ -71,6 +71,18 @@ export async function GET(request: NextRequest) {
                 cnpjCpf: true,
                 telefone: true,
                 whatsapp: true,
+                representanteCliente: {
+                  select: {
+                    representante: {
+                      select: {
+                        id: true,
+                        nome: true,
+                        email: true,
+                        telefone: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },

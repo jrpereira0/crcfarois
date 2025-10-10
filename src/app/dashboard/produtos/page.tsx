@@ -109,8 +109,10 @@ export default function ProdutosPage() {
         params.append("categoria", filtrosAtivos.categoria);
       if (filtrosAtivos.marca) params.append("origem", filtrosAtivos.marca); // Usando origem no lugar de marca
       if (filtrosAtivos.ativo) params.append("ativo", filtrosAtivos.ativo);
-      if (filtrosAtivos.orderBy) params.append("orderBy", filtrosAtivos.orderBy);
-      if (filtrosAtivos.orderDirection) params.append("orderDirection", filtrosAtivos.orderDirection);
+      if (filtrosAtivos.orderBy)
+        params.append("orderBy", filtrosAtivos.orderBy);
+      if (filtrosAtivos.orderDirection)
+        params.append("orderDirection", filtrosAtivos.orderDirection);
 
       const response = await fetch(`/api/produtos?${params.toString()}`);
 
@@ -198,13 +200,13 @@ export default function ProdutosPage() {
   };
 
   const limparFiltros = () => {
-    const filtrosLimpos = { 
-      search: "", 
-      categoria: "", 
-      marca: "", 
+    const filtrosLimpos = {
+      search: "",
+      categoria: "",
+      marca: "",
       ativo: "",
       orderBy: "createdAt",
-      orderDirection: "desc" as "desc"
+      orderDirection: "desc" as "desc",
     };
     setFiltros(filtrosLimpos);
     fetchProdutos(1, filtrosLimpos);
@@ -213,16 +215,17 @@ export default function ProdutosPage() {
   // Função para ordenar por coluna
   const handleSort = (column: string) => {
     const novosFiltros = { ...filtros };
-    
+
     if (filtros.orderBy === column) {
       // Se já está ordenando por esta coluna, inverte a direção
-      novosFiltros.orderDirection = filtros.orderDirection === "asc" ? "desc" : "asc";
+      novosFiltros.orderDirection =
+        filtros.orderDirection === "asc" ? "desc" : "asc";
     } else {
       // Se é uma nova coluna, ordena por ela em ordem crescente
       novosFiltros.orderBy = column;
       novosFiltros.orderDirection = "asc";
     }
-    
+
     setFiltros(novosFiltros);
     fetchProdutos(1, novosFiltros);
   };
