@@ -61,6 +61,8 @@ interface Filtros {
   categoria: string;
   marca: string;
   ativo: string;
+  orderBy: string;
+  orderDirection: "asc" | "desc";
 }
 
 export default function ProdutosPage() {
@@ -88,6 +90,8 @@ export default function ProdutosPage() {
     categoria: "",
     marca: "",
     ativo: "",
+    orderBy: "createdAt",
+    orderDirection: "desc",
   });
 
   const fetchProdutos = async (page = 1, filtrosAtivos = filtros) => {
@@ -102,6 +106,8 @@ export default function ProdutosPage() {
         params.append("categoria", filtrosAtivos.categoria);
       if (filtrosAtivos.marca) params.append("origem", filtrosAtivos.marca); // Usando origem no lugar de marca
       if (filtrosAtivos.ativo) params.append("ativo", filtrosAtivos.ativo);
+      if (filtrosAtivos.orderBy) params.append("orderBy", filtrosAtivos.orderBy);
+      if (filtrosAtivos.orderDirection) params.append("orderDirection", filtrosAtivos.orderDirection);
 
       const response = await fetch(`/api/produtos?${params.toString()}`);
 
@@ -189,7 +195,14 @@ export default function ProdutosPage() {
   };
 
   const limparFiltros = () => {
-    const filtrosLimpos = { search: "", categoria: "", marca: "", ativo: "" };
+    const filtrosLimpos = { 
+      search: "", 
+      categoria: "", 
+      marca: "", 
+      ativo: "",
+      orderBy: "createdAt",
+      orderDirection: "desc" as "desc"
+    };
     setFiltros(filtrosLimpos);
     fetchProdutos(1, filtrosLimpos);
   };
@@ -428,15 +441,50 @@ export default function ProdutosPage() {
       {/* Lista de Produtos */}
       <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col">
         <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <h2 className="text-lg font-semibold text-gray-900">
               Catálogo de Produtos
             </h2>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
               <span className="text-sm text-gray-500">
                 {pagination.total} produto{pagination.total !== 1 ? "s" : ""}{" "}
                 encontrado{pagination.total !== 1 ? "s" : ""}
               </span>
+              
+              {/* Ordenação */}
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-600 whitespace-nowrap">Ordenar por:</label>
+                <select
+                  value={filtros.orderBy}
+                  onChange={(e) => handleFilterChange("orderBy", e.target.value)}
+                  className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-primary focus:border-transparent"
+                >
+                  <option value="createdAt">Data de cadastro</option>
+                  <option value="titulo">Nome (A-Z)</option>
+                  <option value="sku">SKU</option>
+                  <option value="preco">Preço</option>
+                  <option value="quantidadeEstoque">Estoque</option>
+                  <option value="categoria">Categoria</option>
+                  <option value="origem">Origem</option>
+                </select>
+                
+                <button
+                  onClick={() => handleFilterChange("orderDirection", filtros.orderDirection === "asc" ? "desc" : "asc")}
+                  className="p-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  title={filtros.orderDirection === "asc" ? "Crescente" : "Decrescente"}
+                >
+                  {filtros.orderDirection === "asc" ? (
+                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+
               <button className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
                 <Download className="h-4 w-4" />
                 Exportar

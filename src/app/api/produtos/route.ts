@@ -19,6 +19,8 @@ export async function GET(request: NextRequest) {
     const categoriaId = searchParams.get("categoria") || "";
     const origem = searchParams.get("origem") || "";
     const ativo = searchParams.get("ativo");
+    const orderBy = searchParams.get("orderBy") || "createdAt";
+    const orderDirection = searchParams.get("orderDirection") || "desc";
 
     const skip = (page - 1) * limit;
 
@@ -45,6 +47,34 @@ export async function GET(request: NextRequest) {
       where.ativo = ativo === "true";
     }
 
+    // Construir ordenação
+    let orderByClause: any = {};
+    
+    switch (orderBy) {
+      case "titulo":
+        orderByClause = { titulo: orderDirection };
+        break;
+      case "sku":
+        orderByClause = { sku: orderDirection };
+        break;
+      case "preco":
+        orderByClause = { preco: orderDirection };
+        break;
+      case "quantidadeEstoque":
+        orderByClause = { quantidadeEstoque: orderDirection };
+        break;
+      case "categoria":
+        orderByClause = { categoria: { nome: orderDirection } };
+        break;
+      case "origem":
+        orderByClause = { origem: orderDirection };
+        break;
+      case "createdAt":
+      default:
+        orderByClause = { createdAt: orderDirection };
+        break;
+    }
+
     // Buscar produtos
     const [produtos, total] = await Promise.all([
       prisma.produto.findMany({
@@ -58,7 +88,7 @@ export async function GET(request: NextRequest) {
             },
           },
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: orderByClause,
         skip,
         take: limit,
       }),

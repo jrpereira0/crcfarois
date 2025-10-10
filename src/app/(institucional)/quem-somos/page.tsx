@@ -118,7 +118,9 @@ export default function QuemSomos() {
                   </p>
                   <div className="grid grid-cols-2 gap-3 sm:gap-4 text-center">
                     <div className="bg-primary/5 rounded-xl p-3 sm:p-4">
-                      <div className="text-xl sm:text-2xl font-black text-primary">3+</div>
+                      <div className="text-xl sm:text-2xl font-black text-primary">
+                        3+
+                      </div>
                       <div className="text-xs text-gray-600">Anos</div>
                     </div>
                     <div className="bg-yellow-300/20 rounded-xl p-3 sm:p-4">
@@ -176,7 +178,9 @@ export default function QuemSomos() {
                   size={24}
                 />
               </div>
-              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Missão</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">
+                Missão
+              </h3>
               <p className="text-sm sm:text-base text-white/80 leading-relaxed">
                 Fornecer soluções completas em{" "}
                 <strong className="text-yellow-300">
@@ -198,7 +202,9 @@ export default function QuemSomos() {
                   size={24}
                 />
               </div>
-              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Visão</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">
+                Visão
+              </h3>
               <p className="text-sm sm:text-base text-white/80 leading-relaxed">
                 Ser reconhecida como a{" "}
                 <strong className="text-yellow-300">
@@ -220,7 +226,9 @@ export default function QuemSomos() {
                   size={24}
                 />
               </div>
-              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Valores</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">
+                Valores
+              </h3>
               <p className="text-sm sm:text-base text-white/80 leading-relaxed">
                 <strong className="text-yellow-300">Qualidade</strong>,
                 integridade, inovação, compromisso com o cliente e
@@ -258,7 +266,9 @@ export default function QuemSomos() {
               <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-primary mb-1 sm:mb-2">
                 3+
               </div>
-              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium">Anos de Experiência</p>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium">
+                Anos de Experiência
+              </p>
             </div>
 
             <div className="text-center p-4 sm:p-6 lg:p-8 bg-yellow-300/10 rounded-2xl sm:rounded-3xl hover:bg-yellow-300/20 transition-colors duration-300 group">
@@ -268,7 +278,9 @@ export default function QuemSomos() {
               <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-yellow-600 mb-1 sm:mb-2">
                 200+
               </div>
-              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium">Produtos Diferentes</p>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium">
+                Produtos Diferentes
+              </p>
             </div>
 
             <div className="text-center p-4 sm:p-6 lg:p-8 bg-primary/5 rounded-2xl sm:rounded-3xl hover:bg-primary/10 transition-colors duration-300 group">
@@ -278,7 +290,9 @@ export default function QuemSomos() {
               <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-primary mb-1 sm:mb-2">
                 1000+
               </div>
-              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium">Clientes Atendidos</p>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium">
+                Clientes Atendidos
+              </p>
             </div>
 
             <div className="text-center p-4 sm:p-6 lg:p-8 bg-yellow-300/10 rounded-2xl sm:rounded-3xl hover:bg-yellow-300/20 transition-colors duration-300 group">
@@ -288,7 +302,9 @@ export default function QuemSomos() {
               <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-yellow-600 mb-1 sm:mb-2">
                 100%
               </div>
-              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium">Brasil Atendido</p>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium">
+                Brasil Atendido
+              </p>
             </div>
           </div>
         </div>
@@ -483,11 +499,17 @@ export default function QuemSomos() {
 
               <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="bg-primary/5 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center">
-                  <div className="text-lg sm:text-xl font-black text-primary">ABC</div>
-                  <div className="text-xs sm:text-sm text-gray-600">Paulista</div>
+                  <div className="text-lg sm:text-xl font-black text-primary">
+                    ABC
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-600">
+                    Paulista
+                  </div>
                 </div>
                 <div className="bg-yellow-300/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center">
-                  <div className="text-lg sm:text-xl font-black text-yellow-600">100%</div>
+                  <div className="text-lg sm:text-xl font-black text-yellow-600">
+                    100%
+                  </div>
                   <div className="text-xs sm:text-sm text-gray-600">Brasil</div>
                 </div>
               </div>
