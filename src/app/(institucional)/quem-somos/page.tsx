@@ -20,19 +20,19 @@ export default function QuemSomos() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative bg-primary text-white py-20 lg:py-32 overflow-hidden">
+      <section className="relative bg-primary text-white py-12 sm:py-16 lg:py-32 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 mb-8">
-              <Building2 size={20} className="text-yellow-300 mr-2" />
-              <span className="text-sm font-medium text-white/90">
+            <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-6 sm:mb-8">
+              <Building2 size={18} className="text-yellow-300 mr-2" />
+              <span className="text-xs sm:text-sm font-medium text-white/90">
                 Sobre a CRC Faróis
               </span>
             </div>
-            <h1 className="text-3xl lg:text-5xl font-black text-white mb-6">
+            <h1 className="text-2xl sm:text-3xl lg:text-5xl font-black text-white mb-4 sm:mb-6 px-2">
               Conheça Nossa História
             </h1>
-            <p className="text-xl lg:text-lg text-white/90 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-lg text-white/90 leading-relaxed max-w-2xl mx-auto px-4">
               Há mais de 3 anos no mercado, somos especialistas em faróis
               automotivos e lanternas traseiras, oferecendo produtos de alta
               qualidade e excelência no atendimento.
@@ -42,20 +42,20 @@ export default function QuemSomos() {
       </section>
 
       {/* Nossa História */}
-      <section className="py-16 lg:py-20 bg-white">
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
             <div>
-              <div className="inline-flex items-center bg-primary/10 rounded-full px-4 py-2 mb-6">
-                <Calendar size={16} className="text-primary mr-2" />
-                <span className="text-sm font-medium text-primary">
+              <div className="inline-flex items-center bg-primary/10 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
+                <Calendar size={14} className="text-primary mr-2" />
+                <span className="text-xs sm:text-sm font-medium text-primary">
                   Nossa Trajetória
                 </span>
               </div>
-              <h2 className="text-3xl lg:text-5xl font-black text-gray-900 mb-6">
+              <h2 className="text-2xl sm:text-3xl lg:text-5xl font-black text-gray-900 mb-4 sm:mb-6">
                 Nossa História
               </h2>
-              <div className="space-y-6 text-base text-gray-600 leading-relaxed">
+              <div className="space-y-4 sm:space-y-6 text-sm sm:text-base text-gray-600 leading-relaxed">
                 <p>
                   A CRC Faróis nasceu com a missão de revolucionar o mercado de
                   <strong className="text-primary">
@@ -88,10 +88,10 @@ export default function QuemSomos() {
             </div>
 
             <div className="relative">
-              <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-3xl p-8 lg:p-12">
-                <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
+              <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-12">
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 text-center">
                   {/* Imagem da empresa */}
-                  <div className="relative w-full h-48 mb-6 rounded-xl overflow-hidden">
+                  <div className="relative w-full h-40 sm:h-48 mb-4 sm:mb-6 rounded-lg sm:rounded-xl overflow-hidden">
                     <picture>
                       <source
                         media="(min-width: 1024px)"
@@ -110,19 +110,19 @@ export default function QuemSomos() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                   </div>
 
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">
                     CRC Faróis
                   </h3>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
                     Especialistas em faróis automotivos e lanternas traseiras
                   </p>
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    <div className="bg-primary/5 rounded-xl p-4">
-                      <div className="text-2xl font-black text-primary">3+</div>
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4 text-center">
+                    <div className="bg-primary/5 rounded-xl p-3 sm:p-4">
+                      <div className="text-xl sm:text-2xl font-black text-primary">3+</div>
                       <div className="text-xs text-gray-600">Anos</div>
                     </div>
-                    <div className="bg-yellow-300/20 rounded-xl p-4">
-                      <div className="text-2xl font-black text-yellow-600">
+                    <div className="bg-yellow-300/20 rounded-xl p-3 sm:p-4">
+                      <div className="text-xl sm:text-2xl font-black text-yellow-600">
                         100%
                       </div>
                       <div className="text-xs text-gray-600">Qualidade</div>
@@ -136,7 +136,7 @@ export default function QuemSomos() {
       </section>
 
       {/* Missão, Visão e Valores */}
-      <section className="relative py-16 lg:py-20 bg-primary overflow-hidden">
+      <section className="relative py-12 sm:py-16 lg:py-20 bg-primary overflow-hidden">
         {/* Background animado */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl animate-float"></div>
@@ -151,33 +151,33 @@ export default function QuemSomos() {
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/20">
-              <Target size={16} className="text-yellow-300 mr-2" />
-              <span className="text-sm font-medium text-white/90">
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+            <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-6 sm:mb-8 border border-white/20">
+              <Target size={14} className="text-yellow-300 mr-2" />
+              <span className="text-xs sm:text-sm font-medium text-white/90">
                 Nossos Pilares
               </span>
             </div>
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4 px-4">
               Missão, Visão e Valores
             </h2>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-white/90 max-w-2xl mx-auto px-4">
               Os princípios que guiam nossa empresa e definem nossa identidade
               no mercado
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {/* Missão */}
-            <div className="group bg-white/10 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/20 hover:bg-white/20 hover:shadow-2xl transition-all duration-500 hover:scale-105">
-              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/30 transition-colors duration-300">
+            <div className="group bg-white/10 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-xl border border-white/20 hover:bg-white/20 hover:shadow-2xl transition-all duration-500 hover:scale-105">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-white/30 transition-colors duration-300">
                 <Target
                   className="text-white group-hover:scale-110 transition-transform duration-300"
-                  size={32}
+                  size={24}
                 />
               </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Missão</h3>
-              <p className="text-white/80 leading-relaxed">
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Missão</h3>
+              <p className="text-sm sm:text-base text-white/80 leading-relaxed">
                 Fornecer soluções completas em{" "}
                 <strong className="text-yellow-300">
                   iluminação automotiva
@@ -189,17 +189,17 @@ export default function QuemSomos() {
 
             {/* Visão */}
             <div
-              className="group bg-white/10 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/20 hover:bg-white/20 hover:shadow-2xl transition-all duration-500 hover:scale-105"
+              className="group bg-white/10 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-xl border border-white/20 hover:bg-white/20 hover:shadow-2xl transition-all duration-500 hover:scale-105"
               style={{ animationDelay: "0.2s" }}
             >
-              <div className="w-16 h-16 bg-yellow-300/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-yellow-300/30 transition-colors duration-300">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-yellow-300/20 rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-yellow-300/30 transition-colors duration-300">
                 <Award
                   className="text-yellow-300 group-hover:scale-110 transition-transform duration-300"
-                  size={32}
+                  size={24}
                 />
               </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Visão</h3>
-              <p className="text-white/80 leading-relaxed">
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Visão</h3>
+              <p className="text-sm sm:text-base text-white/80 leading-relaxed">
                 Ser reconhecida como a{" "}
                 <strong className="text-yellow-300">
                   principal referência
@@ -211,17 +211,17 @@ export default function QuemSomos() {
 
             {/* Valores */}
             <div
-              className="group bg-white/10 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/20 hover:bg-white/20 hover:shadow-2xl transition-all duration-500 hover:scale-105"
+              className="group bg-white/10 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-xl border border-white/20 hover:bg-white/20 hover:shadow-2xl transition-all duration-500 hover:scale-105"
               style={{ animationDelay: "0.4s" }}
             >
-              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/30 transition-colors duration-300">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-white/30 transition-colors duration-300">
                 <Heart
                   className="text-white group-hover:scale-110 transition-transform duration-300"
-                  size={32}
+                  size={24}
                 />
               </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Valores</h3>
-              <p className="text-white/80 leading-relaxed">
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Valores</h3>
+              <p className="text-sm sm:text-base text-white/80 leading-relaxed">
                 <strong className="text-yellow-300">Qualidade</strong>,
                 integridade, inovação, compromisso com o cliente e
                 responsabilidade social são os valores que norteiam todas as
@@ -233,69 +233,69 @@ export default function QuemSomos() {
       </section>
 
       {/* Números da Empresa */}
-      <section className="py-16 lg:py-20 bg-white">
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          <div className="text-center mb-16 ">
-            <div className="inline-flex items-center bg-primary/10 rounded-full px-4 py-2 mb-6">
-              <TrendingUp size={16} className="text-primary mr-2" />
-              <span className="text-sm font-medium text-primary">
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+            <div className="inline-flex items-center bg-primary/10 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
+              <TrendingUp size={14} className="text-primary mr-2" />
+              <span className="text-xs sm:text-sm font-medium text-primary">
                 Nossos Números
               </span>
             </div>
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 px-4">
               CRC Faróis em Números
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-4">
               Dados que demonstram nossa trajetória de sucesso e crescimento
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center p-8 bg-primary/5 rounded-3xl hover:bg-primary/10 transition-colors duration-300 group">
-              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Calendar className="text-primary" size={24} />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            <div className="text-center p-4 sm:p-6 lg:p-8 bg-primary/5 rounded-2xl sm:rounded-3xl hover:bg-primary/10 transition-colors duration-300 group">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary/10 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Calendar className="text-primary" size={20} />
               </div>
-              <div className="text-4xl lg:text-5xl font-black text-primary mb-2">
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-primary mb-1 sm:mb-2">
                 3+
               </div>
-              <p className="text-gray-600 font-medium">Anos de Experiência</p>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium">Anos de Experiência</p>
             </div>
 
-            <div className="text-center p-8 bg-yellow-300/10 rounded-3xl hover:bg-yellow-300/20 transition-colors duration-300 group">
-              <div className="w-16 h-16 bg-yellow-300/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Lightbulb className="text-yellow-600" size={24} />
+            <div className="text-center p-4 sm:p-6 lg:p-8 bg-yellow-300/10 rounded-2xl sm:rounded-3xl hover:bg-yellow-300/20 transition-colors duration-300 group">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-yellow-300/20 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Lightbulb className="text-yellow-600" size={20} />
               </div>
-              <div className="text-4xl lg:text-5xl font-black text-yellow-600 mb-2">
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-yellow-600 mb-1 sm:mb-2">
                 200+
               </div>
-              <p className="text-gray-600 font-medium">Produtos Diferentes</p>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium">Produtos Diferentes</p>
             </div>
 
-            <div className="text-center p-8 bg-primary/5 rounded-3xl hover:bg-primary/10 transition-colors duration-300 group">
-              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Users className="text-primary" size={24} />
+            <div className="text-center p-4 sm:p-6 lg:p-8 bg-primary/5 rounded-2xl sm:rounded-3xl hover:bg-primary/10 transition-colors duration-300 group">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary/10 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Users className="text-primary" size={20} />
               </div>
-              <div className="text-4xl lg:text-5xl font-black text-primary mb-2">
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-primary mb-1 sm:mb-2">
                 1000+
               </div>
-              <p className="text-gray-600 font-medium">Clientes Atendidos</p>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium">Clientes Atendidos</p>
             </div>
 
-            <div className="text-center p-8 bg-yellow-300/10 rounded-3xl hover:bg-yellow-300/20 transition-colors duration-300 group">
-              <div className="w-16 h-16 bg-yellow-300/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                <MapPin className="text-yellow-600" size={24} />
+            <div className="text-center p-4 sm:p-6 lg:p-8 bg-yellow-300/10 rounded-2xl sm:rounded-3xl hover:bg-yellow-300/20 transition-colors duration-300 group">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-yellow-300/20 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <MapPin className="text-yellow-600" size={20} />
               </div>
-              <div className="text-4xl lg:text-5xl font-black text-yellow-600 mb-2">
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-yellow-600 mb-1 sm:mb-2">
                 100%
               </div>
-              <p className="text-gray-600 font-medium">Brasil Atendido</p>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium">Brasil Atendido</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Nossa Equipe */}
-      <section className="relative py-16 lg:py-20 bg-primary overflow-hidden">
+      <section className="relative py-12 sm:py-16 lg:py-20 bg-primary overflow-hidden">
         {/* Background animado */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 right-10 w-72 h-72 bg-white rounded-full blur-3xl animate-float"></div>
@@ -433,30 +433,30 @@ export default function QuemSomos() {
       </section>
 
       {/* Localização */}
-      <section className="py-16 lg:py-20 bg-white">
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          <div className="text-center mb-16 ">
-            <div className="inline-flex items-center bg-primary/10 rounded-full px-4 py-2 mb-6">
-              <MapPin size={16} className="text-primary mr-2" />
-              <span className="text-sm font-medium text-primary">
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+            <div className="inline-flex items-center bg-primary/10 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
+              <MapPin size={14} className="text-primary mr-2" />
+              <span className="text-xs sm:text-sm font-medium text-primary">
                 Nossa Localização
               </span>
             </div>
-            <h2 className="text-3xl lg:text-5xl font-black text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-3xl lg:text-5xl font-black text-gray-900 mb-3 sm:mb-4 px-4">
               Localização Estratégica
             </h2>
-            <p className="text-xl lg:text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-lg text-gray-600 max-w-2xl mx-auto px-4">
               Estrategicamente localizada em São André - SP, no coração do ABC
               Paulista
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
             <div>
-              <h3 className="text-2xl font-black text-gray-900 mb-6">
+              <h3 className="text-xl sm:text-2xl font-black text-gray-900 mb-4 sm:mb-6">
                 ABC Paulista - Região Estratégica
               </h3>
-              <div className="space-y-6 text-base text-gray-600 leading-relaxed">
+              <div className="space-y-4 sm:space-y-6 text-sm sm:text-base text-gray-600 leading-relaxed">
                 <p>
                   Nossa sede está localizada em{" "}
                   <strong className="text-primary">São André - SP</strong>, uma
@@ -481,23 +481,23 @@ export default function QuemSomos() {
                 </p>
               </div>
 
-              <div className="mt-8 grid grid-cols-2 gap-4">
-                <div className="bg-primary/5 rounded-2xl p-4 text-center">
-                  <div className="text-xl font-black text-primary">ABC</div>
-                  <div className="text-sm text-gray-600">Paulista</div>
+              <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-3 sm:gap-4">
+                <div className="bg-primary/5 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center">
+                  <div className="text-lg sm:text-xl font-black text-primary">ABC</div>
+                  <div className="text-xs sm:text-sm text-gray-600">Paulista</div>
                 </div>
-                <div className="bg-yellow-300/20 rounded-2xl p-4 text-center">
-                  <div className="text-xl font-black text-yellow-600">100%</div>
-                  <div className="text-sm text-gray-600">Brasil</div>
+                <div className="bg-yellow-300/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center">
+                  <div className="text-lg sm:text-xl font-black text-yellow-600">100%</div>
+                  <div className="text-xs sm:text-sm text-gray-600">Brasil</div>
                 </div>
               </div>
             </div>
 
             <div className="relative">
-              <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-3xl p-8 lg:p-12">
-                <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
+              <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-12">
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 text-center">
                   {/* Imagem da região ABC */}
-                  <div className="relative w-full h-48 mb-6 rounded-xl overflow-hidden">
+                  <div className="relative w-full h-40 sm:h-48 mb-4 sm:mb-6 rounded-lg sm:rounded-xl overflow-hidden">
                     <picture>
                       <source
                         media="(min-width: 1024px)"
@@ -516,17 +516,17 @@ export default function QuemSomos() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                   </div>
 
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">
                     São André - SP
                   </h3>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
                     ABC Paulista - Região Industrial
                   </p>
-                  <div className="bg-primary/5 rounded-xl p-4">
-                    <p className="text-sm text-gray-600 mb-2">
+                  <div className="bg-primary/5 rounded-lg sm:rounded-xl p-3 sm:p-4">
+                    <p className="text-xs sm:text-sm text-gray-600 mb-2">
                       Horário de Funcionamento
                     </p>
-                    <p className="font-medium text-gray-900">
+                    <p className="text-sm sm:text-base font-medium text-gray-900">
                       Seg - Qui: 8h às 17h <br />
                       Sex: 8h às 16h
                     </p>
