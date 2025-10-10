@@ -58,12 +58,14 @@ interface Pedido {
       cnpjCpf: string;
       telefone?: string;
       whatsapp?: string;
-      representanteCliente?: {
+      representantes?: {
         representante: {
           id: string;
-          nome: string;
-          email: string;
-          telefone?: string;
+          whatsapp?: string;
+          user: {
+            name: string;
+            email: string;
+          };
         };
       }[];
     };
@@ -1065,26 +1067,25 @@ export default function PedidosAdminPage() {
                       </div>
 
                       {/* Representante responsável */}
-                      {pedido.user.cliente?.representanteCliente?.[0]
-                        ?.representante && (
+                      {pedido.user.cliente?.representantes?.[0]?.representante && (
                         <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md w-fit mb-2">
                           <User className="h-3 w-3" />
                           <span className="font-medium">Representante:</span>
                           <span>
                             {
-                              pedido.user.cliente.representanteCliente[0]
-                                .representante.nome
+                              pedido.user.cliente.representantes[0].representante
+                                .user.name
                             }
                           </span>
-                          {pedido.user.cliente.representanteCliente[0]
-                            .representante.telefone && (
+                          {pedido.user.cliente.representantes[0].representante
+                            .whatsapp && (
                             <>
                               <span className="text-gray-300">•</span>
                               <Phone className="h-3 w-3" />
                               <span>
                                 {
-                                  pedido.user.cliente.representanteCliente[0]
-                                    .representante.telefone
+                                  pedido.user.cliente.representantes[0]
+                                    .representante.whatsapp
                                 }
                               </span>
                             </>

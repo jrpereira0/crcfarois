@@ -95,12 +95,14 @@ interface PedidoCompleto {
     email: string;
     cliente?: {
       razaoSocial: string;
-      representanteCliente?: {
+      representantes?: {
         representante: {
           id: string;
-          nome: string;
-          email: string;
-          telefone?: string;
+          whatsapp?: string;
+          user: {
+            name: string;
+            email: string;
+          };
         };
       }[];
     };
@@ -531,26 +533,22 @@ export default function EditarPedidoPage() {
               {pedidoInfo?.user?.cliente?.razaoSocial || pedidoInfo?.user?.name}
             </p>
             {/* Representante responsável */}
-            {pedidoInfo?.user?.cliente?.representanteCliente?.[0]
-              ?.representante && (
+            {pedidoInfo?.user?.cliente?.representantes?.[0]?.representante && (
               <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md w-fit mt-1">
                 <User className="h-3 w-3" />
                 <span className="font-medium">Representante:</span>
                 <span>
-                  {
-                    pedidoInfo.user.cliente.representanteCliente[0]
-                      .representante.nome
-                  }
+                  {pedidoInfo.user.cliente.representantes[0].representante.user.name}
                 </span>
-                {pedidoInfo.user.cliente.representanteCliente[0].representante
-                  .telefone && (
+                {pedidoInfo.user.cliente.representantes[0].representante
+                  .whatsapp && (
                   <>
                     <span className="text-gray-300">•</span>
                     <Phone className="h-3 w-3" />
                     <span>
                       {
-                        pedidoInfo.user.cliente.representanteCliente[0]
-                          .representante.telefone
+                        pedidoInfo.user.cliente.representantes[0].representante
+                          .whatsapp
                       }
                     </span>
                   </>

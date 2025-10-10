@@ -39,14 +39,18 @@ export async function GET(
                 cidade: true,
                 estado: true,
                 cep: true,
-                representanteCliente: {
+                representantes: {
                   select: {
                     representante: {
                       select: {
                         id: true,
-                        nome: true,
-                        email: true,
-                        telefone: true,
+                        whatsapp: true,
+                        user: {
+                          select: {
+                            name: true,
+                            email: true,
+                          },
+                        },
                       },
                     },
                   },

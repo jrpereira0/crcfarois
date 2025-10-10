@@ -88,12 +88,14 @@ interface PedidoDetalhes {
       cidade?: string;
       estado?: string;
       cep?: string;
-      representanteCliente?: {
+      representantes?: {
         representante: {
           id: string;
-          nome: string;
-          email: string;
-          telefone?: string;
+          whatsapp?: string;
+          user: {
+            name: string;
+            email: string;
+          };
         };
       }[];
     };
@@ -518,8 +520,7 @@ export default function PedidoAdminDetalhesPage() {
                 </div>
 
                 {/* Representante responsável */}
-                {pedido.user.cliente?.representanteCliente?.[0]
-                  ?.representante && (
+                {pedido.user.cliente?.representantes?.[0]?.representante && (
                   <div>
                     <label className="text-sm font-medium text-gray-500">
                       Representante Responsável
@@ -527,25 +528,25 @@ export default function PedidoAdminDetalhesPage() {
                     <div className="text-gray-900">
                       <div className="font-medium">
                         {
-                          pedido.user.cliente.representanteCliente[0]
-                            .representante.nome
+                          pedido.user.cliente.representantes[0].representante.user
+                            .name
                         }
                       </div>
                       <div className="text-sm text-gray-600 space-y-1 mt-1">
                         <div className="flex items-center gap-2">
                           <Mail className="h-3 w-3" />
                           {
-                            pedido.user.cliente.representanteCliente[0]
-                              .representante.email
+                            pedido.user.cliente.representantes[0].representante.user
+                              .email
                           }
                         </div>
-                        {pedido.user.cliente.representanteCliente[0]
-                          .representante.telefone && (
+                        {pedido.user.cliente.representantes[0].representante
+                          .whatsapp && (
                           <div className="flex items-center gap-2">
                             <Phone className="h-3 w-3" />
                             {
-                              pedido.user.cliente.representanteCliente[0]
-                                .representante.telefone
+                              pedido.user.cliente.representantes[0].representante
+                                .whatsapp
                             }
                           </div>
                         )}
