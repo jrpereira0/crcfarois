@@ -19,6 +19,9 @@ import {
   Power,
   PowerOff,
   Loader2,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/Skeleton";
 
@@ -205,6 +208,35 @@ export default function ProdutosPage() {
     };
     setFiltros(filtrosLimpos);
     fetchProdutos(1, filtrosLimpos);
+  };
+
+  // Função para ordenar por coluna
+  const handleSort = (column: string) => {
+    const novosFiltros = { ...filtros };
+    
+    if (filtros.orderBy === column) {
+      // Se já está ordenando por esta coluna, inverte a direção
+      novosFiltros.orderDirection = filtros.orderDirection === "asc" ? "desc" : "asc";
+    } else {
+      // Se é uma nova coluna, ordena por ela em ordem crescente
+      novosFiltros.orderBy = column;
+      novosFiltros.orderDirection = "asc";
+    }
+    
+    setFiltros(novosFiltros);
+    fetchProdutos(1, novosFiltros);
+  };
+
+  // Componente para o ícone de ordenação
+  const SortIcon = ({ column }: { column: string }) => {
+    if (filtros.orderBy !== column) {
+      return <ArrowUpDown className="h-4 w-4 text-gray-400" />;
+    }
+    return filtros.orderDirection === "asc" ? (
+      <ArrowUp className="h-4 w-4 text-primary" />
+    ) : (
+      <ArrowDown className="h-4 w-4 text-primary" />
+    );
   };
 
   // Função para abrir menu de ações
@@ -441,50 +473,15 @@ export default function ProdutosPage() {
       {/* Lista de Produtos */}
       <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col">
         <div className="p-6 border-b border-gray-200">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">
               Catálogo de Produtos
             </h2>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="flex items-center gap-4">
               <span className="text-sm text-gray-500">
                 {pagination.total} produto{pagination.total !== 1 ? "s" : ""}{" "}
                 encontrado{pagination.total !== 1 ? "s" : ""}
               </span>
-              
-              {/* Ordenação */}
-              <div className="flex items-center gap-2">
-                <label className="text-sm text-gray-600 whitespace-nowrap">Ordenar por:</label>
-                <select
-                  value={filtros.orderBy}
-                  onChange={(e) => handleFilterChange("orderBy", e.target.value)}
-                  className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-primary focus:border-transparent"
-                >
-                  <option value="createdAt">Data de cadastro</option>
-                  <option value="titulo">Nome (A-Z)</option>
-                  <option value="sku">SKU</option>
-                  <option value="preco">Preço</option>
-                  <option value="quantidadeEstoque">Estoque</option>
-                  <option value="categoria">Categoria</option>
-                  <option value="origem">Origem</option>
-                </select>
-                
-                <button
-                  onClick={() => handleFilterChange("orderDirection", filtros.orderDirection === "asc" ? "desc" : "asc")}
-                  className="p-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                  title={filtros.orderDirection === "asc" ? "Crescente" : "Decrescente"}
-                >
-                  {filtros.orderDirection === "asc" ? (
-                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-                    </svg>
-                  ) : (
-                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
-                    </svg>
-                  )}
-                </button>
-              </div>
-
               <button className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
                 <Download className="h-4 w-4" />
                 Exportar
@@ -544,20 +541,50 @@ export default function ProdutosPage() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Imagem
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Produto
+                    <th className="px-6 py-3 text-left">
+                      <button
+                        onClick={() => handleSort("titulo")}
+                        className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700 transition-colors"
+                      >
+                        Produto
+                        <SortIcon column="titulo" />
+                      </button>
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      SKU
+                    <th className="px-6 py-3 text-left">
+                      <button
+                        onClick={() => handleSort("sku")}
+                        className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700 transition-colors"
+                      >
+                        SKU
+                        <SortIcon column="sku" />
+                      </button>
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Categoria
+                    <th className="px-6 py-3 text-left">
+                      <button
+                        onClick={() => handleSort("categoria")}
+                        className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700 transition-colors"
+                      >
+                        Categoria
+                        <SortIcon column="categoria" />
+                      </button>
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Preço
+                    <th className="px-6 py-3 text-left">
+                      <button
+                        onClick={() => handleSort("preco")}
+                        className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700 transition-colors"
+                      >
+                        Preço
+                        <SortIcon column="preco" />
+                      </button>
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Estoque
+                    <th className="px-6 py-3 text-left">
+                      <button
+                        onClick={() => handleSort("quantidadeEstoque")}
+                        className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700 transition-colors"
+                      >
+                        Estoque
+                        <SortIcon column="quantidadeEstoque" />
+                      </button>
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
