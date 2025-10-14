@@ -1067,14 +1067,15 @@ export default function PedidosAdminPage() {
                       </div>
 
                       {/* Representante responsável */}
-                      {pedido.user.cliente?.representantes?.[0]?.representante && (
+                      {pedido.user.cliente?.representantes?.[0]
+                        ?.representante && (
                         <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md w-fit mb-2">
                           <User className="h-3 w-3" />
                           <span className="font-medium">Representante:</span>
                           <span>
                             {
-                              pedido.user.cliente.representantes[0].representante
-                                .user.name
+                              pedido.user.cliente.representantes[0]
+                                .representante.user.name
                             }
                           </span>
                           {pedido.user.cliente.representantes[0].representante

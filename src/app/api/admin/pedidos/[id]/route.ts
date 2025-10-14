@@ -269,6 +269,7 @@ export async function PUT(
     }
 
     const { id } = params;
+    const body = await request.json();
     const {
       status,
       tipoEntrega,
@@ -279,8 +280,20 @@ export async function PUT(
       itens,
       subtotal,
       frete,
+      descontoTipo,
+      descontoValor,
+      desconto,
       total,
-    } = await request.json();
+    } = body;
+
+    console.log("💰 Desconto recebido:", {
+      descontoTipo,
+      descontoValor,
+      desconto,
+      subtotal,
+      frete,
+      total,
+    });
 
     // Verificar se pedido existe
     const pedidoExistente = await prisma.pedido.findUnique({
@@ -389,7 +402,7 @@ export async function PUT(
       }
 
       // 4. Atualizar dados do pedido
-      return await tx.pedido.update({
+      const pedidoAtualizado = await tx.pedido.update({
         where: { id },
         data: {
           status: status as any,
@@ -399,6 +412,9 @@ export async function PUT(
           observacoes,
           subtotal: subtotal || 0,
           frete: frete || 0,
+          descontoTipo: descontoTipo || null,
+          descontoValor: descontoValor || null,
+          desconto: desconto || 0,
           total: total || subtotal || 0,
           enderecoEntrega: enderecoEntrega?.endereco || null,
           numeroEntrega: enderecoEntrega?.numero || null,
@@ -425,6 +441,15 @@ export async function PUT(
           },
         },
       });
+
+      console.log("✅ Pedido salvo com desconto:", {
+        descontoTipo: pedidoAtualizado.descontoTipo,
+        descontoValor: pedidoAtualizado.descontoValor,
+        desconto: pedidoAtualizado.desconto,
+        total: pedidoAtualizado.total,
+      });
+
+      return pedidoAtualizado;
     });
 
     return NextResponse.json({

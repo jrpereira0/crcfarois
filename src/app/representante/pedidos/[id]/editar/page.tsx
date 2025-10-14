@@ -104,6 +104,11 @@ export default function EditarPedidoRepresentantePage() {
   const [loadingCep, setLoadingCep] = useState(false);
   const [freteCustomizado, setFreteCustomizado] = useState(0);
   const [freteInputValue, setFreteInputValue] = useState("");
+  const [descontoTipo, setDescontoTipo] = useState<"PORCENTAGEM" | "VALOR">(
+    "PORCENTAGEM"
+  );
+  const [descontoValor, setDescontoValor] = useState(0);
+  const [descontoInputValue, setDescontoInputValue] = useState("");
 
   const pedidoId = params.id as string;
 
@@ -177,15 +182,34 @@ export default function EditarPedidoRepresentantePage() {
       });
 
       // Definir frete inicial (converter de Decimal para número)
-      const freteInicial = typeof pedido.frete === 'number' 
-        ? pedido.frete 
-        : Number(pedido.frete) || 0;
+      const freteInicial =
+        typeof pedido.frete === "number"
+          ? pedido.frete
+          : Number(pedido.frete) || 0;
       setFreteCustomizado(freteInicial);
       setFreteInputValue(
         freteInicial > 0
           ? formatCurrencyInput((freteInicial * 100).toString())
           : ""
       );
+
+      // Definir desconto inicial
+      if (pedido.descontoTipo && pedido.descontoValor) {
+        setDescontoTipo(pedido.descontoTipo as "PORCENTAGEM" | "VALOR");
+        const descontoValorInicial =
+          typeof pedido.descontoValor === "number"
+            ? pedido.descontoValor
+            : Number(pedido.descontoValor) || 0;
+        setDescontoValor(descontoValorInicial);
+
+        if (pedido.descontoTipo === "PORCENTAGEM") {
+          setDescontoInputValue(descontoValorInicial.toString());
+        } else {
+          setDescontoInputValue(
+            formatCurrencyInput((descontoValorInicial * 100).toString())
+          );
+        }
+      }
 
       // Buscar condições de pagamento do cliente
       await fetchCondicoesCliente(pedido.userId);
@@ -387,17 +411,31 @@ export default function EditarPedidoRepresentantePage() {
 
   // Calcular totais
   const calcularTotais = useCallback(() => {
-    if (!form) return { subtotal: 0, frete: 0, total: 0 };
+    if (!form) return { subtotal: 0, frete: 0, desconto: 0, total: 0 };
 
     const subtotal = form.itens.reduce((sum, item) => {
-      const itemSubtotal = typeof item.subtotal === 'number' ? item.subtotal : Number(item.subtotal) || 0;
+      const itemSubtotal =
+        typeof item.subtotal === "number"
+          ? item.subtotal
+          : Number(item.subtotal) || 0;
       return sum + itemSubtotal;
     }, 0);
     const frete = form.tipoEntrega === "ENTREGA" ? freteCustomizado : 0;
-    const total = subtotal + frete;
 
-    return { subtotal, frete, total };
-  }, [form, freteCustomizado]);
+    // Calcular desconto
+    let desconto = 0;
+    if (descontoValor > 0) {
+      if (descontoTipo === "PORCENTAGEM") {
+        desconto = (subtotal * descontoValor) / 100;
+      } else {
+        desconto = descontoValor;
+      }
+    }
+
+    const total = subtotal + frete - desconto;
+
+    return { subtotal, frete, desconto, total: Math.max(0, total) };
+  }, [form, freteCustomizado, descontoTipo, descontoValor]);
 
   // Salvar pedido
   const salvarPedido = useCallback(async () => {
@@ -406,7 +444,7 @@ export default function EditarPedidoRepresentantePage() {
     setSaving(true);
 
     try {
-      const { subtotal, frete, total } = calcularTotais();
+      const { subtotal, frete, desconto, total } = calcularTotais();
 
       const response = await fetch(`/api/representante/pedidos/${pedidoId}`, {
         method: "PUT",
@@ -433,27 +471,38 @@ export default function EditarPedidoRepresentantePage() {
               : null,
           itens: form.itens.map((item) => ({
             id: item.id.startsWith("new-") ? undefined : item.id,
-            produtoId: item.produtoId || item.produto?.id, // Pegar de produtoId ou produto.id
+            produtoId: item.produtoId || item.produto?.id,
             quantidade: item.quantidade,
             precoUnitario: item.precoUnitario,
           })),
           subtotal,
           frete,
+          descontoTipo: descontoValor > 0 ? descontoTipo : null,
+          descontoValor: descontoValor > 0 ? descontoValor : null,
+          desconto,
           total,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Erro ao salvar pedido");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erro ao salvar pedido");
       }
 
+      // Mostrar sucesso
+      alert("✅ Pedido atualizado com sucesso!");
       router.push(`/representante/pedidos/${pedidoId}`);
     } catch (error) {
       console.error("Erro ao salvar pedido:", error);
+      alert(
+        `❌ Erro ao salvar pedido: ${
+          error instanceof Error ? error.message : "Erro desconhecido"
+        }`
+      );
     } finally {
       setSaving(false);
     }
-  }, [form, pedidoId, router, calcularTotais]);
+  }, [form, pedidoId, router, calcularTotais, descontoTipo, descontoValor]);
 
   if (loading || !form) {
     return (
@@ -483,7 +532,7 @@ export default function EditarPedidoRepresentantePage() {
     );
   }
 
-  const { subtotal, frete, total } = calcularTotais();
+  const { subtotal, frete, desconto, total } = calcularTotais();
 
   return (
     <div className="space-y-6">
@@ -1134,6 +1183,96 @@ export default function EditarPedidoRepresentantePage() {
                     </div>
                   </div>
                 )}
+              </div>
+
+              {/* Campo de desconto editável */}
+              <div className="space-y-2 border-t border-gray-200 pt-4">
+                <div className="flex justify-between items-center text-sm sm:text-base">
+                  <span className="text-gray-600 font-medium">Desconto</span>
+                </div>
+
+                <div className="space-y-3">
+                  {/* Tipo de desconto */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setDescontoTipo("PORCENTAGEM")}
+                      className={`flex-1 px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors ${
+                        descontoTipo === "PORCENTAGEM"
+                          ? "bg-primary text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
+                      % Porcentagem
+                    </button>
+                    <button
+                      onClick={() => setDescontoTipo("VALOR")}
+                      className={`flex-1 px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors ${
+                        descontoTipo === "VALOR"
+                          ? "bg-primary text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
+                      R$ Valor Fixo
+                    </button>
+                  </div>
+
+                  {/* Input de desconto */}
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                      {descontoTipo === "PORCENTAGEM" ? "%" : "R$"}
+                    </span>
+                    <input
+                      type="text"
+                      value={descontoInputValue}
+                      onChange={(e) => {
+                        if (descontoTipo === "PORCENTAGEM") {
+                          // Para porcentagem, aceitar apenas números
+                          const value = e.target.value.replace(/\D/g, "");
+                          const numValue = parseInt(value) || 0;
+                          // Limitar a 100%
+                          const limitedValue = Math.min(numValue, 100);
+                          setDescontoInputValue(limitedValue.toString());
+                          setDescontoValor(limitedValue);
+                        } else {
+                          // Para valor, usar formatação de moeda
+                          const formatted = formatCurrencyInput(e.target.value);
+                          setDescontoInputValue(formatted);
+                          setDescontoValor(parseCurrencyInput(formatted));
+                        }
+                      }}
+                      onFocus={(e) => {
+                        if (descontoValor === 0) {
+                          setDescontoInputValue("");
+                        }
+                      }}
+                      onBlur={(e) => {
+                        if (!e.target.value.trim()) {
+                          setDescontoValor(0);
+                          setDescontoInputValue("");
+                        }
+                      }}
+                      placeholder={
+                        descontoTipo === "PORCENTAGEM" ? "0" : "0,00"
+                      }
+                      className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    />
+                  </div>
+
+                  {desconto > 0 && (
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span>Desconto aplicado</span>
+                      <span className="font-medium">
+                        - {formatPrice(desconto)}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="text-xs text-gray-500">
+                    {descontoTipo === "PORCENTAGEM"
+                      ? "Digite a porcentagem de desconto (máx. 100%)"
+                      : "Digite o valor fixo do desconto"}
+                  </div>
+                </div>
               </div>
 
               <div className="border-t border-gray-200 pt-3 flex justify-between text-base sm:text-lg font-semibold">

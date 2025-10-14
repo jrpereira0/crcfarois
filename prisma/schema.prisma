@@ -284,6 +284,9 @@ model Pedido {
   // Valores
   subtotal        Decimal       @db.Decimal(10, 2)
   frete           Decimal       @db.Decimal(10, 2) @default(0)
+  descontoTipo    String?       // "PORCENTAGEM" ou "VALOR"
+  descontoValor   Decimal?      @db.Decimal(10, 2) // Valor do desconto (% ou R$)
+  desconto        Decimal       @db.Decimal(10, 2) @default(0) // Valor final do desconto em R$
   total           Decimal       @db.Decimal(10, 2)
   
   // Endereço de entrega (opcional - apenas se tipoEntrega = ENTREGA)

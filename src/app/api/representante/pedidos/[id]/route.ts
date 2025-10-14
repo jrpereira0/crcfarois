@@ -122,6 +122,9 @@ export async function GET(
       condicaoPagamento: pedido.condicaoPagamento,
       subtotal: pedido.subtotal,
       frete: pedido.frete,
+      descontoTipo: pedido.descontoTipo,
+      descontoValor: pedido.descontoValor,
+      desconto: pedido.desconto,
       total: pedido.total,
       observacoes: pedido.observacoes,
       createdAt: pedido.createdAt.toISOString(),
@@ -178,8 +181,11 @@ export async function PUT(
 
     const pedidoId = params.id;
     const body = await request.json();
-    
-    console.log("📦 Dados recebidos para atualizar pedido:", JSON.stringify(body, null, 2));
+
+    console.log(
+      "📦 Dados recebidos para atualizar pedido:",
+      JSON.stringify(body, null, 2)
+    );
 
     // Buscar o representante logado
     const representante = await prisma.representante.findUnique({
@@ -283,7 +289,7 @@ export async function PUT(
     // Se há itens para atualizar
     if (itens && itens.length > 0) {
       console.log("📋 Itens recebidos:", JSON.stringify(itens, null, 2));
-      
+
       // Validar produtos - filtrar apenas IDs válidos
       const produtoIds = itens
         .map((item: any) => item.produtoId)
@@ -334,10 +340,25 @@ export async function PUT(
         0
       );
 
-      const novoFrete = frete !== undefined ? frete : pedidoExistente.frete;
-      const novoTotal = novoSubtotal + novoFrete;
+      const novoFrete =
+        frete !== undefined ? frete : Number(pedidoExistente.frete);
+
+      // Calcular desconto
+      let novoDesconto = 0;
+      if (body.descontoTipo && body.descontoValor) {
+        if (body.descontoTipo === "PORCENTAGEM") {
+          novoDesconto = (novoSubtotal * body.descontoValor) / 100;
+        } else {
+          novoDesconto = body.descontoValor;
+        }
+      }
+
+      const novoTotal = Math.max(0, novoSubtotal + novoFrete - novoDesconto);
 
       dadosAtualizacao.subtotal = novoSubtotal;
+      dadosAtualizacao.descontoTipo = body.descontoTipo || null;
+      dadosAtualizacao.descontoValor = body.descontoValor || null;
+      dadosAtualizacao.desconto = novoDesconto;
       dadosAtualizacao.total = novoTotal;
 
       // Usar transação para atualizar pedido e itens

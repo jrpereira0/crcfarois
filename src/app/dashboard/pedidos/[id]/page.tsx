@@ -528,16 +528,16 @@ export default function PedidoAdminDetalhesPage() {
                     <div className="text-gray-900">
                       <div className="font-medium">
                         {
-                          pedido.user.cliente.representantes[0].representante.user
-                            .name
+                          pedido.user.cliente.representantes[0].representante
+                            .user.name
                         }
                       </div>
                       <div className="text-sm text-gray-600 space-y-1 mt-1">
                         <div className="flex items-center gap-2">
                           <Mail className="h-3 w-3" />
                           {
-                            pedido.user.cliente.representantes[0].representante.user
-                              .email
+                            pedido.user.cliente.representantes[0].representante
+                              .user.email
                           }
                         </div>
                         {pedido.user.cliente.representantes[0].representante
@@ -545,8 +545,8 @@ export default function PedidoAdminDetalhesPage() {
                           <div className="flex items-center gap-2">
                             <Phone className="h-3 w-3" />
                             {
-                              pedido.user.cliente.representantes[0].representante
-                                .whatsapp
+                              pedido.user.cliente.representantes[0]
+                                .representante.whatsapp
                             }
                           </div>
                         )}
