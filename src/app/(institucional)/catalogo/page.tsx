@@ -310,7 +310,7 @@ export default function CatalogoPage() {
               <span>Baixar Catálogo PDF</span>
             </a>
             <p className="text-gray-500 text-xs sm:text-sm mt-3 sm:mt-4 px-2">
-              Arquivo PDF • Atualizado em 08/10/2025
+              Arquivo PDF • Atualizado em 14/10/2025
             </p>
           </div>
         </div>
