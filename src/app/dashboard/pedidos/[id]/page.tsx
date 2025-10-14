@@ -628,18 +628,6 @@ export default function PedidoAdminDetalhesPage() {
                     </div>
                   </div>
                 )}
-
-                {/* Representante (se houver) */}
-                {pedido.user.cliente?.representante && (
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Representante
-                    </label>
-                    <div className="text-gray-900">
-                      {pedido.user.cliente.representante.nome}
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
