@@ -36,6 +36,9 @@ interface PedidoDetalhes {
   condicaoPagamento?: string;
   subtotal: number;
   frete: number;
+  descontoTipo?: string;
+  descontoValor?: number;
+  desconto: number;
   total: number;
   observacoes?: string;
   createdAt: string;
@@ -319,6 +322,13 @@ export default function PedidoAdminDetalhesPage() {
           ? "Grátis"
           : "A consultar"
       }\n`;
+      if (pedido.desconto > 0) {
+        mensagem += `• Desconto ${
+          pedido.descontoTipo === "PORCENTAGEM"
+            ? `(${pedido.descontoValor}%)`
+            : "(Valor Fixo)"
+        }: -${formatPrice(pedido.desconto)}\n`;
+      }
       mensagem += `• *Total: ${formatPrice(pedido.total)}*\n\n`;
 
       if (pedido.observacoes) {
@@ -777,6 +787,19 @@ export default function PedidoAdminDetalhesPage() {
                     : "A consultar"}
                 </span>
               </div>
+              {pedido.desconto > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-green-600 font-medium">
+                    Desconto{" "}
+                    {pedido.descontoTipo === "PORCENTAGEM"
+                      ? `(${pedido.descontoValor}%)`
+                      : "(Valor Fixo)"}
+                  </span>
+                  <span className="font-medium text-green-600">
+                    - {formatPrice(pedido.desconto)}
+                  </span>
+                </div>
+              )}
               <div className="border-t border-gray-200 pt-3 flex justify-between text-lg font-semibold">
                 <span className="text-gray-900">Total</span>
                 <span className="text-primary">

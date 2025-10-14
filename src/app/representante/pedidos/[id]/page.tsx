@@ -32,6 +32,9 @@ interface PedidoDetalhes {
   condicaoPagamento?: string;
   subtotal: number;
   frete: number;
+  descontoTipo?: string;
+  descontoValor?: number;
+  desconto: number;
   total: number;
   observacoes?: string;
   createdAt: string;
@@ -236,7 +239,15 @@ export default function RepresentantePedidoDetalhesPage() {
 ${itensTexto}
 
 *Subtotal:* ${formatPrice(pedido.subtotal)}
-*Frete:* ${pedido.frete > 0 ? formatPrice(pedido.frete) : "A consultar"}
+*Frete:* ${pedido.frete > 0 ? formatPrice(pedido.frete) : "A consultar"}${
+      pedido.desconto > 0
+        ? `\n*Desconto ${
+            pedido.descontoTipo === "PORCENTAGEM"
+              ? `(${pedido.descontoValor}%)`
+              : "(Valor Fixo)"
+          }:* -${formatPrice(pedido.desconto)}`
+        : ""
+    }
 *Total:* ${formatPrice(pedido.total)}${enderecoTexto}${
       pedido.observacoes ? `\n\n*Observações:* ${pedido.observacoes}` : ""
     }
@@ -516,6 +527,19 @@ ${itensTexto}
                       : "A consultar"}
                   </span>
                 </div>
+                {pedido.desconto > 0 && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-green-600 font-medium">
+                      Desconto{" "}
+                      {pedido.descontoTipo === "PORCENTAGEM"
+                        ? `(${pedido.descontoValor}%)`
+                        : "(Valor Fixo)"}
+                    </span>
+                    <span className="font-medium text-green-600">
+                      - {formatPrice(pedido.desconto)}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between items-center text-lg font-semibold border-t border-gray-200 pt-2">
                   <span className="text-gray-900">Total</span>
                   <span className="text-primary">
