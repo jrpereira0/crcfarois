@@ -18,6 +18,7 @@ import {
   MapPin,
   AlertCircle,
   CheckCircle,
+  XCircle,
   Loader2,
   User,
   Calendar,
@@ -109,6 +110,11 @@ export default function EditarPedidoRepresentantePage() {
   );
   const [descontoValor, setDescontoValor] = useState(0);
   const [descontoInputValue, setDescontoInputValue] = useState("");
+  const [toast, setToast] = useState<{
+    show: boolean;
+    type: "success" | "error";
+    message: string;
+  }>({ show: false, type: "success", message: "" });
 
   const pedidoId = params.id as string;
 
@@ -490,15 +496,29 @@ export default function EditarPedidoRepresentantePage() {
       }
 
       // Mostrar sucesso
-      alert("✅ Pedido atualizado com sucesso!");
-      router.push(`/representante/pedidos/${pedidoId}`);
+      setToast({
+        show: true,
+        type: "success",
+        message: "Pedido atualizado com sucesso!",
+      });
+
+      // Redirecionar após 1.5 segundos
+      setTimeout(() => {
+        router.push(`/representante/pedidos/${pedidoId}`);
+      }, 1500);
     } catch (error) {
       console.error("Erro ao salvar pedido:", error);
-      alert(
-        `❌ Erro ao salvar pedido: ${
-          error instanceof Error ? error.message : "Erro desconhecido"
-        }`
-      );
+      setToast({
+        show: true,
+        type: "error",
+        message:
+          error instanceof Error ? error.message : "Erro ao salvar pedido",
+      });
+
+      // Ocultar toast de erro após 5 segundos
+      setTimeout(() => {
+        setToast({ show: false, type: "success", message: "" });
+      }, 5000);
     } finally {
       setSaving(false);
     }
@@ -1363,6 +1383,39 @@ export default function EditarPedidoRepresentantePage() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast de Notificação */}
+      {toast.show && (
+        <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-2 duration-300">
+          <div
+            className={`flex items-center gap-3 px-6 py-4 rounded-lg shadow-2xl border-2 ${
+              toast.type === "success"
+                ? "bg-green-50 border-green-500 text-green-800"
+                : "bg-red-50 border-red-500 text-red-800"
+            }`}
+          >
+            {toast.type === "success" ? (
+              <CheckCircle className="h-6 w-6 text-green-600" />
+            ) : (
+              <XCircle className="h-6 w-6 text-red-600" />
+            )}
+            <div>
+              <p className="font-semibold">
+                {toast.type === "success" ? "Sucesso!" : "Erro!"}
+              </p>
+              <p className="text-sm">{toast.message}</p>
+            </div>
+            <button
+              onClick={() =>
+                setToast({ show: false, type: "success", message: "" })
+              }
+              className="ml-4 text-gray-400 hover:text-gray-600"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
         </div>
       )}
