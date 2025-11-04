@@ -5,15 +5,7 @@ import cloudinary from "@/lib/cloudinary";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-// Configuração para aceitar arquivos maiores
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "10mb",
-    },
-  },
-};
+// Arquivos de até 10MB são suportados por padrão no App Router
 
 export async function POST(req: NextRequest) {
   try {
