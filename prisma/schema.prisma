@@ -254,6 +254,7 @@ enum StatusPedido {
 enum TipoEntrega {
   RETIRADA
   ENTREGA
+  DROPSHIPPING
 }
 
 enum FormaPagamento {
@@ -297,6 +298,11 @@ model Pedido {
   cidadeEntrega   String?
   estadoEntrega   String?
   cepEntrega      String?
+  
+  // Dropshipping (opcional - apenas se tipoEntrega = DROPSHIPPING)
+  etiquetaDropshippingUrl String? // URL da etiqueta no Cloudinary
+  etiquetaDropshippingId  String? // Public ID no Cloudinary
+  etiquetaDropshippingNome String? // Nome original do arquivo
   
   // Observações
   observacoes     String?

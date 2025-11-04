@@ -25,6 +25,8 @@ import {
   X,
   Building,
   MapPinIcon,
+  Download,
+  ExternalLink,
 } from "lucide-react";
 
 interface PedidoDetalhes {
@@ -51,6 +53,10 @@ interface PedidoDetalhes {
   cidadeEntrega?: string;
   estadoEntrega?: string;
   cepEntrega?: string;
+  // Dropshipping
+  etiquetaDropshippingUrl?: string;
+  etiquetaDropshippingId?: string;
+  etiquetaDropshippingNome?: string;
   // Itens
   itens: {
     id: string;
@@ -703,11 +709,17 @@ export default function PedidoAdminDetalhesPage() {
             <div className="flex items-center gap-3 mb-4">
               {pedido.tipoEntrega === "ENTREGA" ? (
                 <Truck className="h-6 w-6 text-primary" />
+              ) : pedido.tipoEntrega === "DROPSHIPPING" ? (
+                <Package className="h-6 w-6 text-primary" />
               ) : (
                 <MapPin className="h-6 w-6 text-primary" />
               )}
               <h2 className="text-xl font-semibold text-gray-900">
-                {pedido.tipoEntrega === "ENTREGA" ? "Entrega" : "Retirada"}
+                {pedido.tipoEntrega === "ENTREGA" 
+                  ? "Entrega" 
+                  : pedido.tipoEntrega === "DROPSHIPPING"
+                  ? "Dropshipping"
+                  : "Retirada"}
               </h2>
             </div>
 
@@ -726,6 +738,46 @@ export default function PedidoAdminDetalhesPage() {
                   {pedido.estadoEntrega}
                 </div>
                 <div className="text-gray-600">CEP: {pedido.cepEntrega}</div>
+              </div>
+            ) : pedido.tipoEntrega === "DROPSHIPPING" ? (
+              <div className="space-y-3">
+                <div className="text-gray-600">
+                  Pedido com envio direto (dropshipping).
+                </div>
+                {pedido.etiquetaDropshippingUrl && (
+                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <FileText className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-blue-900 mb-2">
+                          Etiqueta de Entrega Anexada
+                        </div>
+                        <div className="text-sm text-blue-700 mb-3">
+                          {pedido.etiquetaDropshippingNome || "Etiqueta"}
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          <a
+                            href={pedido.etiquetaDropshippingUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            Visualizar
+                          </a>
+                          <a
+                            href={pedido.etiquetaDropshippingUrl}
+                            download={pedido.etiquetaDropshippingNome}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-white text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors text-sm font-medium"
+                          >
+                            <Download className="h-4 w-4" />
+                            Baixar
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="text-gray-600">

@@ -19,6 +19,9 @@ import {
   AlertCircle,
   Loader2,
   FileText,
+  Upload,
+  X,
+  File,
 } from "lucide-react";
 
 interface EnderecoEntrega {
@@ -37,7 +40,7 @@ export default function CheckoutPage() {
   const router = useRouter();
 
   // Estados do formulário
-  const [tipoEntrega, setTipoEntrega] = useState<"RETIRADA" | "ENTREGA">(
+  const [tipoEntrega, setTipoEntrega] = useState<"RETIRADA" | "ENTREGA" | "DROPSHIPPING">(
     "RETIRADA"
   );
   const [formaPagamento, setFormaPagamento] = useState<string>("");
@@ -56,6 +59,16 @@ export default function CheckoutPage() {
     estado: "",
   });
   const [observacoes, setObservacoes] = useState("");
+  
+  // Estados para Dropshipping
+  const [etiquetaFile, setEtiquetaFile] = useState<File | null>(null);
+  const [etiquetaPreview, setEtiquetaPreview] = useState<string | null>(null);
+  const [uploadingEtiqueta, setUploadingEtiqueta] = useState(false);
+  const [etiquetaData, setEtiquetaData] = useState<{
+    url: string;
+    publicId: string;
+    originalName: string;
+  } | null>(null);
 
   // Estados de loading
   const [loadingCep, setLoadingCep] = useState(false);
@@ -178,6 +191,112 @@ export default function CheckoutPage() {
     []
   );
 
+  // Handler para seleção de arquivo de etiqueta
+  const handleEtiquetaFileChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      // Validar tipo de arquivo
+      const allowedTypes = [
+        "application/pdf",
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp",
+      ];
+      
+      if (!allowedTypes.includes(file.type)) {
+        showToast(
+          "Tipo de arquivo não permitido. Use PDF ou imagens (JPG, PNG, WEBP)",
+          "error"
+        );
+        return;
+      }
+
+      // Validar tamanho (máx 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        showToast("Arquivo muito grande. Tamanho máximo: 10MB", "error");
+        return;
+      }
+
+      setEtiquetaFile(file);
+      setShowValidationErrors(false);
+
+      // Criar preview se for imagem
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setEtiquetaPreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setEtiquetaPreview(null);
+      }
+
+      // Fazer upload automaticamente
+      await uploadEtiqueta(file);
+    },
+    [showToast]
+  );
+
+  // Função para fazer upload da etiqueta
+  const uploadEtiqueta = useCallback(
+    async (file: File) => {
+      setUploadingEtiqueta(true);
+
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await fetch("/api/upload/etiqueta", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || "Erro ao fazer upload");
+        }
+
+        const data = await response.json();
+
+        setEtiquetaData({
+          url: data.url,
+          publicId: data.publicId,
+          originalName: data.originalName,
+        });
+
+        showToast("Etiqueta enviada com sucesso!", "success");
+      } catch (error: any) {
+        console.error("Erro ao fazer upload da etiqueta:", error);
+        showToast(error.message || "Erro ao fazer upload da etiqueta", "error");
+        setEtiquetaFile(null);
+        setEtiquetaPreview(null);
+      } finally {
+        setUploadingEtiqueta(false);
+      }
+    },
+    [showToast]
+  );
+
+  // Função para remover etiqueta
+  const removeEtiqueta = useCallback(async () => {
+    if (etiquetaData?.publicId) {
+      try {
+        await fetch(`/api/upload/etiqueta?publicId=${etiquetaData.publicId}`, {
+          method: "DELETE",
+        });
+      } catch (error) {
+        console.error("Erro ao deletar etiqueta:", error);
+      }
+    }
+
+    setEtiquetaFile(null);
+    setEtiquetaPreview(null);
+    setEtiquetaData(null);
+  }, [etiquetaData]);
+
   // Validar formulário e retornar erros
   const validarFormulario = useCallback(() => {
     const erros: string[] = [];
@@ -212,6 +331,13 @@ export default function CheckoutPage() {
       }
     }
 
+    // Validar etiqueta se dropshipping
+    if (tipoEntrega === "DROPSHIPPING") {
+      if (!etiquetaData || !etiquetaData.url) {
+        erros.push("Anexe a etiqueta de entrega para dropshipping");
+      }
+    }
+
     return erros;
   }, [
     formaPagamento,
@@ -219,6 +345,7 @@ export default function CheckoutPage() {
     condicoesDisponiveis.length,
     tipoEntrega,
     enderecoEntrega,
+    etiquetaData,
   ]);
 
   // Verificar se pode finalizar
@@ -258,6 +385,11 @@ export default function CheckoutPage() {
         formaPagamento,
         condicaoPagamento: condicaoPagamento || condicoesDisponiveis[0] || null,
         enderecoEntrega: tipoEntrega === "ENTREGA" ? enderecoEntrega : null,
+        etiquetaDropshipping: tipoEntrega === "DROPSHIPPING" && etiquetaData ? {
+          url: etiquetaData.url,
+          publicId: etiquetaData.publicId,
+          originalName: etiquetaData.originalName,
+        } : null,
         observacoes: observacoes.trim() || null,
         itens: state.items.map((item) => ({
           produtoId: item.id,
@@ -516,7 +648,7 @@ export default function CheckoutPage() {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
               <label
                 className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
                   tipoEntrega === "RETIRADA"
@@ -571,6 +703,36 @@ export default function CheckoutPage() {
                   </div>
                 </div>
                 {tipoEntrega === "ENTREGA" && (
+                  <CheckCircle className="h-5 w-5 text-primary ml-auto" />
+                )}
+              </label>
+
+              <label
+                className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                  tipoEntrega === "DROPSHIPPING"
+                    ? "border-primary bg-primary/5"
+                    : "border-gray-200 hover:border-gray-300"
+                }`}
+              >
+                  <input
+                    type="radio"
+                    name="tipoEntrega"
+                    value="DROPSHIPPING"
+                    checked={tipoEntrega === "DROPSHIPPING"}
+                    onChange={(e) => {
+                      e.preventDefault();
+                      setTipoEntrega("DROPSHIPPING");
+                    }}
+                    className="sr-only"
+                  />
+                <Package className="h-6 w-6 text-primary" />
+                <div>
+                  <div className="font-medium text-gray-900">Dropshipping</div>
+                  <div className="text-sm text-gray-500">
+                    Envio direto
+                  </div>
+                </div>
+                {tipoEntrega === "DROPSHIPPING" && (
                   <CheckCircle className="h-5 w-5 text-primary ml-auto" />
                 )}
               </label>
@@ -745,6 +907,114 @@ export default function CheckoutPage() {
                       maxLength={2}
                       required
                     />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Upload de Etiqueta Dropshipping */}
+            {tipoEntrega === "DROPSHIPPING" && (
+              <div className="border-t border-gray-200 pt-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <Upload className="h-5 w-5 text-primary" />
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Etiqueta de Entrega *
+                  </h3>
+                </div>
+
+                {/* Alerta de campo obrigatório */}
+                {showValidationErrors && tipoEntrega === "DROPSHIPPING" && !etiquetaData && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <div className="flex items-center gap-2 text-red-800 text-sm">
+                      <AlertCircle className="h-4 w-4" />
+                      <span className="font-medium">
+                        Anexe a etiqueta de entrega para prosseguir
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  {/* Área de upload */}
+                  {!etiquetaFile && !etiquetaData && (
+                    <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors border-gray-300 hover:border-primary">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <Upload className="h-10 w-10 text-gray-400 mb-3" />
+                        <p className="mb-2 text-sm text-gray-700">
+                          <span className="font-semibold">Clique para anexar</span> ou arraste
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          PDF, JPG, PNG ou WEBP (máx. 10MB)
+                        </p>
+                      </div>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept=".pdf,.jpg,.jpeg,.png,.webp"
+                        onChange={handleEtiquetaFileChange}
+                      />
+                    </label>
+                  )}
+
+                  {/* Loading */}
+                  {uploadingEtiqueta && (
+                    <div className="flex items-center justify-center gap-3 p-6 bg-blue-50 border border-blue-200 rounded-lg">
+                      <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+                      <span className="text-blue-800 font-medium">
+                        Enviando etiqueta...
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Arquivo anexado */}
+                  {etiquetaData && etiquetaFile && !uploadingEtiqueta && (
+                    <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-green-800 font-medium mb-1">
+                            Etiqueta anexada com sucesso!
+                          </p>
+                          <div className="flex items-center gap-2 text-sm text-green-700">
+                            <File className="h-4 w-4" />
+                            <span className="truncate">{etiquetaFile.name}</span>
+                            <span className="text-xs text-green-600">
+                              ({(etiquetaFile.size / 1024).toFixed(0)} KB)
+                            </span>
+                          </div>
+                          
+                          {/* Preview se for imagem */}
+                          {etiquetaPreview && (
+                            <div className="mt-3">
+                              <Image
+                                src={etiquetaPreview}
+                                alt="Preview da etiqueta"
+                                width={200}
+                                height={200}
+                                className="rounded-lg border border-green-200"
+                              />
+                            </div>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={removeEtiqueta}
+                          className="p-1 hover:bg-green-100 rounded transition-colors"
+                          title="Remover etiqueta"
+                        >
+                          <X className="h-5 w-5 text-green-600" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-start gap-2 text-sm text-blue-800">
+                    <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                    <p>
+                      Para pedidos de dropshipping, anexe a etiqueta de envio com o endereço de entrega do seu cliente.
+                    </p>
                   </div>
                 </div>
               </div>

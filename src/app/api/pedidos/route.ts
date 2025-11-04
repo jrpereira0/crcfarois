@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
       formaPagamento,
       condicaoPagamento,
       enderecoEntrega,
+      etiquetaDropshipping,
       observacoes,
       itens,
     } = requestBody;
@@ -90,7 +91,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validar enums
-    const tiposEntregaValidos = ["RETIRADA", "ENTREGA"];
+    const tiposEntregaValidos = ["RETIRADA", "ENTREGA", "DROPSHIPPING"];
     const formasPagamentoValidas = [
       "DINHEIRO",
       "PIX",
@@ -118,6 +119,14 @@ export async function POST(request: NextRequest) {
     if (tipoEntrega === "ENTREGA" && !enderecoEntrega) {
       return NextResponse.json(
         { error: "Endereço de entrega é obrigatório" },
+        { status: 400 }
+      );
+    }
+
+    // Validar se é dropshipping e tem etiqueta
+    if (tipoEntrega === "DROPSHIPPING" && !etiquetaDropshipping) {
+      return NextResponse.json(
+        { error: "Etiqueta de entrega é obrigatória para dropshipping" },
         { status: 400 }
       );
     }
@@ -242,6 +251,9 @@ export async function POST(request: NextRequest) {
           cidadeEntrega: enderecoEntrega?.cidade || null,
           estadoEntrega: enderecoEntrega?.estado || null,
           cepEntrega: enderecoEntrega?.cep || null,
+          etiquetaDropshippingUrl: etiquetaDropshipping?.url || null,
+          etiquetaDropshippingId: etiquetaDropshipping?.publicId || null,
+          etiquetaDropshippingNome: etiquetaDropshipping?.originalName || null,
           observacoes,
           itens: {
             create: itensParaCriar,

@@ -26,6 +26,8 @@ import {
   Tag,
   Mail,
   Phone,
+  Download,
+  ExternalLink,
 } from "lucide-react";
 
 interface ProdutoDisponivel {
@@ -73,10 +75,12 @@ interface PedidoForm {
   id: string;
   numero: string;
   status: string;
-  tipoEntrega: "RETIRADA" | "ENTREGA";
+  tipoEntrega: "RETIRADA" | "ENTREGA" | "DROPSHIPPING";
   formaPagamento: string;
   condicaoPagamento: string;
   observacoes: string;
+  etiquetaDropshippingUrl?: string;
+  etiquetaDropshippingNome?: string;
   // Endereço de entrega
   enderecoEntrega: string;
   numeroEntrega: string;
@@ -207,6 +211,8 @@ export default function EditarPedidoPage() {
         formaPagamento: pedido.formaPagamento,
         condicaoPagamento: pedido.condicaoPagamento || "",
         observacoes: pedido.observacoes || "",
+        etiquetaDropshippingUrl: pedido.etiquetaDropshippingUrl || undefined,
+        etiquetaDropshippingNome: pedido.etiquetaDropshippingNome || undefined,
         enderecoEntrega: pedido.enderecoEntrega || "",
         numeroEntrega: pedido.numeroEntrega || "",
         complementoEntrega: pedido.complementoEntrega || "",
@@ -829,7 +835,7 @@ export default function EditarPedidoPage() {
               <h2 className="text-xl font-semibold text-gray-900">Entrega</h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
               <label
                 className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
                   form.tipoEntrega === "RETIRADA"
@@ -892,6 +898,39 @@ export default function EditarPedidoPage() {
                   </div>
                 </div>
                 {form.tipoEntrega === "ENTREGA" && (
+                  <CheckCircle className="h-5 w-5 text-primary ml-auto" />
+                )}
+              </label>
+
+              <label
+                className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                  form.tipoEntrega === "DROPSHIPPING"
+                    ? "border-primary bg-primary/5"
+                    : "border-gray-200 hover:border-gray-300"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="tipoEntrega"
+                  value="DROPSHIPPING"
+                  checked={form.tipoEntrega === "DROPSHIPPING"}
+                  onChange={(e) =>
+                    setForm((prev) =>
+                      prev
+                        ? { ...prev, tipoEntrega: e.target.value as "DROPSHIPPING" }
+                        : null
+                    )
+                  }
+                  className="sr-only"
+                />
+                <Package className="h-6 w-6 text-primary" />
+                <div>
+                  <div className="font-medium text-gray-900">Dropshipping</div>
+                  <div className="text-sm text-gray-500">
+                    Envio direto
+                  </div>
+                </div>
+                {form.tipoEntrega === "DROPSHIPPING" && (
                   <CheckCircle className="h-5 w-5 text-primary ml-auto" />
                 )}
               </label>
@@ -1043,6 +1082,47 @@ export default function EditarPedidoPage() {
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       maxLength={2}
                     />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Etiqueta de Dropshipping */}
+            {form.tipoEntrega === "DROPSHIPPING" && form.etiquetaDropshippingUrl && (
+              <div className="border-t border-gray-200 pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Etiqueta de Entrega
+                </h3>
+                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <FileText className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-blue-900 mb-2">
+                        Etiqueta Anexada pelo Cliente
+                      </div>
+                      <div className="text-sm text-blue-700 mb-3">
+                        {form.etiquetaDropshippingNome || "Etiqueta"}
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <a
+                          href={form.etiquetaDropshippingUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                          Visualizar
+                        </a>
+                        <a
+                          href={form.etiquetaDropshippingUrl}
+                          download={form.etiquetaDropshippingNome}
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-white text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors text-sm font-medium"
+                        >
+                          <Download className="h-4 w-4" />
+                          Baixar
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
