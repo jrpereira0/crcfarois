@@ -11,6 +11,10 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    // Aumentar limite de body size para 10MB
+    bodySizeLimit: '10mb',
+  },
 };
 
 module.exports = nextConfig;
