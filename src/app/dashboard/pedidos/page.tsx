@@ -462,7 +462,11 @@ export default function PedidosAdminPage() {
       mensagem += `• Status: ${statusFormatado}\n`;
       mensagem += `• Data: ${dataFormatada}\n`;
       mensagem += `• Tipo: ${
-        pedido.tipoEntrega === "ENTREGA" ? "🚚 Entrega" : "🏪 Retirada"
+        pedido.tipoEntrega === "ENTREGA"
+          ? "🚚 Entrega"
+          : pedido.tipoEntrega === "DROPSHIPPING"
+          ? "📦 Dropshipping"
+          : "🏪 Retirada"
       }\n`;
       mensagem += `• Pagamento: ${pedido.formaPagamento.replace("_", " ")}`;
       if (pedido.condicaoPagamento) {
@@ -721,6 +725,7 @@ export default function PedidosAdminPage() {
                 <option value="">Todos os tipos</option>
                 <option value="RETIRADA">Retirada</option>
                 <option value="ENTREGA">Entrega</option>
+                <option value="DROPSHIPPING">Dropshipping</option>
               </select>
             </div>
           </div>
@@ -1103,11 +1108,15 @@ export default function PedidosAdminPage() {
                         <span className="flex items-center gap-1">
                           {pedido.tipoEntrega === "ENTREGA" ? (
                             <Truck className="h-4 w-4" />
+                          ) : pedido.tipoEntrega === "DROPSHIPPING" ? (
+                            <Package className="h-4 w-4" />
                           ) : (
                             <MapPin className="h-4 w-4" />
                           )}
                           {pedido.tipoEntrega === "ENTREGA"
                             ? "Entrega"
+                            : pedido.tipoEntrega === "DROPSHIPPING"
+                            ? "Dropshipping"
                             : "Retirada"}
                         </span>
                         <span className="flex items-center gap-1">
