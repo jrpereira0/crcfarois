@@ -368,24 +368,27 @@ export default function B2BHomePage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <MessageCircle className="h-5 w-5 text-blue-200 flex-shrink-0" />
-              <div>
-                <p className="text-xs text-blue-200">WhatsApp</p>
-                <a
-                  href={`https://wa.me/55${stats.representante.whatsapp.replace(
-                    /\D/g,
-                    ""
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold hover:underline inline-flex items-center gap-1"
-                >
-                  {stats.representante.whatsapp}
-                  <ArrowRight className="h-4 w-4" />
-                </a>
-              </div>
-            </div>
+            {stats.representante.whatsapp &&
+              stats.representante.whatsapp !== "Não informado" && (
+                <div className="flex items-center gap-3">
+                  <MessageCircle className="h-5 w-5 text-blue-200 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs text-blue-200">WhatsApp</p>
+                    <a
+                      href={`https://wa.me/55${stats.representante.whatsapp.replace(
+                        /\D/g,
+                        ""
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold hover:underline inline-flex items-center gap-1"
+                    >
+                      {stats.representante.whatsapp}
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
+                  </div>
+                </div>
+              )}
           </div>
         </div>
       )}

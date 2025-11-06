@@ -78,9 +78,9 @@ export async function GET(request: NextRequest) {
       pedidosRecentes,
       representante: representante
         ? {
-            nome: representante.user.name,
-            email: representante.user.email,
-            whatsapp: representante.whatsapp,
+            nome: representante.user.name || "Não informado",
+            email: representante.user.email || "Não informado",
+            whatsapp: representante.whatsapp || "Não informado",
           }
         : null,
     });
