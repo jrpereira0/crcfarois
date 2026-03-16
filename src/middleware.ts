@@ -5,7 +5,7 @@ import type { NextFetchEvent, NextRequest } from "next/server";
 // Troque para false quando quiser reativar o site
 const MAINTENANCE_MODE = true;
 
-const MAINTENANCE_BYPASS = ["/manutencao", "/_next", "/api/auth", "/favicon.ico"];
+const MAINTENANCE_BYPASS = ["/error", "/_next", "/api/auth", "/favicon.ico"];
 
 const authMiddleware = withAuth(
   function middleware(req) {
@@ -105,7 +105,7 @@ export default function middleware(req: NextRequest, event: NextFetchEvent) {
       pathname.startsWith(path)
     );
     if (!isBypassed) {
-      return NextResponse.redirect(new URL("/manutencao", req.url));
+      return NextResponse.redirect(new URL("/error", req.url));
     }
     return NextResponse.next();
   }
