@@ -1,7 +1,13 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 
-export default withAuth(
+// Troque para false quando quiser reativar o site
+const MAINTENANCE_MODE = true;
+
+const MAINTENANCE_BYPASS = ["/manutencao", "/_next", "/api/auth", "/favicon.ico"];
+
+const authMiddleware = withAuth(
   function middleware(req) {
     const token = req.nextauth.token;
     const { pathname } = req.nextUrl;
@@ -35,7 +41,7 @@ export default withAuth(
           return NextResponse.redirect(new URL("/representante", req.url));
         }
       }
-      
+
       // Bloquear acesso de FUNCIONARIO à página de usuários
       if (token.role === "FUNCIONARIO" && pathname.startsWith("/dashboard/usuarios")) {
         return NextResponse.redirect(new URL("/dashboard", req.url));
@@ -91,11 +97,22 @@ export default withAuth(
   }
 );
 
+export default function middleware(req: NextRequest, event: NextFetchEvent) {
+  const { pathname } = req.nextUrl;
+
+  if (MAINTENANCE_MODE) {
+    const isBypassed = MAINTENANCE_BYPASS.some((path) =>
+      pathname.startsWith(path)
+    );
+    if (!isBypassed) {
+      return NextResponse.redirect(new URL("/manutencao", req.url));
+    }
+    return NextResponse.next();
+  }
+
+  return (authMiddleware as (req: NextRequest, event: NextFetchEvent) => ReturnType<typeof NextResponse.next>)(req, event);
+}
+
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/b2b/:path*",
-    "/representante/:path*",
-    "/login",
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
