@@ -110,6 +110,11 @@ export default function middleware(req: NextRequest, event: NextFetchEvent) {
     return NextResponse.next();
   }
 
+  // Bloqueia acesso direto à página /error quando o site está no ar
+  if (pathname.startsWith("/error")) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
   return (authMiddleware as (req: NextRequest, event: NextFetchEvent) => ReturnType<typeof NextResponse.next>)(req, event);
 }
 
