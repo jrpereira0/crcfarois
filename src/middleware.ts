@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextFetchEvent, NextRequest } from "next/server";
 
 // Troque para false quando quiser reativar o site
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 
 const MAINTENANCE_BYPASS = ["/error", "/_next", "/api/auth", "/favicon.ico"];
 
