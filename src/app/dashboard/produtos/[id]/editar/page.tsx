@@ -37,6 +37,7 @@ interface FormData {
   quantidadeEstoque: string;
   compraMinima: string;
   compraMaxima: string;
+  precoDropshipping: string;
   altura: string;
   largura: string;
   comprimento: string;
@@ -68,6 +69,7 @@ interface Produto {
   quantidadeEstoque: number;
   compraMinima: number;
   compraMaxima?: number;
+  precoDropshipping?: number | string | null;
   altura?: number | string | null;
   largura?: number | string | null;
   comprimento?: number | string | null;
@@ -109,6 +111,7 @@ export default function EditarProdutoPage() {
     quantidadeEstoque: "",
     compraMinima: "1",
     compraMaxima: "",
+    precoDropshipping: "",
     altura: "",
     largura: "",
     comprimento: "",
@@ -141,6 +144,7 @@ export default function EditarProdutoPage() {
         quantidadeEstoque: produto.quantidadeEstoque.toString(),
         compraMinima: produto.compraMinima.toString(),
         compraMaxima: produto.compraMaxima?.toString() || "",
+        precoDropshipping: produto.precoDropshipping?.toString() || "",
         altura: produto.altura?.toString() || "",
         largura: produto.largura?.toString() || "",
         comprimento: produto.comprimento?.toString() || "",
@@ -266,6 +270,11 @@ export default function EditarProdutoPage() {
     setFormData((prev) => ({ ...prev, [field]: numericValue }));
   };
 
+  const handlePrecoDropshippingChange = (value: string) => {
+    const numericValue = value.replace(/[^\d.,]/g, "").replace(",", ".");
+    setFormData((prev) => ({ ...prev, precoDropshipping: numericValue }));
+  };
+
   // Validação do formulário
   const validateForm = () => {
     const newErrors: FormErrors = {};
@@ -370,6 +379,7 @@ export default function EditarProdutoPage() {
         quantidadeEstoque: formData.quantidadeEstoque,
         compraMinima: formData.compraMinima,
         compraMaxima: formData.compraMaxima || null,
+        precoDropshipping: formData.precoDropshipping || null,
         altura: formData.altura || null,
         largura: formData.largura || null,
         comprimento: formData.comprimento || null,
@@ -747,6 +757,35 @@ export default function EditarProdutoPage() {
                   <p className="mt-1 text-xs text-gray-500">
                     Quantidade máxima por pedido (opcional)
                   </p>
+                </div>
+              </div>
+
+              {/* Preço Dropshipping */}
+              <div>
+                <h3 className="text-base font-semibold text-gray-900 mb-4">
+                  Dropshipping
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Preço Dropshipping (R$)
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.precoDropshipping}
+                      onChange={(e) =>
+                        handlePrecoDropshippingChange(e.target.value)
+                      }
+                      placeholder="Opcional"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    />
+                    <p className="mt-1 text-xs text-gray-500 flex items-start gap-1">
+                      <AlertCircle className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+                      Valor cobrado para embalar e despachar este produto
+                      quando o cliente escolher a modalidade Dropshipping.
+                      Deixe vazio se não se aplicar.
+                    </p>
+                  </div>
                 </div>
               </div>
 

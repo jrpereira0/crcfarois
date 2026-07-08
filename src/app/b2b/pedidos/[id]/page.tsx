@@ -30,6 +30,7 @@ interface PedidoDetalhes {
   formaPagamento: string;
   subtotal: number;
   frete: number;
+  taxaDropshipping: number;
   total: number;
   observacoes?: string;
   createdAt: string;
@@ -436,6 +437,17 @@ export default function PedidoDetalhesPage() {
                     : "A consultar"}
                 </span>
               </div>
+              {pedido.tipoEntrega === "DROPSHIPPING" &&
+                pedido.taxaDropshipping > 0 && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm sm:text-base text-gray-600">
+                      Taxa Dropshipping
+                    </span>
+                    <span className="text-sm sm:text-base font-medium text-gray-900">
+                      {formatPrice(pedido.taxaDropshipping)}
+                    </span>
+                  </div>
+                )}
               <div className="border-t border-gray-200 pt-3 flex justify-between items-center">
                 <span className="text-base sm:text-lg font-semibold text-gray-900">Total</span>
                 <span className="text-base sm:text-lg font-semibold text-primary">

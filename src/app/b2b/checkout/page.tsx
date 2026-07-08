@@ -114,6 +114,17 @@ export default function CheckoutPage() {
     fetchCondicoesPagamento();
   }, [state.items.length, router]);
 
+  // Taxa de dropshipping (soma do preço de dropshipping de cada produto * quantidade)
+  const taxaDropshipping =
+    tipoEntrega === "DROPSHIPPING"
+      ? state.items.reduce(
+          (sum, item) => sum + (item.precoDropshipping || 0) * item.quantidade,
+          0
+        )
+      : 0;
+
+  const totalComDropshipping = state.total + taxaDropshipping;
+
   // Formatação de preço
   const formatPrice = useCallback((price: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -470,7 +481,7 @@ export default function CheckoutPage() {
           </div>
           <div className="text-sm text-gray-500">
             {state.totalItems} {state.totalItems === 1 ? "item" : "itens"} •{" "}
-            {formatPrice(state.total)}
+            {formatPrice(totalComDropshipping)}
           </div>
         </div>
       </div>
@@ -915,6 +926,21 @@ export default function CheckoutPage() {
             {/* Upload de Etiqueta Dropshipping */}
             {tipoEntrega === "DROPSHIPPING" && (
               <div className="border-t border-gray-200 pt-6">
+                {taxaDropshipping > 0 && (
+                  <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <div className="flex items-center gap-2 text-amber-800 text-sm">
+                      <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                      <span>
+                        Será cobrada uma taxa adicional de{" "}
+                        <span className="font-semibold">
+                          {formatPrice(taxaDropshipping)}
+                        </span>{" "}
+                        para embalagem e despacho dos produtos selecionados.
+                      </span>
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex items-center gap-3 mb-4">
                   <Upload className="h-5 w-5 text-primary" />
                   <h3 className="text-lg font-semibold text-gray-900">
@@ -1154,9 +1180,19 @@ export default function CheckoutPage() {
                 <span className="text-gray-600">Frete</span>
                 <span className="font-medium text-gray-900">A consultar</span>
               </div>
+              {tipoEntrega === "DROPSHIPPING" && taxaDropshipping > 0 && (
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-gray-600">Taxa Dropshipping</span>
+                  <span className="font-medium text-gray-900">
+                    {formatPrice(taxaDropshipping)}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between items-center text-lg font-semibold">
                 <span className="text-gray-900">Total</span>
-                <span className="text-primary">{formatPrice(state.total)}</span>
+                <span className="text-primary">
+                  {formatPrice(totalComDropshipping)}
+                </span>
               </div>
             </div>
 

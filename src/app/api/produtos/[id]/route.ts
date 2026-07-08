@@ -70,6 +70,7 @@ export async function PUT(
       quantidadeEstoque,
       compraMinima,
       compraMaxima,
+      precoDropshipping,
       altura,
       largura,
       comprimento,
@@ -210,6 +211,9 @@ export async function PUT(
         quantidadeEstoque: parseInt(quantidadeEstoque),
         compraMinima: parseInt(compraMinima),
         compraMaxima: compraMaxima ? parseInt(compraMaxima) : null,
+        precoDropshipping: precoDropshipping
+          ? parseFloat(precoDropshipping)
+          : null,
         altura: altura ? parseFloat(altura) : null,
         largura: largura ? parseFloat(largura) : null,
         comprimento: comprimento ? parseFloat(comprimento) : null,

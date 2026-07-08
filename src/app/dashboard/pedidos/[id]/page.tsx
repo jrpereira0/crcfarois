@@ -38,6 +38,7 @@ interface PedidoDetalhes {
   condicaoPagamento?: string;
   subtotal: number;
   frete: number;
+  taxaDropshipping?: number;
   descontoTipo?: string;
   descontoValor?: number;
   desconto: number;
@@ -407,6 +408,9 @@ export default function PedidoAdminDetalhesPage() {
           ? "Grátis"
           : "A consultar"
       }\n`;
+      if (pedido.tipoEntrega === "DROPSHIPPING" && (pedido.taxaDropshipping || 0) > 0) {
+        mensagem += `• Taxa Dropshipping: ${formatPrice(pedido.taxaDropshipping || 0)}\n`;
+      }
       if (pedido.desconto > 0) {
         mensagem += `• Desconto ${
           pedido.descontoTipo === "PORCENTAGEM"
@@ -906,6 +910,15 @@ export default function PedidoAdminDetalhesPage() {
                     : "A consultar"}
                 </span>
               </div>
+              {pedido.tipoEntrega === "DROPSHIPPING" &&
+                (pedido.taxaDropshipping || 0) > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Taxa Dropshipping</span>
+                    <span className="font-medium text-gray-900">
+                      {formatPrice(pedido.taxaDropshipping || 0)}
+                    </span>
+                  </div>
+                )}
               {pedido.desconto > 0 && (
                 <div className="flex justify-between">
                   <span className="text-green-600 font-medium">

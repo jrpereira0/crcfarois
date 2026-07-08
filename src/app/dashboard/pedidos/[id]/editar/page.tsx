@@ -35,6 +35,7 @@ interface ProdutoDisponivel {
   titulo: string;
   sku: string;
   preco: number;
+  precoDropshipping?: number | null;
   quantidadeEstoque: number;
   compraMinima: number;
   compraMaxima?: number;
@@ -68,6 +69,7 @@ interface ItemPedido {
     };
     quantidadeEstoque: number;
     preco: number;
+    precoDropshipping?: number | null;
   };
 }
 
@@ -433,6 +435,7 @@ export default function EditarPedidoPage() {
             categoria: produto.categoria,
             quantidadeEstoque: produto.quantidadeEstoque,
             preco: produto.preco,
+            precoDropshipping: produto.precoDropshipping,
           },
         };
 
@@ -448,10 +451,24 @@ export default function EditarPedidoPage() {
 
   // Calcular totais
   const calcularTotais = useCallback(() => {
-    if (!form) return { subtotal: 0, frete: 0, desconto: 0, total: 0 };
+    if (!form)
+      return { subtotal: 0, frete: 0, taxaDropshipping: 0, desconto: 0, total: 0 };
 
     const subtotal = form.itens.reduce((sum, item) => sum + item.subtotal, 0);
     const frete = form.tipoEntrega === "ENTREGA" ? freteCustomizado : 0;
+
+    // Calcular taxa de dropshipping com base no preço de dropshipping de cada produto
+    const taxaDropshipping =
+      form.tipoEntrega === "DROPSHIPPING"
+        ? form.itens.reduce((sum, item) => {
+            const produtoInfo = produtosDisponiveis.find(
+              (p) => p.id === item.produtoId
+            );
+            const precoDrop =
+              produtoInfo?.precoDropshipping ?? item.produto?.precoDropshipping;
+            return sum + (precoDrop || 0) * item.quantidade;
+          }, 0)
+        : 0;
 
     // Calcular desconto
     let desconto = 0;
@@ -463,10 +480,16 @@ export default function EditarPedidoPage() {
       }
     }
 
-    const total = subtotal + frete - desconto;
+    const total = subtotal + frete + taxaDropshipping - desconto;
 
-    return { subtotal, frete, desconto, total: Math.max(0, total) };
-  }, [form, freteCustomizado, descontoTipo, descontoValor]);
+    return {
+      subtotal,
+      frete,
+      taxaDropshipping,
+      desconto,
+      total: Math.max(0, total),
+    };
+  }, [form, freteCustomizado, descontoTipo, descontoValor, produtosDisponiveis]);
 
   // Salvar pedido
   const salvarPedido = useCallback(async () => {
@@ -475,7 +498,8 @@ export default function EditarPedidoPage() {
     setSaving(true);
 
     try {
-      const { subtotal, frete, desconto, total } = calcularTotais();
+      const { subtotal, frete, taxaDropshipping, desconto, total } =
+        calcularTotais();
 
       const response = await fetch(`/api/admin/pedidos/${pedidoId}`, {
         method: "PUT",
@@ -508,6 +532,7 @@ export default function EditarPedidoPage() {
           })),
           subtotal,
           frete,
+          taxaDropshipping,
           descontoTipo: descontoValor > 0 ? descontoTipo : null,
           descontoValor: descontoValor > 0 ? descontoValor : null,
           desconto,
@@ -577,7 +602,8 @@ export default function EditarPedidoPage() {
     );
   }
 
-  const { subtotal, frete, desconto, total } = calcularTotais();
+  const { subtotal, frete, taxaDropshipping, desconto, total } =
+    calcularTotais();
 
   return (
     <div className="space-y-6">
@@ -1327,6 +1353,18 @@ export default function EditarPedidoPage() {
                   </div>
                 )}
               </div>
+
+              {/* Taxa de Dropshipping (calculada automaticamente) */}
+              {form.tipoEntrega === "DROPSHIPPING" && (
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Taxa Dropshipping</span>
+                  <span className="font-medium text-gray-900">
+                    {taxaDropshipping > 0
+                      ? formatPrice(taxaDropshipping)
+                      : "R$ 0,00"}
+                  </span>
+                </div>
+              )}
 
               {/* Campo de desconto editável */}
               <div className="space-y-2 border-t border-gray-200 pt-4">

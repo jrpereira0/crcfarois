@@ -167,8 +167,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Calcular subtotal
+    // Calcular subtotal e taxa de dropshipping (se aplicável)
     let subtotal = 0;
+    let taxaDropshipping = 0;
     const itensParaCriar = [];
 
     for (const item of itens) {
@@ -205,6 +206,11 @@ export async function POST(request: NextRequest) {
       const subtotalItem = precoUnitario * item.quantidade;
       subtotal += subtotalItem;
 
+      if (tipoEntrega === "DROPSHIPPING" && produto.precoDropshipping) {
+        taxaDropshipping +=
+          parseFloat(produto.precoDropshipping.toString()) * item.quantidade;
+      }
+
       itensParaCriar.push({
         produtoId: produto.id,
         quantidade: item.quantidade,
@@ -217,7 +223,7 @@ export async function POST(request: NextRequest) {
 
     // Por enquanto, frete é 0 (pode ser calculado depois)
     const frete = 0;
-    const total = subtotal + frete;
+    const total = subtotal + frete + taxaDropshipping;
 
     // Criar pedido
     console.log("Criando pedido com dados:", {
@@ -228,6 +234,7 @@ export async function POST(request: NextRequest) {
       condicaoPagamento,
       subtotal,
       frete,
+      taxaDropshipping,
       total,
       itensCount: itensParaCriar.length,
     });
@@ -243,6 +250,7 @@ export async function POST(request: NextRequest) {
           condicaoPagamento: condicaoPagamento || null,
           subtotal,
           frete,
+          taxaDropshipping,
           total,
           enderecoEntrega: enderecoEntrega?.endereco || null,
           numeroEntrega: enderecoEntrega?.numero || null,
@@ -286,6 +294,7 @@ export async function POST(request: NextRequest) {
         condicaoPagamento: condicaoPagamento || null,
         subtotal,
         frete,
+        taxaDropshipping,
         total,
         itensParaCriar,
       });

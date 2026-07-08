@@ -73,6 +73,7 @@ export async function GET(
       ...pedido,
       subtotal: parseFloat(pedido.subtotal.toString()),
       frete: parseFloat(pedido.frete.toString()),
+      taxaDropshipping: parseFloat(pedido.taxaDropshipping.toString()),
       total: parseFloat(pedido.total.toString()),
       itens: pedido.itens.map((item) => ({
         ...item,

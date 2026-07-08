@@ -77,6 +77,7 @@ export async function GET(
                 },
                 quantidadeEstoque: true,
                 preco: true,
+                precoDropshipping: true,
               },
             },
           },
@@ -96,6 +97,7 @@ export async function GET(
       ...pedido,
       subtotal: parseFloat(pedido.subtotal.toString()),
       frete: parseFloat(pedido.frete.toString()),
+      taxaDropshipping: parseFloat(pedido.taxaDropshipping.toString()),
       total: parseFloat(pedido.total.toString()),
       itens: pedido.itens.map((item) => ({
         ...item,
@@ -104,6 +106,9 @@ export async function GET(
         produto: {
           ...item.produto,
           preco: parseFloat(item.produto.preco.toString()),
+          precoDropshipping: item.produto.precoDropshipping
+            ? parseFloat(item.produto.precoDropshipping.toString())
+            : null,
         },
       })),
     };
@@ -304,6 +309,7 @@ export async function PUT(
       itens,
       subtotal,
       frete,
+      taxaDropshipping,
       descontoTipo,
       descontoValor,
       desconto,
@@ -436,6 +442,7 @@ export async function PUT(
           observacoes,
           subtotal: subtotal || 0,
           frete: frete || 0,
+          taxaDropshipping: taxaDropshipping || 0,
           descontoTipo: descontoTipo || null,
           descontoValor: descontoValor || null,
           desconto: desconto || 0,

@@ -14,6 +14,7 @@ export interface CartItem {
   titulo: string;
   sku: string;
   preco: number;
+  precoDropshipping?: number | null;
   imagemPrincipal?: string;
   imagensUrls: string[];
   categoria: {
@@ -85,6 +86,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
           titulo: produto.titulo,
           sku: produto.sku,
           preco: produto.preco,
+          precoDropshipping: produto.precoDropshipping ?? null,
           imagemPrincipal: produto.imagemPrincipal,
           imagensUrls: produto.imagensUrls || [],
           categoria: produto.categoria,

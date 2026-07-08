@@ -64,6 +64,9 @@ export async function GET(request: NextRequest) {
         titulo: item.produto.titulo,
         sku: item.produto.sku,
         preco: parseFloat(item.precoUnitario.toString()),
+        precoDropshipping: item.produto.precoDropshipping
+          ? parseFloat(item.produto.precoDropshipping.toString())
+          : null,
         imagemPrincipal: item.produto.imagemPrincipal,
         imagensUrls: item.produto.imagensUrls,
         categoria: item.produto.categoria,
