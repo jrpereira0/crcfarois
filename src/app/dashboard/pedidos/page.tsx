@@ -1218,6 +1218,9 @@ export default function PedidosAdminPage() {
                             <h4 className="text-xs font-medium text-gray-900 truncate">
                               {item.produtoTitulo}
                             </h4>
+                            <div className="text-[10px] text-gray-500 uppercase tracking-wide">
+                              SKU: {item.produtoSku}
+                            </div>
                             <div className="text-xs text-gray-500">
                               {item.quantidade}x{" "}
                               {formatPrice(item.precoUnitario)}
