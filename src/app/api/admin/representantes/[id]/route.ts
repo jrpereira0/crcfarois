@@ -102,7 +102,6 @@ export async function PUT(
       conta,
       tipoConta,
       chavePix,
-      comissaoPercentual,
       ativo,
       clientesIds,
     } = requestBody;
@@ -192,7 +191,7 @@ export async function PUT(
           conta,
           tipoConta,
           chavePix,
-          comissaoPercentual: parseFloat(comissaoPercentual) || 0,
+          comissaoPercentual: 0,
           ativo,
         },
         include: {

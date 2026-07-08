@@ -12,7 +12,6 @@ import {
   MapPin,
   Phone,
   Building,
-  Percent,
   Save,
   Eye,
   EyeOff,
@@ -45,7 +44,6 @@ interface RepresentanteForm {
   conta: string;
   tipoConta: string;
   chavePix: string;
-  comissaoPercentual: string;
   ativo: boolean;
 }
 
@@ -80,7 +78,6 @@ export default function EditarRepresentantePage() {
     conta: "",
     tipoConta: "CORRENTE",
     chavePix: "",
-    comissaoPercentual: "",
     ativo: true,
   });
 
@@ -119,7 +116,6 @@ export default function EditarRepresentantePage() {
         conta: rep.conta || "",
         tipoConta: rep.tipoConta || "CORRENTE",
         chavePix: rep.chavePix || "",
-        comissaoPercentual: rep.comissaoPercentual?.toString() || "",
         ativo: rep.ativo,
       });
     } catch (error) {
@@ -178,9 +174,6 @@ export default function EditarRepresentantePage() {
     if (!form.cidade.trim()) novosErros.push("Cidade é obrigatória");
     if (!form.estado.trim()) novosErros.push("Estado é obrigatório");
     if (!form.cep) novosErros.push("CEP é obrigatório");
-    if (!form.comissaoPercentual) {
-      novosErros.push("Percentual de comissão é obrigatório");
-    }
 
     setErrors(novosErros);
     return novosErros.length === 0;
@@ -213,7 +206,6 @@ export default function EditarRepresentantePage() {
         conta: form.conta.trim() || null,
         tipoConta: form.tipoConta || null,
         chavePix: form.chavePix.trim() || null,
-        comissaoPercentual: parseFloat(form.comissaoPercentual) || 0,
         ativo: form.ativo,
       };
 
@@ -663,40 +655,6 @@ export default function EditarRepresentantePage() {
 
         {/* Sidebar */}
         <div className="lg:col-span-1 space-y-6">
-          {/* Comissão */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Percent className="h-6 w-6 text-primary" />
-              <h2 className="text-xl font-semibold text-gray-900">Comissão</h2>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Percentual de Comissão *
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  max="100"
-                  value={form.comissaoPercentual}
-                  onChange={(e) =>
-                    setForm({ ...form, comissaoPercentual: e.target.value })
-                  }
-                  className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="5.50"
-                />
-                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                  %
-                </span>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Percentual sobre o valor dos pedidos
-              </p>
-            </div>
-          </div>
-
           {/* Status */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-3 mb-4">

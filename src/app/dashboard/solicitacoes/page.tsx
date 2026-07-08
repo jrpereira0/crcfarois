@@ -70,7 +70,6 @@ interface Representante {
     name: string;
     email: string;
   };
-  comissaoPercentual: number;
 }
 
 export default function SolicitacoesPage() {
@@ -607,7 +606,7 @@ export default function SolicitacoesPage() {
                     <option value="">Selecione um representante</option>
                     {representantes.map((rep) => (
                       <option key={rep.id} value={rep.id}>
-                        {rep.user.name} - {rep.comissaoPercentual}% comissão
+                        {rep.user.name}
                       </option>
                     ))}
                   </select>

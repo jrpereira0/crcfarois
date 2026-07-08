@@ -59,7 +59,6 @@ interface ClienteDetalhes {
         name: string;
         email: string;
       };
-      comissaoPercentual: number;
     };
   }[];
 }
@@ -679,14 +678,6 @@ export default function VisualizarClientePage() {
                         <p className="text-sm text-gray-600">
                           {cliente.representantes[0].representante.user.email}
                         </p>
-                        <p className="text-xs text-blue-600">
-                          Comissão:{" "}
-                          {
-                            cliente.representantes[0].representante
-                              .comissaoPercentual
-                          }
-                          %
-                        </p>
                       </div>
                     </div>
                     <button
@@ -899,9 +890,6 @@ export default function VisualizarClientePage() {
                           </p>
                           <p className="text-sm text-gray-600">
                             {representante.user.email}
-                          </p>
-                          <p className="text-xs text-blue-600">
-                            Comissão: {representante.comissaoPercentual}%
                           </p>
                         </div>
                       </div>

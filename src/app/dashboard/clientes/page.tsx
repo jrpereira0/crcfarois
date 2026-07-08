@@ -54,7 +54,6 @@ interface Cliente {
         name: string;
         email: string;
       };
-      comissaoPercentual: number;
     };
   }[];
 }

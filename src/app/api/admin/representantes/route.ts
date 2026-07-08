@@ -93,7 +93,6 @@ export async function POST(request: NextRequest) {
       conta,
       tipoConta,
       chavePix,
-      comissaoPercentual,
     } = await request.json();
 
     // Validações básicas
@@ -161,7 +160,7 @@ export async function POST(request: NextRequest) {
           conta,
           tipoConta,
           chavePix,
-          comissaoPercentual: parseFloat(comissaoPercentual) || 0,
+          comissaoPercentual: 0,
         },
         include: {
           user: {

@@ -11,7 +11,6 @@ import {
   MapPin,
   CreditCard,
   Building,
-  Percent,
   Users,
   Edit3,
   UserPlus,
@@ -41,7 +40,6 @@ interface RepresentanteDetalhes {
   conta?: string;
   tipoConta?: string;
   chavePix?: string;
-  comissaoPercentual: number;
   ativo: boolean;
   createdAt: string;
   updatedAt: string;
@@ -432,14 +430,6 @@ export default function RepresentanteDetalhesPage() {
             <h2 className="text-xl font-semibold text-gray-900 mb-6">Resumo</h2>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Comissão</span>
-                <div className="flex items-center gap-1 text-lg font-bold text-primary">
-                  <Percent className="h-4 w-4" />
-                  {representante.comissaoPercentual}%
-                </div>
-              </div>
-
               <div className="flex items-center justify-between">
                 <span className="text-gray-600">Clientes</span>
                 <span className="font-medium text-gray-900">

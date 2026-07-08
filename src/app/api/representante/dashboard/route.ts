@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
 
     const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
 
-    const [pedidosHoje, pedidosMes, pedidosConcluidosMes, pedidosRecentes] =
+    const [pedidosHoje, pedidosMes, pedidosRecentes] =
       await Promise.all([
         // Pedidos de hoje
         prisma.pedido.count({
@@ -66,18 +66,6 @@ export async function GET(request: NextRequest) {
           where: {
             userId: { in: clientesIds },
             createdAt: { gte: inicioMes },
-          },
-          select: {
-            total: true,
-          },
-        }),
-
-        // Pedidos concluídos do mês (para cálculo de comissão)
-        prisma.pedido.findMany({
-          where: {
-            userId: { in: clientesIds },
-            createdAt: { gte: inicioMes },
-            status: "ENTREGUE", // Apenas pedidos concluídos
           },
           select: {
             total: true,
@@ -105,16 +93,6 @@ export async function GET(request: NextRequest) {
         }),
       ]);
 
-    // Calcular comissão do mês (apenas pedidos ENTREGUES)
-    const totalVendasConcluidas = pedidosConcluidosMes.reduce(
-      (acc, pedido) => acc + parseFloat(pedido.total.toString()),
-      0
-    );
-    const comissaoMes =
-      (totalVendasConcluidas *
-        parseFloat(representante.comissaoPercentual.toString())) /
-      100;
-
     // Formatar pedidos recentes
     const pedidosRecentesFormatados = pedidosRecentes.map((pedido) => ({
       id: pedido.id,
@@ -134,7 +112,6 @@ export async function GET(request: NextRequest) {
       totalClientes: representante.clientes.length,
       pedidosHoje,
       pedidosMes: pedidosMes.length,
-      comissaoMes,
       pedidosRecentes: pedidosRecentesFormatados,
     });
   } catch (error) {

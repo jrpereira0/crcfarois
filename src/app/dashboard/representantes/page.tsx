@@ -10,7 +10,6 @@ import {
   Trash2,
   Eye,
   UserCheck,
-  Percent,
   Phone,
   Mail,
   MapPin,
@@ -33,7 +32,6 @@ interface Representante {
   conta?: string;
   tipoConta?: string;
   chavePix?: string;
-  comissaoPercentual: number;
   ativo: boolean;
   createdAt: string;
   updatedAt: string;
@@ -323,10 +321,6 @@ export default function RepresentantesPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="flex items-center gap-2 text-lg font-bold text-primary mb-1">
-                        <Percent className="h-5 w-5" />
-                        {representante.comissaoPercentual}%
-                      </div>
                       <div className="text-sm text-gray-500">
                         {representante._count.clientes}{" "}
                         {representante._count.clientes === 1

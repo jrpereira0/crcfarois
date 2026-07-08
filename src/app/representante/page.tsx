@@ -8,7 +8,6 @@ import {
   ShoppingBag,
   TrendingUp,
   Calendar,
-  DollarSign,
   Eye,
 } from "lucide-react";
 
@@ -16,7 +15,6 @@ interface DashboardStats {
   totalClientes: number;
   pedidosHoje: number;
   pedidosMes: number;
-  comissaoMes: number;
   pedidosRecentes: {
     id: string;
     numero: string;
@@ -107,7 +105,7 @@ export default function RepresentanteDashboard() {
       </div>
 
       {/* Estatísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-blue-100 rounded-lg">
@@ -150,19 +148,6 @@ export default function RepresentanteDashboard() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <DollarSign className="h-6 w-6 text-yellow-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Comissão Mês</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {loading ? "..." : formatPrice(stats?.comissaoMes || 0)}
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Ações rápidas */}
