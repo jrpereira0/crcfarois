@@ -43,6 +43,7 @@ interface PedidoDetalhes {
   desconto: number;
   total: number;
   observacoes?: string;
+  numeroFaturamento?: string | null;
   createdAt: string;
   updatedAt: string;
   // Endereço de entrega
@@ -119,6 +120,12 @@ export default function PedidoAdminDetalhesPage() {
   const [editingStatus, setEditingStatus] = useState(false);
   const [newStatus, setNewStatus] = useState("");
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [numeroFaturamento, setNumeroFaturamento] = useState("");
+  const [savingNumeroFaturamento, setSavingNumeroFaturamento] = useState(false);
+  const [numeroFaturamentoMessage, setNumeroFaturamentoMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const pedidoId = params.id as string;
 
@@ -158,6 +165,7 @@ export default function PedidoAdminDetalhesPage() {
       const data = await response.json();
       setPedido(data.pedido);
       setNewStatus(data.pedido.status);
+      setNumeroFaturamento(data.pedido.numeroFaturamento || "");
     } catch (error) {
       console.error("Erro ao buscar pedido:", error);
       router.push("/dashboard/pedidos");
@@ -207,6 +215,77 @@ export default function PedidoAdminDetalhesPage() {
       setUpdatingStatus(false);
     }
   }, [pedido, newStatus]);
+
+  // Salvar número de faturamento do ERP
+  const saveNumeroFaturamento = useCallback(async () => {
+    if (!pedido) return;
+
+    const valorAtual = (pedido.numeroFaturamento || "").trim();
+    const valorNovo = numeroFaturamento.trim();
+
+    if (valorNovo && !/^\d+$/.test(valorNovo)) {
+      setNumeroFaturamentoMessage({
+        type: "error",
+        text: "Informe apenas números",
+      });
+      return;
+    }
+
+    if (valorAtual === valorNovo) {
+      setNumeroFaturamentoMessage({
+        type: "success",
+        text: "Número já está salvo",
+      });
+      return;
+    }
+
+    try {
+      setSavingNumeroFaturamento(true);
+      setNumeroFaturamentoMessage(null);
+
+      const response = await fetch(`/api/admin/pedidos/${pedido.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          numeroFaturamento: valorNovo || null,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erro ao salvar número de faturamento");
+      }
+
+      setPedido((prev) =>
+        prev
+          ? {
+              ...prev,
+              numeroFaturamento: data.pedido.numeroFaturamento,
+              updatedAt: data.pedido.updatedAt || new Date().toISOString(),
+            }
+          : null
+      );
+      setNumeroFaturamento(data.pedido.numeroFaturamento || "");
+      setNumeroFaturamentoMessage({
+        type: "success",
+        text: "Número de faturamento salvo",
+      });
+    } catch (error) {
+      console.error("Erro ao salvar número de faturamento:", error);
+      setNumeroFaturamentoMessage({
+        type: "error",
+        text:
+          error instanceof Error
+            ? error.message
+            : "Erro ao salvar número de faturamento",
+      });
+    } finally {
+      setSavingNumeroFaturamento(false);
+    }
+  }, [pedido, numeroFaturamento]);
 
   // Copiar número do pedido
   const copyPedidoNumber = useCallback(() => {
@@ -873,6 +952,69 @@ export default function PedidoAdminDetalhesPage() {
                     Atualizado em {formatDate(pedido.updatedAt)}
                   </span>
                 </div>
+              )}
+            </div>
+          </div>
+
+          {/* Número de faturamento ERP */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <FileText className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-semibold text-gray-900">
+                Número Faturamento
+              </h3>
+            </div>
+
+            <p className="text-sm text-gray-500 mb-4">
+              Número do pedido vinculado ao ERP. Preencha e salve
+              manualmente.
+            </p>
+
+            <div className="space-y-3">
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={numeroFaturamento}
+                onChange={(e) => {
+                  const onlyNumbers = e.target.value.replace(/\D/g, "");
+                  setNumeroFaturamento(onlyNumbers);
+                  if (numeroFaturamentoMessage) {
+                    setNumeroFaturamentoMessage(null);
+                  }
+                }}
+                placeholder="Ex: 123456"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
+
+              <button
+                onClick={saveNumeroFaturamento}
+                disabled={savingNumeroFaturamento}
+                className="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 font-medium disabled:opacity-50"
+              >
+                {savingNumeroFaturamento ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                    Salvando...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4" />
+                    Salvar Número
+                  </>
+                )}
+              </button>
+
+              {numeroFaturamentoMessage && (
+                <p
+                  className={`text-sm ${
+                    numeroFaturamentoMessage.type === "success"
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
+                >
+                  {numeroFaturamentoMessage.text}
+                </p>
               )}
             </div>
           </div>

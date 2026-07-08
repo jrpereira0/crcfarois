@@ -38,6 +38,7 @@ interface Pedido {
   frete: number;
   total: number;
   observacoes?: string;
+  numeroFaturamento?: string | null;
   createdAt: string;
   updatedAt: string;
   // Endereço
@@ -1046,11 +1047,16 @@ export default function PedidosAdminPage() {
                   {/* Header do pedido */}
                   <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-6">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="flex items-center gap-3 mb-2 flex-wrap">
                         <h3 className="text-lg font-semibold text-gray-900">
                           Pedido {pedido.numero}
                         </h3>
                         <StatusDropdown pedido={pedido} />
+                        {pedido.numeroFaturamento && (
+                          <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-md">
+                            Fat. ERP: {pedido.numeroFaturamento}
+                          </span>
+                        )}
                       </div>
 
                       {/* Informações do cliente */}

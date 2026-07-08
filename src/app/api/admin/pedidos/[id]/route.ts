@@ -118,7 +118,7 @@ export async function GET(
   }
 }
 
-// PATCH - Atualizar status do pedido (admin)
+// PATCH - Atualizar status e/ou número de faturamento do pedido (admin)
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -131,11 +131,15 @@ export async function PATCH(
     }
 
     const { id } = params;
-    const { status } = await request.json();
+    const body = await request.json();
+    const { status, numeroFaturamento } = body;
 
-    if (!status) {
+    const temStatus = status !== undefined && status !== null && status !== "";
+    const temNumeroFaturamento = "numeroFaturamento" in body;
+
+    if (!temStatus && !temNumeroFaturamento) {
       return NextResponse.json(
-        { error: "Status é obrigatório" },
+        { error: "Informe status ou número de faturamento para atualizar" },
         { status: 400 }
       );
     }
@@ -151,20 +155,26 @@ export async function PATCH(
       "CANCELADO",
     ];
 
-    if (!statusValidos.includes(status)) {
+    if (temStatus && !statusValidos.includes(status)) {
       return NextResponse.json({ error: "Status inválido" }, { status: 400 });
     }
 
-    // Verificar se pedido existe
-    const pedidoExistente = await prisma.pedido.findUnique({
-      where: { id },
-    });
+    // Validar número de faturamento (apenas dígitos, opcional)
+    let numeroFaturamentoNormalizado: string | null | undefined = undefined;
+    if (temNumeroFaturamento) {
+      const raw =
+        numeroFaturamento === null || numeroFaturamento === undefined
+          ? ""
+          : String(numeroFaturamento).trim();
 
-    if (!pedidoExistente) {
-      return NextResponse.json(
-        { error: "Pedido não encontrado" },
-        { status: 404 }
-      );
+      if (raw && !/^\d+$/.test(raw)) {
+        return NextResponse.json(
+          { error: "Número de faturamento deve conter apenas números" },
+          { status: 400 }
+        );
+      }
+
+      numeroFaturamentoNormalizado = raw || null;
     }
 
     // Buscar pedido com informações do cliente antes de atualizar
@@ -194,17 +204,30 @@ export async function PATCH(
     // Guardar status anterior
     const statusAnterior = pedidoCompleto.status;
 
-    // Atualizar status
+    const dataUpdate: {
+      status?: any;
+      numeroFaturamento?: string | null;
+      updatedAt: Date;
+    } = {
+      updatedAt: new Date(),
+    };
+
+    if (temStatus) {
+      dataUpdate.status = status as any;
+    }
+
+    if (temNumeroFaturamento) {
+      dataUpdate.numeroFaturamento = numeroFaturamentoNormalizado!;
+    }
+
+    // Atualizar pedido
     const pedidoAtualizado = await prisma.pedido.update({
       where: { id },
-      data: {
-        status: status as any,
-        updatedAt: new Date(),
-      },
+      data: dataUpdate,
     });
 
     // Se o status mudou, enviar email para o cliente
-    if (statusAnterior !== status) {
+    if (temStatus && statusAnterior !== status) {
       const dataFormatada = new Intl.DateTimeFormat("pt-BR", {
         day: "2-digit",
         month: "2-digit",
@@ -244,11 +267,12 @@ export async function PATCH(
       pedido: {
         id: pedidoAtualizado.id,
         status: pedidoAtualizado.status,
+        numeroFaturamento: pedidoAtualizado.numeroFaturamento,
         updatedAt: pedidoAtualizado.updatedAt,
       },
     });
   } catch (error) {
-    console.error("Erro ao atualizar status do pedido:", error);
+    console.error("Erro ao atualizar pedido:", error);
     return NextResponse.json(
       { error: "Erro interno do servidor" },
       { status: 500 }
