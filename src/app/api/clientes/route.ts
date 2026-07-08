@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
       whatsapp,
       senha,
       representanteId,
+      horarioCorteMercadoLivre,
     } = body;
 
     // Validações básicas
@@ -121,6 +122,7 @@ export async function POST(request: NextRequest) {
           email,
           telefone: telefone || null,
           whatsapp,
+          horarioCorteMercadoLivre: horarioCorteMercadoLivre || null,
         },
       });
 

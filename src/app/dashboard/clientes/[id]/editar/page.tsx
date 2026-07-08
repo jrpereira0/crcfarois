@@ -14,6 +14,7 @@ import {
   Loader2,
   CheckCircle,
   AlertCircle,
+  Clock,
   CreditCard,
   MessageCircle,
   Search,
@@ -51,6 +52,7 @@ interface ClienteForm {
   email: string;
   telefone: string;
   whatsapp: string;
+  horarioCorteMercadoLivre: string;
   ativo: boolean;
   representanteId: string;
   // Campos de senha
@@ -94,6 +96,7 @@ export default function EditarClientePage() {
     email: "",
     telefone: "",
     whatsapp: "",
+    horarioCorteMercadoLivre: "",
     ativo: true,
     representanteId: "",
     // Campos de senha
@@ -217,6 +220,8 @@ export default function EditarClientePage() {
           email: data.email || "",
           telefone: formatTelefoneDisplay(data.telefone || ""),
           whatsapp: formatTelefoneDisplay(data.whatsapp || ""),
+          horarioCorteMercadoLivre:
+            data.horarioCorteMercadoLivre || "",
           ativo: data.ativo,
           representanteId: representanteAtual,
           // Campos de senha
@@ -392,6 +397,8 @@ export default function EditarClientePage() {
         email: form.email,
         telefone: unformatValue(form.telefone),
         whatsapp: unformatValue(form.whatsapp),
+        horarioCorteMercadoLivre:
+          form.horarioCorteMercadoLivre || null,
         ativo: form.ativo,
         representanteId: form.representanteId,
       };
@@ -676,6 +683,31 @@ export default function EditarClientePage() {
                     Nenhum representante cadastrado.
                   </p>
                 )}
+              </div>
+            </div>
+
+            {/* Horário de corte Mercado Livre */}
+            <div className="border-t border-gray-200 pt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Clock className="h-5 w-5 text-primary" />
+                Horário de corte (Mercado Livre)
+              </h3>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="horarioCorteMercadoLivre"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Horário de corte do Mercado Livre
+                </label>
+                <input
+                  type="time"
+                  id="horarioCorteMercadoLivre"
+                  name="horarioCorteMercadoLivre"
+                  value={form.horarioCorteMercadoLivre}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                />
               </div>
             </div>
 

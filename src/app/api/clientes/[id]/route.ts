@@ -112,6 +112,7 @@ export async function PUT(
       ativo,
       novaSenha,
       representanteId,
+      horarioCorteMercadoLivre,
     } = body;
 
     // Validações básicas
@@ -184,6 +185,7 @@ export async function PUT(
           email,
           telefone: telefone || null,
           whatsapp,
+          horarioCorteMercadoLivre: horarioCorteMercadoLivre || null,
           ativo,
         },
         include: {

@@ -12,6 +12,7 @@ import {
   MapPin,
   Building2,
   Calendar,
+  Clock,
   CreditCard,
   Shield,
   CheckCircle,
@@ -42,6 +43,7 @@ interface ClienteDetalhes {
   email: string;
   telefone?: string;
   whatsapp: string;
+  horarioCorteMercadoLivre?: string;
   ativo: boolean;
   createdAt: string;
   updatedAt: string;
@@ -318,6 +320,15 @@ export default function VisualizarClientePage() {
                   </label>
                   <p className="text-lg text-gray-900 mt-1">
                     {cliente.tipoEmpresa || "Não informado"}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">
+                    Horário de corte (Mercado Livre)
+                  </label>
+                  <p className="text-lg text-gray-900 mt-1 flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-gray-400" />
+                    {cliente.horarioCorteMercadoLivre || "Não informado"}
                   </p>
                 </div>
                 {cliente.inscricaoEstadual && (

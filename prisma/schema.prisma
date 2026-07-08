@@ -105,6 +105,8 @@ model Cliente {
   email                String   @unique
   telefone             String?
   whatsapp             String
+  // Horário de corte do Mercado Livre (ex: "15:30")
+  horarioCorteMercadoLivre String?
   ativo                Boolean  @default(true)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
@@ -195,6 +197,11 @@ model Produto {
   quantidadeEstoque Int       @default(0)
   compraMinima      Int       @default(1)
   compraMaxima      Int?
+  // Medidas (cm) e peso (kg)
+  altura            Decimal?  @db.Decimal(10, 2)
+  largura           Decimal?  @db.Decimal(10, 2)
+  comprimento       Decimal?  @db.Decimal(10, 2)
+  peso              Decimal?  @db.Decimal(10, 2)
   // Imagens via Cloudinary
   imagemPrincipal   String?   // URL da imagem principal
   imagensUrls       String[]  @default([]) // Array de URLs das imagens

@@ -136,6 +136,10 @@ export async function POST(request: NextRequest) {
       quantidadeEstoque,
       compraMinima,
       compraMaxima,
+      altura,
+      largura,
+      comprimento,
+      peso,
       imagens,
     } = body;
 
@@ -244,6 +248,10 @@ export async function POST(request: NextRequest) {
         quantidadeEstoque: parseInt(quantidadeEstoque),
         compraMinima: parseInt(compraMinima),
         compraMaxima: compraMaxima ? parseInt(compraMaxima) : null,
+        altura: altura ? parseFloat(altura) : null,
+        largura: largura ? parseFloat(largura) : null,
+        comprimento: comprimento ? parseFloat(comprimento) : null,
+        peso: peso ? parseFloat(peso) : null,
         // Campos de imagens do Cloudinary
         imagemPrincipal,
         imagensUrls,
