@@ -8,6 +8,7 @@ import {
   Search,
   Filter,
   Download,
+  FileText,
   Eye,
   Edit,
   MoreHorizontal,
@@ -81,6 +82,7 @@ export default function ProdutosPage() {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [produtoToDelete, setProdutoToDelete] = useState<Produto | null>(null);
+  const [generatingPdf, setGeneratingPdf] = useState(false);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
@@ -326,6 +328,106 @@ export default function ProdutosPage() {
     }).format(price);
   };
 
+  const getEstoqueStatus = (quantidade: number) => {
+    if (quantidade <= 0) return "Indisponível";
+    if (quantidade <= 10) return "Estoque Baixo";
+    return "Disponível";
+  };
+
+  // Gerar PDF com a lista de produtos (respeitando os filtros aplicados)
+  const handleGerarPdf = async () => {
+    setGeneratingPdf(true);
+    try {
+      const params = new URLSearchParams();
+      params.append("page", "1");
+      params.append("limit", "10000");
+
+      if (filtros.search) params.append("search", filtros.search);
+      if (filtros.categoria) params.append("categoria", filtros.categoria);
+      if (filtros.marca) params.append("origem", filtros.marca);
+      if (filtros.ativo) params.append("ativo", filtros.ativo);
+      if (filtros.orderBy) params.append("orderBy", filtros.orderBy);
+      if (filtros.orderDirection)
+        params.append("orderDirection", filtros.orderDirection);
+
+      const response = await fetch(`/api/produtos?${params.toString()}`);
+      if (!response.ok) {
+        throw new Error("Erro ao buscar produtos para o PDF");
+      }
+
+      const data: ProdutosResponse = await response.json();
+      const todosProdutos = data.produtos || [];
+
+      const { default: jsPDF } = await import("jspdf");
+      const autoTable = (await import("jspdf-autotable")).default;
+
+      const doc = new jsPDF();
+
+      doc.setFontSize(16);
+      doc.text("CRC Faróis - Lista de Produtos", 14, 16);
+
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      const dataGeracao = new Intl.DateTimeFormat("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(new Date());
+      doc.text(`Gerado em ${dataGeracao}`, 14, 22);
+
+      autoTable(doc, {
+        startY: 28,
+        head: [["SKU", "Nome do Produto", "Preço", "Estoque"]],
+        body: todosProdutos.map((produto) => [
+          produto.sku,
+          produto.titulo,
+          formatPrice(produto.preco),
+          getEstoqueStatus(produto.quantidadeEstoque),
+        ]),
+        headStyles: {
+          fillColor: [21, 44, 84],
+          textColor: 255,
+          fontStyle: "bold",
+        },
+        styles: {
+          fontSize: 9,
+          cellPadding: 4,
+        },
+        columnStyles: {
+          0: { cellWidth: 35 },
+          2: { cellWidth: 30 },
+          3: { cellWidth: 35 },
+        },
+        didParseCell: (hookData) => {
+          if (
+            hookData.section === "body" &&
+            hookData.column.index === 3
+          ) {
+            const valor = hookData.cell.raw as string;
+            if (valor === "Disponível") {
+              hookData.cell.styles.textColor = [22, 163, 74];
+            } else if (valor === "Estoque Baixo") {
+              hookData.cell.styles.textColor = [202, 138, 4];
+            } else if (valor === "Indisponível") {
+              hookData.cell.styles.textColor = [220, 38, 38];
+            }
+          }
+        },
+      });
+
+      doc.save(
+        `produtos-crc-farois-${new Date().toISOString().slice(0, 10)}.pdf`
+      );
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error);
+      alert("Erro ao gerar PDF da lista de produtos");
+    } finally {
+      setGeneratingPdf(false);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("pt-BR", {
       day: "2-digit",
@@ -369,6 +471,19 @@ export default function ProdutosPage() {
           >
             <Filter className="h-4 w-4" />
             Filtros
+          </button>
+
+          <button
+            onClick={handleGerarPdf}
+            disabled={generatingPdf}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            {generatingPdf ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <FileText className="h-4 w-4" />
+            )}
+            Gerar PDF
           </button>
 
           <Link
@@ -485,8 +600,16 @@ export default function ProdutosPage() {
                 {pagination.total} produto{pagination.total !== 1 ? "s" : ""}{" "}
                 encontrado{pagination.total !== 1 ? "s" : ""}
               </span>
-              <button className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
-                <Download className="h-4 w-4" />
+              <button
+                onClick={handleGerarPdf}
+                disabled={generatingPdf}
+                className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1 disabled:opacity-50"
+              >
+                {generatingPdf ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
                 Exportar
               </button>
             </div>
